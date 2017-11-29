@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="weatherflowsmartweather"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+        xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+
+<thing-type id="air">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="hub"/>
+        </supported-bridge-type-refs>
+
+        <label>SmartWeather Air</label>
+        <description>Air and Lightning sensors</description>
+
+        <channels>
+            <channel id="epoch" typeId="epoch"/>
+            <channel id="temperature" typeId="temperature"/>
+            <channel id="pressure" typeId="pressure"/>
+            <channel id="humidity" typeId="humidity"/>
+            <channel id="strike_count" typeId="count"/>
+            <channel id="strike_distance" typeId="distance"/>
+            <channel id="battery_level" typeId="battery_level"/>
+        </channels>
+
+        <properties>
+          <property name="serial_number"></property>
+        </properties>
+    </thing-type>
+
+    <channel-type id="temperature">
+        <item-type>Number</item-type>
+        <label>Temperature</label>
+        <description>Temperature, in ºC</description>
+        <category>Temperature</category>
+        <state pattern="%0.2f ºC" readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="humidity">
+        <item-type>Number</item-type>
+        <label>Relative Humidity</label>
+        <description>Relative Humidity, in %</description>
+        <category>Humidity</category>
+        <state pattern="%0.1f %%" readOnly="true"></state>
+    </channel-type>
+    
+    <channel-type id="pressure">
+        <item-type>Number</item-type>
+        <label>Pressure</label>
+        <description>Barometric Pressure, in MB</description>
+        <category>Pressure</category>
+        <state pattern="%0.2f MB" readOnly="true"></state>
+    </channel-type>
+    
+      <channel-type id="count">
+        <item-type>Number</item-type>
+        <label>Lightning Strike Count</label>
+        <description>Lightning Strike Count</description>
+        <category>Energy</category>
+        <state readOnly="true"></state>
+    </channel-type>
+        
+      <channel-type id="distance">
+        <item-type>Number</item-type>
+        <label>Lightning Strike Distance</label>
+        <description>Average Lightning Strike Distance, in km</description>
+        <category>Energy</category>
+        <state pattern="%0.2f km" readOnly="true"></state>
+    </channel-type>
+    
+        
+      <channel-type id="epoch">
+        <item-type>DateTime</item-type>
+        <label>Report Epoch</label>
+        <description>UTC Time of observation, in seconds since the epoch.</description>
+        <category>Time</category>
+        <state readOnly="true"></state>
+    </channel-type>
+    
+      <channel-type id="battery_level">
+        <item-type>Number</item-type>
+        <label>Battery Level</label>
+        <description>Sensor Battery Level, in V</description>
+        <category>Battery</category>
+        <state pattern="%0.2f V" readOnly="true"></state>
+    </channel-type>
+    
+
+</thing:thing-descriptions>
