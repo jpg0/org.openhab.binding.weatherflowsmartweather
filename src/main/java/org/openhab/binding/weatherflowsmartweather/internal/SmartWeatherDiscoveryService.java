@@ -32,9 +32,13 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
 
     protected DiscoveryServiceCallback discoveryServiceCallback = null;
 
-    @Reference
+    @Reference()
     protected void bindUdpListener(SmartWeatherUDPListenerService service) {
         udpListener = service;
+    };
+
+    protected void unbindUdpListener(SmartWeatherUDPListenerService service) {
+        udpListener = null;
     };
 
     public SmartWeatherDiscoveryService() {

@@ -48,11 +48,16 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
 
     static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = WeatherFlowSmartWeatherBindingConstants.SUPPORTED_THING_TYPES;
     private Map<ThingUID, ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
+
     SmartWeatherUDPListenerService udpListener;
 
-    @Reference
+    @Reference()
     protected void bindUdpListener(SmartWeatherUDPListenerService service) {
         udpListener = service;
+    };
+
+    protected void unbindUdpListener(SmartWeatherUDPListenerService service) {
+        udpListener = null;
     };
 
     @Override
