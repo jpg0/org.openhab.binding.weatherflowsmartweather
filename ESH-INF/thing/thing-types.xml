@@ -32,7 +32,7 @@
         <label>Temperature</label>
         <description>Temperature, in ºC</description>
         <category>Temperature</category>
-        <state pattern="%0.1f ºC" readOnly="true"></state>
+        <state pattern="%.1f ºC" readOnly="true"></state>
     </channel-type>
     
     <channel-type id="humidity">
@@ -40,7 +40,7 @@
         <label>Relative Humidity</label>
         <description>Relative Humidity, in %</description>
         <category>Humidity</category>
-        <state pattern="%0.1f %%" readOnly="true"></state>
+        <state pattern="%.1f %%" readOnly="true"></state>
     </channel-type>
     
     <channel-type id="pressure">
@@ -48,7 +48,7 @@
         <label>Pressure</label>
         <description>Barometric Pressure, in mbar</description>
         <category>Pressure</category>
-        <state pattern="%0.1f mbar" readOnly="true"></state>
+        <state pattern="%.1f mbar" readOnly="true"></state>
     </channel-type>
     
       <channel-type id="count">
@@ -64,7 +64,7 @@
         <label>Lightning Strike Distance</label>
         <description>Average Lightning Strike Distance, in km</description>
         <category>Energy</category>
-        <state pattern="%0.1f km" readOnly="true"></state>
+        <state pattern="%.1f km" readOnly="true"></state>
     </channel-type>
     
         
@@ -81,7 +81,7 @@
         <label>Battery Level</label>
         <description>Sensor Battery Level, in V</description>
         <category>Battery</category>
-        <state pattern="%0.1f V" readOnly="true"></state>
+        <state pattern="%.1f V" readOnly="true"></state>
     </channel-type>
     
 
