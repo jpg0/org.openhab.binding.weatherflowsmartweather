@@ -24,3 +24,4 @@ _To be completed_
 
 - Support Sky sensors
 - Support Strike (and Fast Wind/Rain Start) events
+- Add derived datapoints (feels like, dewpoint, etc)
