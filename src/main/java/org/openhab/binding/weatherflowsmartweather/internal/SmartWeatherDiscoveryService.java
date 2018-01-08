@@ -76,9 +76,9 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
                     serial);
 
             logger.debug("Got discovered device.");
-            if (discoveryServiceCallback != null) {
+            if (getDiscoveryServiceCallback() != null) {
                 logger.debug("Looking to see if this thing exists already.");
-                Thing thing = discoveryServiceCallback.getExistingThing(thingUid);
+                Thing thing = getDiscoveryServiceCallback().getExistingThing(thingUid);
                 if (thing != null) {
                     logger.debug("Already have thing with ID=<" + thingUid + ">");
                     return;
@@ -102,4 +102,9 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
     public void setDiscoveryServiceCallback(DiscoveryServiceCallback discoveryServiceCallback) {
         this.discoveryServiceCallback = discoveryServiceCallback;
     }
+
+    public DiscoveryServiceCallback getDiscoveryServiceCallback() {
+        return discoveryServiceCallback;
+    }
+
 }
