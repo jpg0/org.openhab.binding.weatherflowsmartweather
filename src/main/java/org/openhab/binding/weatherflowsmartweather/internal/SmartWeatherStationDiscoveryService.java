@@ -32,7 +32,7 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
         super(supportedDevices, 30, true);
         this.udpListener = udpListener;
         this.hubHandler = hubHandler;
-        logger.warn("Creating discovery service");
+        logger.info("Creating discovery service");
     }
 
     public void activate() {
@@ -94,7 +94,7 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
 
             Thing thing = hubHandler.getThingByUID(thingUid);
             if (thing != null) {
-                logger.warn("Already have thing with ID=<" + thingUid + ">");
+                logger.info("Already have thing with ID=<" + thingUid + ">");
                 return;
             } else {
                 logger.debug("Nope. This should trigger a new inbox entry.");

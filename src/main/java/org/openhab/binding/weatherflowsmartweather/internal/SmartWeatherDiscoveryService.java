@@ -43,7 +43,7 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
 
     public SmartWeatherDiscoveryService() {
         super(supportedDevices, 30, true);
-        logger.warn("Creating discovery service");
+        logger.info("Creating discovery service");
     }
 
     @Override

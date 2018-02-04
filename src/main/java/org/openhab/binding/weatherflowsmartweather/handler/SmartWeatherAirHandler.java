@@ -85,7 +85,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
     @Override
     public void eventReceived(InetAddress source, SmartWeatherMessage data) {
         if (data instanceof StationStatusMessage) {
-            logger.warn("got status message message: " + data);
+            logger.debug("got status message message: " + data);
 
             if (messageTimeout != null) {
                 messageTimeout.cancel(true);
@@ -114,7 +114,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
         ThingUID uid = getThing().getUID();
 
         for (List obs : l) {
-            logger.warn("parsing observation record: " + obs);
+            logger.info("parsing observation record: " + obs);
 
             String[] fields = { CHANNEL_EPOCH, CHANNEL_PRESSURE, CHANNEL_TEMPERATURE, CHANNEL_HUMIDITY,
                     CHANNEL_STRIKE_COUNT, CHANNEL_STRIKE_DISTANCE, CHANNEL_BATTERY_LEVEL };
@@ -124,7 +124,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
                 State type;
                 if (f.equals(CHANNEL_EPOCH)) {
                     type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
-                    logger.warn("posting type = " + type);
+                    logger.debug("posting type = " + type);
                 } else {
                     type = new DecimalType(val);
                 }
