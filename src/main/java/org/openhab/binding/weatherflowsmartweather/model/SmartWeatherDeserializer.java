@@ -40,6 +40,7 @@ public class SmartWeatherDeserializer implements JsonDeserializer<SmartWeatherMe
             case "station_status":
                 return gson.fromJson(je, StationStatusMessage.class);
             case "hub-status":
+            case "hub_status":
                 return gson.fromJson(je, HubStatusMessage.class);
             default:
                 log.error("Received unknown SmartWeather message type: " + messageType);
