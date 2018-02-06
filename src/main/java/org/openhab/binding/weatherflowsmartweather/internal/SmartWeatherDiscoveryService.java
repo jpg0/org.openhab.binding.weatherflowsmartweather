@@ -6,6 +6,7 @@ import java.util.Set;
 import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
+import org.eclipse.smarthome.config.discovery.DiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryServiceCallback;
 import org.eclipse.smarthome.config.discovery.ExtendedDiscoveryService;
 import org.eclipse.smarthome.core.thing.Thing;
@@ -20,7 +21,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(service = org.eclipse.smarthome.config.discovery.DiscoveryService.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
+@Component(service = DiscoveryService.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
 public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
         implements ExtendedDiscoveryService, SmartWeatherEventListener {
 
