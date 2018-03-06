@@ -1,19 +1,17 @@
 package org.openhab.binding.weatherflowsmartweather.model;
 
 public class HubStatusMessage extends SmartWeatherMessage {
-    protected String firmware_version;
-    private long uptime;
-    private int rssi;
-    private long timestamp;
-    private int reset_flags;
-    private String stack;
+    protected String firmware_revision;
+    protected long uptime;
+    protected int rssi;
+    protected long timestamp;
 
     public String getFirmware_version() {
-        return firmware_version;
+        return firmware_revision;
     }
 
     public void setFirmware_version(String firmware_version) {
-        this.firmware_version = firmware_version;
+        this.firmware_revision = firmware_version;
     }
 
     public long getUptime() {
@@ -40,26 +38,10 @@ public class HubStatusMessage extends SmartWeatherMessage {
         this.timestamp = timestamp;
     }
 
-    public int getReset_flags() {
-        return reset_flags;
-    }
-
-    public void setReset_flags(int reset_flags) {
-        this.reset_flags = reset_flags;
-    }
-
-    public String getStack() {
-        return stack;
-    }
-
-    public void setStack(String stack) {
-        this.stack = stack;
-    }
-
     @Override
     public String toString() {
-        return "HubStatusMessage [firmware_version=" + firmware_version + ", uptime=" + uptime + ", rssi=" + rssi
-                + ", timestamp=" + timestamp + ", reset_flags=" + reset_flags + ", stack=" + stack + ", serial_number="
+        return "HubStatusMessage [firmware_version=" + firmware_revision + ", uptime=" + uptime + ", rssi=" + rssi
+                + ", timestamp=" + timestamp + ", serial_number="
                 + serial_number + "]";
     }
 

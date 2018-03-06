@@ -7,6 +7,16 @@ public class ObservationAirMessage extends SmartWeatherMessage {
     // private int device_id;
     private List<List> obs;
 
+    private int firmware_revision;
+
+    public int getFirmware_revision() {
+        return firmware_revision;
+    }
+
+    public void setFirmware_revision(int firmware_revision) {
+        this.firmware_revision = firmware_revision;
+    }
+
     public String getHub_sn() {
         return hub_sn;
     }
@@ -23,6 +33,8 @@ public class ObservationAirMessage extends SmartWeatherMessage {
     // this.device_id = device_id;
     // }
 
+
+
     public List<List> getObs() {
         return obs;
     }
@@ -33,7 +45,12 @@ public class ObservationAirMessage extends SmartWeatherMessage {
 
     @Override
     public String toString() {
-        return "ObservationAirMessage [hub_sn=" + hub_sn + ", obs=" + (obs) + ", serial_number=" + serial_number + "]";
+        return "ObservationAirMessage{" +
+                "hub_sn='" + hub_sn + '\'' +
+                ", obs=" + obs +
+                ", firmware_revision=" + firmware_revision +
+                ", serial_number='" + serial_number + '\'' +
+                '}';
     }
 
 }

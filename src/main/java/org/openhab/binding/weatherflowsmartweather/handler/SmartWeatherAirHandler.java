@@ -30,6 +30,7 @@ import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.State;
 import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
+import org.openhab.binding.weatherflowsmartweather.model.DeviceStatusMessage;
 import org.openhab.binding.weatherflowsmartweather.model.ObservationAirMessage;
 import org.openhab.binding.weatherflowsmartweather.model.SmartWeatherMessage;
 import org.openhab.binding.weatherflowsmartweather.model.StationStatusMessage;
@@ -84,7 +85,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
 
     @Override
     public void eventReceived(InetAddress source, SmartWeatherMessage data) {
-        if (data instanceof StationStatusMessage) {
+        if (data instanceof StationStatusMessage || data instanceof DeviceStatusMessage) {
             logger.debug("got status message message: " + data);
 
             if (messageTimeout != null) {
@@ -103,7 +104,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
             // TODO update station status fields
         } else if (data instanceof ObservationAirMessage) {
             handleObservationMessage((ObservationAirMessage) data);
-        } else {
+        }  else {
             logger.warn("not handling message: " + data);
         }
     }

@@ -1,7 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.model;
 
 public class StationStatusMessage extends SmartWeatherMessage {
-    private int version;
+    private int firmware_revision;
     private long uptime;
     private int rssi;
     private long timestamp;
@@ -10,11 +10,11 @@ public class StationStatusMessage extends SmartWeatherMessage {
     private int sensor_status;
 
     public int getFirmware_revision() {
-        return version;
+        return firmware_revision;
     }
 
     public void setVersion(int version) {
-        this.version = version;
+        this.firmware_revision = version;
     }
 
     public long getUptime() {
@@ -67,7 +67,7 @@ public class StationStatusMessage extends SmartWeatherMessage {
 
     @Override
     public String toString() {
-        return "StationStatusMessage [version=" + version + ", uptime=" + uptime + ", rssi=" + rssi + ", timestamp="
+        return "StationStatusMessage [fimware_revision=" + firmware_revision + ", uptime=" + uptime + ", rssi=" + rssi + ", timestamp="
                 + timestamp + ", hub_sn=" + hub_sn + ", voltage=" + voltage + ", sensor_status=" + sensor_status
                 + ", serial_number=" + serial_number + "]";
     }

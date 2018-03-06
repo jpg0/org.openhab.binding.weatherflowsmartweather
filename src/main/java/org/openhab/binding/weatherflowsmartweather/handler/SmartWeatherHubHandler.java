@@ -33,10 +33,7 @@ import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
 import org.openhab.binding.weatherflowsmartweather.internal.SmartWeatherUDPListenerService;
-import org.openhab.binding.weatherflowsmartweather.model.HubStatusMessage;
-import org.openhab.binding.weatherflowsmartweather.model.ObservationAirMessage;
-import org.openhab.binding.weatherflowsmartweather.model.SmartWeatherMessage;
-import org.openhab.binding.weatherflowsmartweather.model.StationStatusMessage;
+import org.openhab.binding.weatherflowsmartweather.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,6 +115,21 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
                 handler.eventReceived(source, message);
+            } else if (data instanceof DeviceStatusMessage) {
+                DeviceStatusMessage message = (DeviceStatusMessage) data;
+                String serialNumber = message.getSerial_number();
+
+                // TODO handle Sky and other sensors properly as well.
+                ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR,
+                        getThing().getUID(), serialNumber);
+
+                Thing t = this.getThingByUID(thingUid);
+                if (t == null) {
+                    logger.warn("device status but not for us.");
+                    return;
+                } // not our hub and sensor combo.
+                SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
+                handler.eventReceived(source, message);
             } else if (data instanceof StationStatusMessage) {
                 StationStatusMessage message = (StationStatusMessage) data;
                 String serialNumber = message.getSerial_number();
@@ -126,15 +138,13 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("air observation but not for us.");
+                    logger.warn("station status but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
                 handler.eventReceived(source, message);
             }
-
         }
-
     }
 
     // wonder if perhaps the refresh rate on this data may be too high by default... do we really need to
@@ -146,6 +156,8 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
         updateState(new ChannelUID(getThing().getUID(), CHANNEL_LAST_REPORT),
                 new DateTimeType(new DateTime(data.getTimestamp() * 1000).toCalendar(null)));
         updateState(new ChannelUID(getThing().getUID(), CHANNEL_UPTIME), new DecimalType(data.getUptime()));
+
+        // TODO Does it make sense to include the new fields from the v30 status message? Mostly debug info, it seems.
     }
 
     private void goOnline() {
