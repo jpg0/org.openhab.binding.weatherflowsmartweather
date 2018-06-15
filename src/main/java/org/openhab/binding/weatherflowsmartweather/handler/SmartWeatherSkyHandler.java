@@ -12,13 +12,28 @@
  */
 package org.openhab.binding.weatherflowsmartweather.handler;
 
+import org.eclipse.smarthome.core.library.types.DateTimeType;
+import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
+import org.eclipse.smarthome.core.thing.ThingUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
+import org.eclipse.smarthome.core.types.State;
+import org.joda.time.DateTime;
+import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
+import org.openhab.binding.weatherflowsmartweather.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.InetAddress;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.*;
+import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.CHANNEL_EPOCH;
 
 /**
  * The {@link SmartWeatherSkyHandler} is responsible for handling commands, which are
@@ -27,9 +42,11 @@ import org.slf4j.LoggerFactory;
  * @author William Welliver - Initial contribution
  */
 
-public class SmartWeatherSkyHandler extends BaseThingHandler {
+public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWeatherEventListener {
 
     private final Logger logger = LoggerFactory.getLogger(SmartWeatherSkyHandler.class);
+
+    private ScheduledFuture<?> messageTimeout;
 
     public SmartWeatherSkyHandler(Thing thing) {
         super(thing);
@@ -59,5 +76,66 @@ public class SmartWeatherSkyHandler extends BaseThingHandler {
         // as expected. E.g.
         // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
         // "Can not access device as username and/or password are invalid");
+    }
+
+    @Override
+    public void eventReceived(InetAddress source, SmartWeatherMessage data) {
+        logger.info("SkyHandler received message " + data);
+        if (data instanceof StationStatusMessage || data instanceof DeviceStatusMessage) {
+            logger.debug("got status message message: " + data);
+
+            if (messageTimeout != null) {
+                messageTimeout.cancel(true);
+            }
+            if (this.getThing().getStatus() == ThingStatus.OFFLINE) {
+                goOnline();
+            }
+            messageTimeout = scheduler.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    goOffline();
+                }
+            }, 3, TimeUnit.MINUTES);
+
+            // TODO update station status fields
+        } else if (data instanceof ObservationSkyMessage) {
+            handleObservationMessage((ObservationSkyMessage) data);
+        }  else {
+            logger.warn("not handling message: " + data);
+        }
+    }
+
+    public void handleObservationMessage(ObservationSkyMessage data) {
+        // logger.warn("Received observation message: " + data);
+        List<List> l = data.getObs();
+        ThingUID uid = getThing().getUID();
+
+        for (List obs : l) {
+            logger.info("parsing observation record: " + obs);
+
+            String[] fields = { CHANNEL_EPOCH, CHANNEL_ILLUMINANCE, CHANNEL_UV, CHANNEL_BATTERY_LEVEL };
+            int i = 0;
+            for (String f : fields) {
+                Double val = (Double) obs.get(i++);
+                State type;
+                if (f.equals(CHANNEL_EPOCH)) {
+                    type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
+                    logger.debug("posting type = " + type);
+                } else {
+                    type = new DecimalType(val);
+                }
+                updateState(new ChannelUID(uid, f), type);
+            }
+        }
+    }
+
+    private void goOnline() {
+        this.updateStatus(ThingStatus.ONLINE);
+        messageTimeout = null;
+    }
+
+    protected void goOffline() {
+        this.updateStatus(ThingStatus.OFFLINE);
+        messageTimeout = null;
     }
 }

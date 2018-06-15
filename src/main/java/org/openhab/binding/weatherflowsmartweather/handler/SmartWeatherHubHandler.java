@@ -21,12 +21,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.StringType;
-import org.eclipse.smarthome.core.thing.Bridge;
-import org.eclipse.smarthome.core.thing.ChannelUID;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.eclipse.smarthome.core.thing.ThingStatus;
-import org.eclipse.smarthome.core.thing.ThingStatusDetail;
-import org.eclipse.smarthome.core.thing.ThingUID;
+import org.eclipse.smarthome.core.thing.*;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.joda.time.DateTime;
@@ -115,17 +110,30 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
                 handler.eventReceived(source, message);
-            } else if (data instanceof DeviceStatusMessage) {
-                DeviceStatusMessage message = (DeviceStatusMessage) data;
+            } else if (data instanceof ObservationSkyMessage) {
+                ObservationSkyMessage message = (ObservationSkyMessage) data;
                 String serialNumber = message.getSerial_number();
-
-                // TODO handle Sky and other sensors properly as well.
-                ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR,
+                ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY,
                         getThing().getUID(), serialNumber);
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("device status but not for us.");
+                    logger.warn("sky observation but not for us.");
+                    return;
+                } // not our hub and sensor combo.
+                SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
+                handler.eventReceived(source, message);
+            } else if (data instanceof DeviceStatusMessage) {
+                DeviceStatusMessage message = (DeviceStatusMessage) data;
+                String serialNumber = message.getSerial_number();
+
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
+
+                Thing t = this.getThingByUID(thingUid);
+                if (t == null) {
+                    logger.warn("device status but not for us: " + thingUid);
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -133,8 +141,9 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
             } else if (data instanceof StationStatusMessage) {
                 StationStatusMessage message = (StationStatusMessage) data;
                 String serialNumber = message.getSerial_number();
-                ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR,
-                        getThing().getUID(), serialNumber);
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
@@ -145,6 +154,14 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
                 handler.eventReceived(source, message);
             }
         }
+    }
+
+    private ThingTypeUID thingTypeUidFromSerial(String serialNumber) {
+        if(serialNumber.startsWith("SK"))
+            return WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY;
+        else if(serialNumber.startsWith("AR"))
+            return WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR;
+        else return null;
     }
 
     // wonder if perhaps the refresh rate on this data may be too high by default... do we really need to

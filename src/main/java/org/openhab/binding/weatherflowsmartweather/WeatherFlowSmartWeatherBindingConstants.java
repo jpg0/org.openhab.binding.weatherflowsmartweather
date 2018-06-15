@@ -49,6 +49,10 @@ public class WeatherFlowSmartWeatherBindingConstants {
     public static final String CHANNEL_STRIKE_DISTANCE = "strike_distance";
     public static final String CHANNEL_BATTERY_LEVEL = "battery_level";
 
+    // List of all Sky Channel ids
+    public static final String CHANNEL_ILLUMINANCE = "illuminance";
+    public static final String CHANNEL_UV = "uv";
+
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES = ImmutableSet.of(THING_TYPE_SMART_WEATHER_HUB,
             THING_TYPE_SMART_WEATHER_AIR, THING_TYPE_SMART_WEATHER_SKY);
 

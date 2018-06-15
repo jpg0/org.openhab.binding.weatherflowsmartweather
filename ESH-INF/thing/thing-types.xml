@@ -27,6 +27,52 @@
         </properties>
     </thing-type>
 
+    <thing-type id="sky">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="hub"/>
+        </supported-bridge-type-refs>
+
+        <label>SmartWeather Sky</label>
+        <description>Wind, Rain and UV sensors</description>
+
+        <channels>
+            <channel id="epoch" typeId="epoch"/>
+            <channel id="illuminance" typeId="illuminance"/>
+            <channel id="uv" typeId="uv"/>
+            <channel id="rain_accumulated" typeId="mm"/>
+            <channel id="wind_lull" typeId="m_s"/>
+            <channel id="wind_avg" typeId="m_s"/>
+            <channel id="wind_gust" typeId="m_s"/>
+            <channel id="wind_direction" typeId="degrees"/>
+            <channel id="solar_radiation" typeId="w_m2"/>
+            <channel id="local_day_rain_accumulation" typeId="mm"/>
+            <channel id="precipitation_type" typeId="precipitation_type"/>
+            <channel id="wind_sample_interval" typeId="seconds"/>
+            <channel id="battery_level" typeId="battery_level"/>
+        </channels>
+
+        <properties>
+            <property name="serial_number"></property>
+        </properties>
+    </thing-type>
+
+
+    <channel-type id="illuminance">
+        <item-type>Number</item-type>
+        <label>Illuminance</label>
+        <description>Illuminance, in Lux</description>
+        <category>Number</category>
+        <state pattern="%.1f Lux" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="uv">
+        <item-type>Number</item-type>
+        <label>UV Index</label>
+        <description>UV Index</description>
+        <category>Number</category>
+        <state pattern="%.1f" readOnly="true"></state>
+    </channel-type>
+
     <channel-type id="temperature">
         <item-type>Number</item-type>
         <label>Temperature</label>

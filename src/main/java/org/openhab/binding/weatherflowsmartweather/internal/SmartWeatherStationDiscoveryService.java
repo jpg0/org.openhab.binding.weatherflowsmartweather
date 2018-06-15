@@ -88,6 +88,12 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
             thingType = WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR;
         }
 
+        if (serial != null && serial.startsWith("SK")) {
+            // we have a SKY sensor.
+            label = "SmartWeather Sky";
+            thingType = WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY;
+        }
+
         // were we able to determine the thing type?
         if (thingType == null) {
             return;

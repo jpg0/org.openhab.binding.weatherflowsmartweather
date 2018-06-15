@@ -52,18 +52,21 @@ public class SmartWeatherUDPListenerServiceImpl implements SmartWeatherUDPListen
         us.stop();
     }
 
+    Gson gson = new GsonBuilder().registerTypeAdapter(SmartWeatherMessage.class, new SmartWeatherDeserializer())
+            .create();
+
     // TODO fix concurrent modification race condition
     private void processMessage(InetAddress source, String data) {
         SmartWeatherMessage message = null;
         // logger.warn("Parsing message data for " + listeners.size() + " listeners.");
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(SmartWeatherMessage.class, new SmartWeatherDeserializer())
-                .create();
         try {
             message = gson.fromJson(data, SmartWeatherMessage.class);
         } catch (Exception e) {
             logger.error("Unable to parse message. ", e);
         }
+
+        if(message == null) return;
 
         logger.debug("Sending message " + message + " for  " + listeners.size() + " listeners.");
         for (SmartWeatherEventListener listener : listeners) {

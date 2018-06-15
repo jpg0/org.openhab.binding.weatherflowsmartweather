@@ -27,8 +27,7 @@ public class SmartWeatherDeserializer implements JsonDeserializer<SmartWeatherMe
             case "obs_air":
                 return gson.fromJson(je, ObservationAirMessage.class);
             case "obs_sky":
-                // TODO model objects
-                return gson.fromJson(je, SmartWeatherMessage.class);
+                return gson.fromJson(je, ObservationSkyMessage.class);
             case "evt_precip":
                 // TODO model objects
                 return gson.fromJson(je, SmartWeatherMessage.class);
@@ -45,8 +44,14 @@ public class SmartWeatherDeserializer implements JsonDeserializer<SmartWeatherMe
                 return gson.fromJson(je, HubStatusMessage.class);
             case "hub_status":
                 return gson.fromJson(je, HubStatusV30Message.class);
+            case "light_debug":
+            case "wind_debug":
+                if(log.isDebugEnabled()) {
+                    log.debug("Received " + messageType + " with content: " + je.toString());
+                }
+                break;
             default:
-                log.error("Received unknown SmartWeather message type: " + messageType);
+                log.error("Received unknown SmartWeather message type: " + messageType + " with content: " + je.toString());
                 break;
         }
         return message;
