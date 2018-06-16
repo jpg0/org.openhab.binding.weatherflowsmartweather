@@ -22,6 +22,5 @@ _To be completed_
 
 ## TODO
 
-- Support Sky sensors
 - Support Strike (and Fast Wind/Rain Start) events
 - Add derived datapoints (feels like, dewpoint, etc) Done, see weathercalulations binding
