@@ -116,7 +116,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
             String[] fields = { CHANNEL_EPOCH, CHANNEL_ILLUMINANCE, CHANNEL_UV, CHANNEL_RAIN_ACCUMULATED,
                     CHANNEL_WIND_LULL, CHANNEL_WIND_AVG, CHANNEL_WIND_GUST,
                     CHANNEL_WIND_DIRECTION, CHANNEL_BATTERY_LEVEL, CHANNEL_REPORT_INTERVAL,
-                    CHANNEL_SOLAR_RADIATION, CHANNEL_LOCAL_DAY_RAIN_ACCUMULATION,
+                        CHANNEL_SOLAR_RADIATION, CHANNEL_LOCAL_DAY_RAIN_ACCUMULATION,
                     CHANNEL_PRECIPITATION_TYPE, CHANNEL_WIND_SAMPLE_INTERVAL };
             int i = 0;
             for (String f : fields) {
@@ -125,6 +125,8 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
                 if (f.equals(CHANNEL_EPOCH)) {
                     type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
                     logger.debug("posting type = " + type);
+                } else if(f.equals(CHANNEL_PRECIPITATION_TYPE)) {
+                    type = new DecimalType(val.intValue());
                 } else {
                     if(val == null)
                         type = new DecimalType(0);

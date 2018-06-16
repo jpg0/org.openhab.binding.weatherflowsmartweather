@@ -114,12 +114,12 @@
         <state pattern="%.1f º" readOnly="true"></state>
     </channel-type>
 
-    <channel-type id="repot_interval">
+    <channel-type id="report_interval">
         <item-type>Number</item-type>
         <label>Report Interval</label>
-        <description>Report Interval, in seconds</description>
+        <description>Report Interval, in minutes</description>
         <category>Number</category>
-        <state pattern="%.1f s" readOnly="true"></state>
+        <state pattern="%.1f minutes" readOnly="true"></state>
     </channel-type>
 
 
@@ -157,7 +157,7 @@
         <label>Wind Sample Interval</label>
         <description>Wind Sample Interval, in seconds</description>
         <category>Number</category>
-        <state pattern="%.1f s" readOnly="true"></state>
+        <state pattern="%.1f seconds" readOnly="true"></state>
     </channel-type>
 
     <channel-type id="temperature">
