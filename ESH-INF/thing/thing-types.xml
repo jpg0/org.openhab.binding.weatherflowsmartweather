@@ -39,16 +39,17 @@
             <channel id="epoch" typeId="epoch"/>
             <channel id="illuminance" typeId="illuminance"/>
             <channel id="uv" typeId="uv"/>
-            <channel id="rain_accumulated" typeId="mm"/>
-            <channel id="wind_lull" typeId="m_s"/>
-            <channel id="wind_avg" typeId="m_s"/>
-            <channel id="wind_gust" typeId="m_s"/>
-            <channel id="wind_direction" typeId="degrees"/>
-            <channel id="solar_radiation" typeId="w_m2"/>
-            <channel id="local_day_rain_accumulation" typeId="mm"/>
-            <channel id="precipitation_type" typeId="precipitation_type"/>
-            <channel id="wind_sample_interval" typeId="seconds"/>
+            <channel id="rain_accumulated" typeId="rain_accumulated"/>
+            <channel id="wind_lull" typeId="wind_lull"/>
+            <channel id="wind_avg" typeId="wind_avg"/>
+            <channel id="wind_gust" typeId="wind_gust"/>
+            <channel id="wind_direction" typeId="wind_direction"/>
             <channel id="battery_level" typeId="battery_level"/>
+            <channel id="report_interval" typeId="report_interval"/>
+            <channel id="solar_radiation" typeId="solar_radiation"/>
+            <channel id="local_day_rain_accumulation" typeId="local_day_rain_accumulation"/>
+            <channel id="precipitation_type" typeId="precipitation_type"/>
+            <channel id="wind_sample_interval" typeId="wind_sample_interval"/>
         </channels>
 
         <properties>
@@ -71,6 +72,92 @@
         <description>UV Index</description>
         <category>Number</category>
         <state pattern="%.1f" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="rain_accumulated">
+        <item-type>Number</item-type>
+        <label>Rain Accumulated</label>
+        <description>Rain Accumulated, in mm</description>
+        <category>Number</category>
+        <state pattern="%.1f mm" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="wind_lull">
+        <item-type>Number</item-type>
+        <label>Wind Lull</label>
+        <description>Wind Lull (minimum 3 second sample), in m/s</description>
+        <category>Number</category>
+        <state pattern="%.1f m/s" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="wind_avg">
+        <item-type>Number</item-type>
+        <label>Wind Avg</label>
+        <description>Wind Avg (average over report interval), in m/s</description>
+        <category>Number</category>
+        <state pattern="%.1f m/s" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="wind_gust">
+        <item-type>Number</item-type>
+        <label>Wind Gust</label>
+        <description>Wind Gust (maximum 3 second sample), in m/s</description>
+        <category>Number</category>
+        <state pattern="%.1f m/s" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="wind_direction">
+        <item-type>Number</item-type>
+        <label>Wind Direction</label>
+        <description>Wind Direction, in degrees</description>
+        <category>Number</category>
+        <state pattern="%.1f º" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="repot_interval">
+        <item-type>Number</item-type>
+        <label>Report Interval</label>
+        <description>Report Interval, in seconds</description>
+        <category>Number</category>
+        <state pattern="%.1f s" readOnly="true"></state>
+    </channel-type>
+
+
+    <channel-type id="solar_radiation">
+        <item-type>Number</item-type>
+        <label>Solar Radiation</label>
+        <description>Solar Radiation, in W/m^2</description>
+        <category>Number</category>
+        <state pattern="%.1f W/m^2" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="local_day_rain_accumulation">
+        <item-type>Number</item-type>
+        <label>Local Day Rain Accumulation</label>
+        <description>Local Day Rain Accumulation, in mm</description>
+        <category>Number</category>
+        <state pattern="%.1f mm" readOnly="true"></state>
+    </channel-type>
+
+    <channel-type id="precipitation_type">
+        <item-type>String</item-type>
+        <label>Precipitation Type</label>
+        <description>Precipitation Type</description>
+        <state readOnly="true">
+            <options>
+                <option value="0">None</option>
+                <option value="1">Rain</option>
+                <option value="2">Hail</option>
+            </options>
+        </state>
+    </channel-type>
+
+    <channel-type id="wind_sample_interval">
+        <item-type>Number</item-type>
+        <label>Wind Sample Interval</label>
+        <description>Wind Sample Interval, in seconds</description>
+        <category>Number</category>
+        <state pattern="%.1f s" readOnly="true"></state>
     </channel-type>
 
     <channel-type id="temperature">

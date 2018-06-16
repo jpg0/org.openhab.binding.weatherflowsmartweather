@@ -52,6 +52,16 @@ public class WeatherFlowSmartWeatherBindingConstants {
     // List of all Sky Channel ids
     public static final String CHANNEL_ILLUMINANCE = "illuminance";
     public static final String CHANNEL_UV = "uv";
+    public static final String CHANNEL_RAIN_ACCUMULATED = "rain_accumulated";
+    public static final String CHANNEL_WIND_LULL = "wind_lull";
+    public static final String CHANNEL_WIND_AVG = "wind_avg";
+    public static final String CHANNEL_WIND_GUST = "wind_gust";
+    public static final String CHANNEL_WIND_DIRECTION = "wind_direction";
+    public static final String CHANNEL_REPORT_INTERVAL = "report_interval";
+    public static final String CHANNEL_SOLAR_RADIATION = "solar_radiation";
+    public static final String CHANNEL_LOCAL_DAY_RAIN_ACCUMULATION = "local_day_rain_accumulation";
+    public static final String CHANNEL_PRECIPITATION_TYPE = "precipitation_type";
+    public static final String CHANNEL_WIND_SAMPLE_INTERVAL = "wind_sample_interval";
 
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES = ImmutableSet.of(THING_TYPE_SMART_WEATHER_HUB,
             THING_TYPE_SMART_WEATHER_AIR, THING_TYPE_SMART_WEATHER_SKY);

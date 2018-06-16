@@ -113,7 +113,11 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
         for (List obs : l) {
             logger.info("parsing observation record: " + obs);
 
-            String[] fields = { CHANNEL_EPOCH, CHANNEL_ILLUMINANCE, CHANNEL_UV, CHANNEL_BATTERY_LEVEL };
+            String[] fields = { CHANNEL_EPOCH, CHANNEL_ILLUMINANCE, CHANNEL_UV, CHANNEL_RAIN_ACCUMULATED,
+                    CHANNEL_WIND_LULL, CHANNEL_WIND_AVG, CHANNEL_WIND_GUST,
+                    CHANNEL_WIND_DIRECTION, CHANNEL_BATTERY_LEVEL, CHANNEL_REPORT_INTERVAL,
+                    CHANNEL_SOLAR_RADIATION, CHANNEL_LOCAL_DAY_RAIN_ACCUMULATION,
+                    CHANNEL_PRECIPITATION_TYPE, CHANNEL_WIND_SAMPLE_INTERVAL };
             int i = 0;
             for (String f : fields) {
                 Double val = (Double) obs.get(i++);
@@ -122,7 +126,10 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
                     type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
                     logger.debug("posting type = " + type);
                 } else {
-                    type = new DecimalType(val);
+                    if(val == null)
+                        type = new DecimalType(0);
+                    else
+                        type = new DecimalType(val);
                 }
                 updateState(new ChannelUID(uid, f), type);
             }
