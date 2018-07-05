@@ -12,6 +12,7 @@
  */
 package org.openhab.binding.weatherflowsmartweather.handler;
 
+import static org.eclipse.smarthome.core.library.unit.MetricPrefix.HECTO;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.*;
 
 import java.net.InetAddress;
@@ -21,6 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
+import org.eclipse.smarthome.core.library.types.QuantityType;
+import org.eclipse.smarthome.core.library.unit.SIUnits;
+import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -36,6 +40,8 @@ import org.openhab.binding.weatherflowsmartweather.model.SmartWeatherMessage;
 import org.openhab.binding.weatherflowsmartweather.model.StationStatusMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.measure.quantity.*;
 
 /**
  * The {@link SmartWeatherAirHandler} is responsible for handling commands, which are
@@ -122,13 +128,35 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
             int i = 0;
             for (String f : fields) {
                 Double val = (Double) obs.get(i++);
-                State type;
-                if (f.equals(CHANNEL_EPOCH)) {
-                    type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
-                    logger.debug("posting type = " + type);
-                } else {
-                    type = new DecimalType(val);
+                State type = null;
+                switch(f) {
+                    case CHANNEL_EPOCH:
+                        type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
+                        break;
+                    case CHANNEL_PRESSURE:
+                        type = new QuantityType<Pressure>(val, HECTO(SIUnits.PASCAL));
+                        break;
+                    case CHANNEL_TEMPERATURE:
+                        type = new QuantityType<Temperature>(val, SIUnits.CELSIUS);
+                        break;
+                    case CHANNEL_HUMIDITY:
+                        type = new QuantityType<Dimensionless>(val, SmartHomeUnits.PERCENT);
+                        break;
+                    case CHANNEL_STRIKE_COUNT:
+                        type = new DecimalType(val);
+                        break;
+                    case CHANNEL_STRIKE_DISTANCE:
+                        type = new QuantityType<Length>(val, SIUnits.METRE.multiply(1000.0));
+                        break;
+                    case CHANNEL_BATTERY_LEVEL:
+                        type = new QuantityType<ElectricPotential>(val, SmartHomeUnits.VOLT);
+                        break;
+                    default:
+                        logger.info("Received unknown field " + f + " with value " + val);
                 }
+
+                logger.debug("posting field = " + f + ", type = " + type);
+
                 updateState(new ChannelUID(uid, f), type);
             }
         }

@@ -12,8 +12,12 @@
  */
 package org.openhab.binding.weatherflowsmartweather.handler;
 
+import org.eclipse.smarthome.core.library.dimension.Intensity;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
+import org.eclipse.smarthome.core.library.types.QuantityType;
+import org.eclipse.smarthome.core.library.unit.SIUnits;
+import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -27,11 +31,13 @@ import org.openhab.binding.weatherflowsmartweather.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.measure.quantity.*;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static org.eclipse.smarthome.core.library.unit.MetricPrefix.MILLI;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.*;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.CHANNEL_EPOCH;
 
@@ -121,18 +127,60 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
             int i = 0;
             for (String f : fields) {
                 Double val = (Double) obs.get(i++);
-                State type;
-                if (f.equals(CHANNEL_EPOCH)) {
-                    type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
-                    logger.debug("posting type = " + type);
-                } else if(f.equals(CHANNEL_PRECIPITATION_TYPE)) {
-                    type = new DecimalType(val.intValue());
-                } else {
-                    if(val == null)
-                        type = new DecimalType(0);
-                    else
-                        type = new DecimalType(val);
+                State type = null;
+
+                if(val == null)
+                    type = new DecimalType(0);
+                else {
+                    switch (f) {
+                        case CHANNEL_EPOCH:
+                            type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
+                            break;
+                        case CHANNEL_ILLUMINANCE:
+                            type = new QuantityType<Illuminance>(val, SmartHomeUnits.LUX);
+                            break;
+                        case CHANNEL_UV:
+                            type = new QuantityType<Dimensionless>(val, SmartHomeUnits.ONE);
+                            break;
+                        case CHANNEL_RAIN_ACCUMULATED:
+                            type = new QuantityType<Length>(val, MILLI(SIUnits.METRE));
+                            break;
+                        case CHANNEL_WIND_LULL:
+                            type = new QuantityType<Speed>(val, SmartHomeUnits.METRE_PER_SECOND);
+                            break;
+                        case CHANNEL_WIND_AVG:
+                            type = new QuantityType<Speed>(val, SmartHomeUnits.METRE_PER_SECOND);
+                            break;
+                        case CHANNEL_WIND_GUST:
+                            type = new QuantityType<Speed>(val, SmartHomeUnits.METRE_PER_SECOND);
+                            break;
+                        case CHANNEL_WIND_DIRECTION:
+                            type = new QuantityType<Angle>(val, SmartHomeUnits.DEGREE_ANGLE);
+                            break;
+                        case CHANNEL_BATTERY_LEVEL:
+                            type = new QuantityType<ElectricPotential>(val, SmartHomeUnits.VOLT);
+                            break;
+                        case CHANNEL_REPORT_INTERVAL:
+                            type = new QuantityType<Time>(val, SmartHomeUnits.SECOND);
+                            break;
+                        case CHANNEL_SOLAR_RADIATION:
+                            type = new QuantityType<Intensity>(val, SmartHomeUnits.IRRADIANCE);
+                            break;
+                        case CHANNEL_LOCAL_DAY_RAIN_ACCUMULATION:
+                            type = new QuantityType<Length>(val, MILLI(SIUnits.METRE));
+                            break;
+                        case CHANNEL_PRECIPITATION_TYPE:
+                            type = new DecimalType(val.intValue());
+                            break;
+                        case CHANNEL_WIND_SAMPLE_INTERVAL:
+                            type = new QuantityType<Time>(val, SmartHomeUnits.SECOND);
+                            break;
+                        default:
+                            logger.info("Received unknown field " + f + " with value " + val);
+                    }
                 }
+                logger.debug("posting type = " + type);
+
                 updateState(new ChannelUID(uid, f), type);
             }
         }
