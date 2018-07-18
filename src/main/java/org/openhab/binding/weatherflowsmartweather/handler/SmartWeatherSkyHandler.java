@@ -16,6 +16,7 @@ import org.eclipse.smarthome.core.library.dimension.Intensity;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.QuantityType;
+import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.library.unit.SIUnits;
 import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -170,7 +171,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
                             type = new QuantityType<Length>(val, MILLI(SIUnits.METRE));
                             break;
                         case CHANNEL_PRECIPITATION_TYPE:
-                            type = new DecimalType(val.intValue());
+                            type = new StringType("" + val.intValue());
                             break;
                         case CHANNEL_WIND_SAMPLE_INTERVAL:
                             type = new QuantityType<Time>(val, SmartHomeUnits.SECOND);
