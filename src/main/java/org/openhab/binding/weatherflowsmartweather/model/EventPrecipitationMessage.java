@@ -2,7 +2,7 @@ package org.openhab.binding.weatherflowsmartweather.model;
 
 import java.util.Arrays;
 
-public class EventStrikeMessage extends SmartWeatherMessage {
+public class EventPrecipitationMessage extends SmartWeatherMessage {
     private int firmware_revision;
     private String hub_sn;
     private int device_id;
@@ -32,9 +32,7 @@ public class EventStrikeMessage extends SmartWeatherMessage {
         this.device_id = device_id;
     }
 
-    public Object[] getEvt() {
-        return evt;
-    }
+    public Object[] getEvt() { return evt; }
 
     public void setEvt(Object[] evt) {
         this.evt = evt;
@@ -42,7 +40,7 @@ public class EventStrikeMessage extends SmartWeatherMessage {
 
     @Override
     public String toString() {
-        return "EventStrikeMessage [firmware_revision=" + firmware_revision + ", hub_sn=" + hub_sn + ", device_id="
+        return "EventPrecipitationMessage [firmware_revision=" + firmware_revision + ", hub_sn=" + hub_sn + ", device_id="
                 + device_id + ", evt=" + Arrays.toString(evt) + ", serial_number=" + serial_number + "]";
     }
 

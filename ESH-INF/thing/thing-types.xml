@@ -20,6 +20,8 @@
             <channel id="strike_count" typeId="count"/>
             <channel id="strike_distance" typeId="distance"/>
             <channel id="battery_level" typeId="battery_level"/>
+     <!--       <channel id="strike_events" typeId="strike_events"/>
+     -->
         </channels>
 
         <properties>
@@ -50,6 +52,9 @@
             <channel id="local_day_rain_accumulation" typeId="local_day_rain_accumulation"/>
             <channel id="precipitation_type" typeId="precipitation_type"/>
             <channel id="wind_sample_interval" typeId="wind_sample_interval"/>
+        <!--    <channel id="rapid_wind_events" typeId="rapid_wind_events"/>
+            <channel id="precipitation_start_events" typeId="precipitation_start_events"/>
+        -->
         </channels>
 
         <properties>
@@ -114,7 +119,7 @@
         <state pattern="%.1f %unit%" readOnly="true"></state>
     </channel-type>
 
-    <channel-type id="report_interval">
+    <channel-type id="report_interval" advanced="true">
         <item-type>Number:Time</item-type>
         <label>Report Interval</label>
         <description>Report Interval</description>
@@ -152,7 +157,7 @@
         </state>
     </channel-type>
 
-    <channel-type id="wind_sample_interval">
+    <channel-type id="wind_sample_interval" advanced="true">
         <item-type>Number:Time</item-type>
         <label>Wind Sample Interval</label>
         <description>Wind Sample Interval</description>
@@ -209,13 +214,38 @@
         <state readOnly="true"></state>
     </channel-type>
     
-      <channel-type id="battery_level">
+      <channel-type id="battery_level" advanced="true">
         <item-type>Number:ElectricPotential</item-type>
         <label>Battery Level</label>
         <description>Sensor Battery Level</description>
         <category>Battery</category>
         <state pattern="%.1f %unit%" readOnly="true"></state>
     </channel-type>
-    
+
+<!--
+    <channel-type id="strike_events" advanced="true">
+	    <kind>trigger</kind>
+        <event/>
+        <label>Lightning Strikes</label>
+        <description>Lightning Strike Event Channel</description>
+        <category>Sensor</category>
+    </channel-type>
+
+    <channel-type id="rapid_wind_events" advanced="true">
+        <kind>trigger</kind>
+        <event/>
+        <label>Rapid Wind</label>
+        <description>Rapid Wind Event Channel</description>
+        <category>Sensor</category>
+    </channel-type>
+
+    <channel-type id="precipitation_start_events" advanced="true">
+        <kind>trigger</kind>
+        <event/>
+        <label>Precipitation</label>
+        <description>Precipitation Start Event Channel</description>
+        <category>Sensor</category>
+    </channel-type>
+    -->
 
 </thing:thing-descriptions>

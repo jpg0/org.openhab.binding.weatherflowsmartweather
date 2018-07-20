@@ -12,11 +12,9 @@
  */
 package org.openhab.binding.weatherflowsmartweather.handler;
 
+import com.google.gson.Gson;
 import org.eclipse.smarthome.core.library.dimension.Intensity;
-import org.eclipse.smarthome.core.library.types.DateTimeType;
-import org.eclipse.smarthome.core.library.types.DecimalType;
-import org.eclipse.smarthome.core.library.types.QuantityType;
-import org.eclipse.smarthome.core.library.types.StringType;
+import org.eclipse.smarthome.core.library.types.*;
 import org.eclipse.smarthome.core.library.unit.SIUnits;
 import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -54,6 +52,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
     private final Logger logger = LoggerFactory.getLogger(SmartWeatherSkyHandler.class);
 
     private ScheduledFuture<?> messageTimeout;
+    private Gson gson = new Gson();
 
     public SmartWeatherSkyHandler(Thing thing) {
         super(thing);
@@ -87,7 +86,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
 
     @Override
     public void eventReceived(InetAddress source, SmartWeatherMessage data) {
-        logger.info("SkyHandler received message " + data);
+        logger.debug("SkyHandler received message " + data);
         if (data instanceof StationStatusMessage || data instanceof DeviceStatusMessage) {
             logger.debug("got status message message: " + data);
 
@@ -107,10 +106,22 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
             // TODO update station status fields
         } else if (data instanceof ObservationSkyMessage) {
             handleObservationMessage((ObservationSkyMessage) data);
-        }  else {
+        }  else if (data instanceof EventRapidWindMessage) {
+         //   handleEventRapidWindMessage((EventRapidWindMessage) data);
+        }
+        else {
             logger.warn("not handling message: " + data);
         }
     }
+
+/*
+    private void handleEventRapidWindMessage(EventRapidWindMessage data) {
+        ThingUID uid = getThing().getUID();
+        logger.info("handling rapid wind record: " + data);
+
+        updateState(new ChannelUID(uid, CHANNEL_RAPID_WIND_EVENTS), new RapidWindType(data));
+    }
+*/
 
     public void handleObservationMessage(ObservationSkyMessage data) {
         // logger.warn("Received observation message: " + data);

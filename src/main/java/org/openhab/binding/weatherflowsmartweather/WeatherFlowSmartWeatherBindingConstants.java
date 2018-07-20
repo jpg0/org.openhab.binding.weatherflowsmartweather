@@ -63,8 +63,15 @@ public class WeatherFlowSmartWeatherBindingConstants {
     public static final String CHANNEL_PRECIPITATION_TYPE = "precipitation_type";
     public static final String CHANNEL_WIND_SAMPLE_INTERVAL = "wind_sample_interval";
 
+    // Event Channel ids
+    public static final String CHANNEL_STRIKE_EVENTS = "strike_events";
+    public static final String CHANNEL_RAPID_WIND_EVENTS = "rapid_wind_events";
+    public static final String CHANNEL_PRECIPITATION_START_EVENTS = "precipitation_start_events";
+
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES = ImmutableSet.of(THING_TYPE_SMART_WEATHER_HUB,
             THING_TYPE_SMART_WEATHER_AIR, THING_TYPE_SMART_WEATHER_SKY);
 
     public static final String PROPERTY_SERIAL_NUMBER = "serial_number";
+
+    public static final String MIME_TYPE_JSON = "application/json";
 }

@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import com.google.gson.Gson;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.QuantityType;
+import org.eclipse.smarthome.core.library.types.RawType;
 import org.eclipse.smarthome.core.library.unit.SIUnits;
 import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -34,10 +36,7 @@ import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.State;
 import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
-import org.openhab.binding.weatherflowsmartweather.model.DeviceStatusMessage;
-import org.openhab.binding.weatherflowsmartweather.model.ObservationAirMessage;
-import org.openhab.binding.weatherflowsmartweather.model.SmartWeatherMessage;
-import org.openhab.binding.weatherflowsmartweather.model.StationStatusMessage;
+import org.openhab.binding.weatherflowsmartweather.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +53,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
 
     private final Logger logger = LoggerFactory.getLogger(SmartWeatherAirHandler.class);
 
+    private Gson gson = new Gson();
     private ScheduledFuture<?> messageTimeout;
 
     public SmartWeatherAirHandler(Thing thing) {
@@ -110,10 +110,20 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
             // TODO update station status fields
         } else if (data instanceof ObservationAirMessage) {
             handleObservationMessage((ObservationAirMessage) data);
-        }  else {
+        }  else if (data instanceof EventStrikeMessage) {
+//            handleEventStrikeMessage((EventStrikeMessage) data);
+
+        } else
+        {
             logger.warn("not handling message: " + data);
         }
     }
+/*
+    private void handleEventStrikeMessage(EventStrikeMessage data) {
+        ThingUID uid = getThing().getUID();
+        String s = gson.toJson(data);
+        updateState(new ChannelUID(uid, CHANNEL_STRIKE_EVENTS), new RawType(s.getBytes(), MIME_TYPE_JSON));
+    }*/
 
     public void handleObservationMessage(ObservationAirMessage data) {
         // logger.warn("Received observation message: " + data);
@@ -157,7 +167,8 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
 
                 logger.debug("posting field = " + f + ", type = " + type);
 
-                updateState(new ChannelUID(uid, f), type);
+
+
             }
         }
     }

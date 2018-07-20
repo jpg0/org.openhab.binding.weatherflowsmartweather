@@ -29,13 +29,11 @@ public class SmartWeatherDeserializer implements JsonDeserializer<SmartWeatherMe
             case "obs_sky":
                 return gson.fromJson(je, ObservationSkyMessage.class);
             case "evt_precip":
-                // TODO model objects
-                return gson.fromJson(je, SmartWeatherMessage.class);
+                return gson.fromJson(je, EventPrecipitationMessage.class);
             case "evt_strike":
                 return gson.fromJson(je, EventStrikeMessage.class);
             case "rapid_wind":
-                // TODO model objects
-                return gson.fromJson(je, SmartWeatherMessage.class);
+                return gson.fromJson(je, EventRapidWindMessage.class);
             case "station_status":
                 return gson.fromJson(je, StationStatusMessage.class);
             case "device_status":

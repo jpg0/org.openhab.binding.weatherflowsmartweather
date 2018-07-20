@@ -97,7 +97,21 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
                 }
             }
         } else if (serial != null) { // TODO need a better approach to this
-            if (data instanceof ObservationAirMessage) {
+            if (data instanceof EventRapidWindMessage) {
+                EventRapidWindMessage message = (EventRapidWindMessage) data;
+                String serialNumber = message.getSerial_number();
+                ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY,
+                        getThing().getUID(), serialNumber);
+
+                Thing t = this.getThingByUID(thingUid);
+                if (t == null) {
+                    logger.warn("rapid wind observation but not for us.");
+                    return;
+                } // not our hub and sensor combo.
+                SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
+                handler.eventReceived(source, message);
+            }
+            else if (data instanceof ObservationAirMessage) {
                 ObservationAirMessage message = (ObservationAirMessage) data;
                 String serialNumber = message.getSerial_number();
                 ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR,
