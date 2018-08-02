@@ -136,14 +136,6 @@
         <state pattern="%.1f %unit%" readOnly="true"></state>
     </channel-type>
 
-    <channel-type id="local_day_rain_accumulation">
-        <item-type>Number:Length</item-type>
-        <label>Local Day Rain Accumulation</label>
-        <description>Local Day Rain Accumulation</description>
-        <category>Number</category>
-        <state pattern="%.1f %unit%" readOnly="true"></state>
-    </channel-type>
-
     <channel-type id="precipitation_type">
         <item-type>String</item-type>
         <label>Precipitation Type</label>

@@ -18,7 +18,6 @@
         <properties>
             <property name="vendor">WeatherFlow</property>
             <property name="serial_number"></property>
-
         </properties>
       
         </bridge-type>
@@ -28,7 +27,7 @@
      <channel-type id="rssi">
         <item-type>Number</item-type>
         <label>RSSI</label>
-        <description>Wireless RSSI</description>
+        <description>Wireless RSSI (Signal Strength)</description>
         <category>Network</category>
         <state readOnly="true"/>
       </channel-type>
