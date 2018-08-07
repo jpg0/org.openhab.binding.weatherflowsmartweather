@@ -1,0 +1,6 @@
+<div class="btnwidget" oc-lazy-load="['/habpanel/app/widgets/rapidWind.js']">
+  <div ng-controller="RapidWindCtrl" class="flex">
+    <button rapid-wind class="btn2" style="outline: none; background-color: transparent; border: 0px; flex: 1 1 auto">
+            <div class="" style="font-size: 4.5vw">{{epoch}}</div>
+  </button>
+</div>
