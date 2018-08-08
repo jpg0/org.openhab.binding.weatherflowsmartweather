@@ -29,7 +29,11 @@ Import-Package:
  org.osgi.framework;version="1.8.0",
  org.slf4j,
  javax.measure,
- org.eclipse.smarthome.core.library
+ org.eclipse.smarthome.core.library,
+ org.eclipse.smarthome.core.events,
+ org.eclipse.smarthome.core.items,
+ org.eclipse.smarthome.core.items.events,
+ org.joda.time.format
 Service-Component: OSGI-INF/*.xml
 Require-Bundle: org.eclipse.smarthome.config.discovery,
  com.google.guava

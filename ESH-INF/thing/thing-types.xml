@@ -194,50 +194,22 @@
         <label>Lightning Strike Distance</label>
         <description>Average Lightning Strike Distance</description>
         <category>Energy</category>
-        <state pattern="%.1f %unit%" readOnly="true"></state>
+        <state pattern="%.1f %unit%" readOnly="true"/>
     </channel-type>
-    
-        
-      <channel-type id="epoch">
+
+    <channel-type id="epoch">
         <item-type>DateTime</item-type>
         <label>Report Epoch</label>
         <description>UTC Time of observation, in seconds since the epoch.</description>
         <category>Time</category>
-        <state readOnly="true"></state>
+        <state readOnly="true"/>
     </channel-type>
-    
-      <channel-type id="battery_level" advanced="true">
+
+    <channel-type id="battery_level" advanced="true">
         <item-type>Number:ElectricPotential</item-type>
         <label>Battery Level</label>
         <description>Sensor Battery Level</description>
         <category>Battery</category>
-        <state pattern="%.1f %unit%" readOnly="true"></state>
+        <state pattern="%.1f %unit%" readOnly="true"/>
     </channel-type>
-
-<!--
-    <channel-type id="strike_events" advanced="true">
-	    <kind>trigger</kind>
-        <event/>
-        <label>Lightning Strikes</label>
-        <description>Lightning Strike Event Channel</description>
-        <category>Sensor</category>
-    </channel-type>
-
-    <channel-type id="rapid_wind_events" advanced="true">
-        <kind>trigger</kind>
-        <event/>
-        <label>Rapid Wind</label>
-        <description>Rapid Wind Event Channel</description>
-        <category>Sensor</category>
-    </channel-type>
-
-    <channel-type id="precipitation_start_events" advanced="true">
-        <kind>trigger</kind>
-        <event/>
-        <label>Precipitation</label>
-        <description>Precipitation Start Event Channel</description>
-        <category>Sensor</category>
-    </channel-type>
-    -->
-
 </thing:thing-descriptions>
