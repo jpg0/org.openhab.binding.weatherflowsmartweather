@@ -166,9 +166,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
                 }
 
                 logger.debug("posting field = " + f + ", type = " + type);
-
-
-
+                this.updateState(new ChannelUID(this.getThing().getUID(), f), type);
             }
         }
     }

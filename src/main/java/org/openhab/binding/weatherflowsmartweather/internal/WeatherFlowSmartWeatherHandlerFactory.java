@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.smarthome.config.discovery.DiscoveryService;
+import org.eclipse.smarthome.core.events.EventPublisher;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
@@ -26,6 +27,8 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
+import org.openhab.binding.weatherflowsmartweather.event.RapidWindEvent;
+import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactory;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherAirHandler;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherHubHandler;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherSkyHandler;
@@ -41,7 +44,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author William Welliver - Initial contribution
  */
-@Component(service = ThingHandlerFactory.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
+//@Component(service = ThingHandlerFactory.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
 public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFactory {
 
     protected static final Logger logger = LoggerFactory.getLogger(WeatherFlowSmartWeatherHandlerFactory.class);
@@ -50,15 +53,32 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
     private Map<ThingUID, ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
 
     SmartWeatherUDPListenerService udpListener;
+    private RapidWindEventFactory rapidWindEventFactory;
+    private EventPublisher eventPublisher;
 
-    @Reference()
-    protected void bindUdpListener(SmartWeatherUDPListenerService service) {
+   // @Reference()
+    protected void setUdpListener(SmartWeatherUDPListenerService service) {
         udpListener = service;
     };
 
-    protected void unbindUdpListener(SmartWeatherUDPListenerService service) {
+    protected void unsetUdpListener(SmartWeatherUDPListenerService service) {
         udpListener = null;
     };
+
+    //@Reference()
+    protected void setRapidWindEventFactory(RapidWindEventFactory factory) { rapidWindEventFactory = factory; }
+
+    protected void unsetRapidWindEventFactory(RapidWindEventFactory factory) { rapidWindEventFactory = null; }
+
+   // @Reference()
+    protected void setEventPublisher(EventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
+
+    protected void unsetEventPublisher(EventPublisher eventPublisher) {
+        this.eventPublisher = null;
+    }
+
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
@@ -80,7 +100,7 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
         }
 
         else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY)) {
-            return new SmartWeatherSkyHandler(thing);
+            return new SmartWeatherSkyHandler(thing, rapidWindEventFactory, eventPublisher);
         }
 
         else {

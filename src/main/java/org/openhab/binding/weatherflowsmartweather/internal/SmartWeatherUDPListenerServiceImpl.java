@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-@Component(service = SmartWeatherUDPListenerService.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
+//@Component(service = SmartWeatherUDPListenerService.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
 public class SmartWeatherUDPListenerServiceImpl implements SmartWeatherUDPListenerService {
 
     Logger logger = LoggerFactory.getLogger(SmartWeatherUDPListenerServiceImpl.class);

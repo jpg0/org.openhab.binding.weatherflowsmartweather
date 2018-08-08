@@ -21,7 +21,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(service = DiscoveryService.class, immediate = true, configurationPid = "binding.weatherflowsmartweather", name = "org.openhab.binding.weatherflowsmartweather.discovery.hub")
+//@Component(service = DiscoveryService.class, immediate = true, configurationPid = "binding.weatherflowsmartweather", name = "org.openhab.binding.weatherflowsmartweather.discovery.hub")
 public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
         implements ExtendedDiscoveryService, SmartWeatherEventListener {
 
@@ -101,7 +101,7 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
 
     @Override
     public void setDiscoveryServiceCallback(DiscoveryServiceCallback discoveryServiceCallback) {
-        logger.warn("setDiscoveryServiceCallback()");
+       // logger.warn("setDiscoveryServiceCallback()");
         this.discoveryServiceCallback = discoveryServiceCallback;
     }
 

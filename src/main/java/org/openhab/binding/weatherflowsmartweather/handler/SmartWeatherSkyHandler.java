@@ -13,6 +13,8 @@
 package org.openhab.binding.weatherflowsmartweather.handler;
 
 import com.google.gson.Gson;
+import org.eclipse.smarthome.core.events.Event;
+import org.eclipse.smarthome.core.events.EventPublisher;
 import org.eclipse.smarthome.core.library.dimension.Intensity;
 import org.eclipse.smarthome.core.library.types.*;
 import org.eclipse.smarthome.core.library.unit.SIUnits;
@@ -26,6 +28,8 @@ import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.State;
 import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
+import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactory;
+import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactoryImpl;
 import org.openhab.binding.weatherflowsmartweather.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +57,13 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
 
     private ScheduledFuture<?> messageTimeout;
     private Gson gson = new Gson();
+    private RapidWindEventFactoryImpl rapidWindEventFactory;
+    private EventPublisher eventPublisher;
 
-    public SmartWeatherSkyHandler(Thing thing) {
+    public SmartWeatherSkyHandler(Thing thing, RapidWindEventFactory rapidWindEventFactory, EventPublisher eventPublisher) {
         super(thing);
+        this.rapidWindEventFactory = new RapidWindEventFactoryImpl();
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -86,7 +94,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
 
     @Override
     public void eventReceived(InetAddress source, SmartWeatherMessage data) {
-        logger.debug("SkyHandler received message " + data);
+        logger.info("SkyHandler received message " + data);
         if (data instanceof StationStatusMessage || data instanceof DeviceStatusMessage) {
             logger.debug("got status message message: " + data);
 
@@ -107,21 +115,23 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
         } else if (data instanceof ObservationSkyMessage) {
             handleObservationMessage((ObservationSkyMessage) data);
         }  else if (data instanceof EventRapidWindMessage) {
-         //   handleEventRapidWindMessage((EventRapidWindMessage) data);
+            logger.info("Received Rapid Wind Message.");
+            handleEventRapidWindMessage((EventRapidWindMessage) data);
         }
         else {
             logger.warn("not handling message: " + data);
         }
     }
 
-/*
+
     private void handleEventRapidWindMessage(EventRapidWindMessage data) {
         ThingUID uid = getThing().getUID();
-        logger.info("handling rapid wind record: " + data);
-
-        updateState(new ChannelUID(uid, CHANNEL_RAPID_WIND_EVENTS), new RapidWindType(data));
+        RapidWindData rapidWindData = new RapidWindData(getThing(), data);
+        logger.info("handling rapid wind record: " + rapidWindData);
+        Event event = rapidWindEventFactory.createRapidWindEvent(rapidWindData);
+        logger.info("publisher: " + eventPublisher + ", event: " + event);
+        eventPublisher.post(event);
     }
-*/
 
     public void handleObservationMessage(ObservationSkyMessage data) {
         // logger.warn("Received observation message: " + data);
