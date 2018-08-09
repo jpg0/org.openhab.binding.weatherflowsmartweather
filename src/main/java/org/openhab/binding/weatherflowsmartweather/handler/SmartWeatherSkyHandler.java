@@ -94,7 +94,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
 
     @Override
     public void eventReceived(InetAddress source, SmartWeatherMessage data) {
-        logger.info("SkyHandler received message " + data);
+        logger.debug("SkyHandler received message " + data);
         if (data instanceof StationStatusMessage || data instanceof DeviceStatusMessage) {
             logger.debug("got status message message: " + data);
 
@@ -115,7 +115,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
         } else if (data instanceof ObservationSkyMessage) {
             handleObservationMessage((ObservationSkyMessage) data);
         }  else if (data instanceof EventRapidWindMessage) {
-            logger.info("Received Rapid Wind Message.");
+            logger.debug("Received Rapid Wind Message.");
             handleEventRapidWindMessage((EventRapidWindMessage) data);
         }
         else {
@@ -127,9 +127,9 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
     private void handleEventRapidWindMessage(EventRapidWindMessage data) {
         ThingUID uid = getThing().getUID();
         RapidWindData rapidWindData = new RapidWindData(getThing(), data);
-        logger.info("handling rapid wind record: " + rapidWindData);
+        logger.debug("handling rapid wind record: " + rapidWindData);
         Event event = rapidWindEventFactory.createRapidWindEvent(rapidWindData);
-        logger.info("publisher: " + eventPublisher + ", event: " + event);
+        logger.debug("publisher: " + eventPublisher + ", event: " + event);
         eventPublisher.post(event);
     }
 
@@ -139,7 +139,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
         ThingUID uid = getThing().getUID();
 
         for (List obs : l) {
-            logger.info("parsing observation record: " + obs);
+            logger.debug("parsing observation record: " + obs);
 
             String[] fields = { CHANNEL_EPOCH, CHANNEL_ILLUMINANCE, CHANNEL_UV, CHANNEL_RAIN_ACCUMULATED,
                     CHANNEL_WIND_LULL, CHANNEL_WIND_AVG, CHANNEL_WIND_GUST,

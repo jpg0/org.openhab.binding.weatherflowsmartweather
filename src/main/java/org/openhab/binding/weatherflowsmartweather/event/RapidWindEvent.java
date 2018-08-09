@@ -10,7 +10,7 @@ public class RapidWindEvent extends AbstractEvent {
     private final RapidWindData rapidWindData;
 
     RapidWindEvent(String topic, String payload, RapidWindData rapidWindData) {
-        super(topic, payload, null);
+        super(topic, payload, rapidWindData.getThingUID());
         this.rapidWindData = rapidWindData;
     }
 

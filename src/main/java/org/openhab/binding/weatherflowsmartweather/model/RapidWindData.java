@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.measure.quantity.Angle;
 import javax.measure.quantity.Speed;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class RapidWindData {
     private String serialNumber;
 
     private DateTime epoch;
-   // private final double windDirection;
-//    private final QuantityType<Speed> windSpeed;
+    private final QuantityType<Angle> windDirection;
+    private final QuantityType<Speed> windSpeed;
 
 //    private Logger log = LoggerFactory.getLogger(RapidWindData.class);
 
@@ -33,8 +34,8 @@ public class RapidWindData {
 
         epoch = new DateTime((((Double) ob.get(0)).intValue() * 1000L));
 
- //       windSpeed = new QuantityType<Speed>((Double) ob.get(1), SmartHomeUnits.METRE_PER_SECOND);
- //       windDirection = new QuantityType<Angle>((Double) ob.get(2), SmartHomeUnits.DEGREE_ANGLE);
+        windSpeed = new QuantityType<Speed>((Double) ob.get(1), SmartHomeUnits.METRE_PER_SECOND);
+        windDirection = new QuantityType<Angle>((Double) ob.get(2), SmartHomeUnits.DEGREE_ANGLE);
     }
 
     public String getBridgeUID() {
@@ -56,23 +57,23 @@ public class RapidWindData {
     public DateTime getEpoch() { return epoch; }
 
 
-//
-//    public QuantityType<Angle> getWindDirection() {
-//        return windDirection;
-//    }
 
- /*   public QuantityType<Speed> getWindSpeed() {
+    public QuantityType<Angle> getWindDirection() {
+        return windDirection;
+    }
+
+    public QuantityType<Speed> getWindSpeed() {
         return windSpeed;
     }
-*/
+
     @Override
     public String toString() {
         return "RapidWindData{" +
                 "bridgeUID=" + bridgeUID +
                 ", thingUID=" + thingUID +
                 ", epoch=" + epoch +
-   //             ", windDirection=" + windDirection +
-  //              ", windSpeed=" + windSpeed +
+                ", windDirection=" + windDirection +
+                ", windSpeed=" + windSpeed +
                 '}';
     }
 }

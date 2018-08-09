@@ -1,0 +1,27 @@
+{  
+   "triggers":[  
+      {  
+         "uid":"RapidWindTrigger",
+         "label":"when a rapid wind event happens",
+         "description":"Triggers the Rule on Rapid Wind Event",
+         "configDescriptions":[
+            {  
+               "name":"skyThingUid",
+               "type":"TEXT",
+               "context":"thing",
+               "label":"Sky Thing",
+               "description":"The WeatherFlow Sky device to use as the source for this trigger.",
+               "required":true
+            }
+         ],
+         "outputs":[  
+            {  
+               "name":"outputValue",
+               "type":"org.openhab.binding.weatherflowsmartweather.model.RapidWindData",
+               "label":"Output value",
+               "description":"Output value"
+            }
+         ]
+      }
+   ]
+}

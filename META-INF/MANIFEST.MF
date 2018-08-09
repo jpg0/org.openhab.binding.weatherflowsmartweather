@@ -33,7 +33,10 @@ Import-Package:
  org.eclipse.smarthome.core.events,
  org.eclipse.smarthome.core.items,
  org.eclipse.smarthome.core.items.events,
- org.joda.time.format
+ org.joda.time.format,
+ org.eclipse.smarthome.automation,
+ org.osgi.service.event,
+ org.eclipse.smarthome.automation.handler
 Service-Component: OSGI-INF/*.xml
 Require-Bundle: org.eclipse.smarthome.config.discovery,
  com.google.guava

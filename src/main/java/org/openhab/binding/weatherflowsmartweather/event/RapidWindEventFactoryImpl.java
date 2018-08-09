@@ -24,17 +24,15 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
 
     public static RapidWindEvent createRapidWindEvent(RapidWindData rapid_wind) {
         String topic = RapidWindEventFactoryImpl.buildTopic(RapidWindEventFactoryImpl.RAPID_WIND_EVENT_TOPIC, rapid_wind.getThingUID());
-        log.warn("Topic: " + topic);
+        log.debug("Topic: " + topic);
         String payload = null;
 
         try {
             payload = mySerializePayload(rapid_wind);
         } catch (Throwable e) {
             log.error("Error serializing payload.", e);
-        } finally {
-            log.info("hrmmmm " + payload);
         }
-        log.warn("Payload: " + payload);
+        log.debug("Payload: " + payload);
         return new RapidWindEvent(topic, payload, rapid_wind);
     }
 
@@ -70,9 +68,9 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
                 .registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {
                     @Override
                     public JsonElement serialize(DateTime json, Type typeOfSrc, JsonSerializationContext context) {
-                        log.warn("Serializing " + json);
+                        log.debug("Serializing " + json);
                         JsonPrimitive p = new JsonPrimitive(ISODateTimeFormat.dateTime().print(json));
-                        log.warn("Serialized to " + p);
+                        log.debug("Serialized to " + p);
                         return p;
                     }
                 })
@@ -83,22 +81,25 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
                         return dt;
                     }
                 })
-//                .registerTypeAdapter(QuantityType.class, new JsonSerializer<QuantityType>() {
-//                    @Override
-//                    public JsonElement serialize(QuantityType json, Type typeOfSrc, JsonSerializationContext context) {
-//                        log.warn("Serializing " + json);
-//                        JsonPrimitive p = new JsonPrimitive(ISODateTimeFormat.dateTime().print(json));
-//                        log.warn("Serialized to " + p);
-//                        return p;
-//                    }
-//                })
-//                .registerTypeAdapter(QuantityType.class, new JsonDeserializer<QuantityType>() {
-//                    @Override
-//                    public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-//                        QuantityType qt = new QuantityType();
-//                        return dt;
-//                    }
-//                })
+                .registerTypeAdapter(QuantityType.class, new JsonSerializer<QuantityType>() {
+                    @Override
+                    public JsonElement serialize(QuantityType quantityType, Type typeOfSrc, JsonSerializationContext context) {
+                        log.debug("Serializing " + quantityType);
+                        JsonPrimitive p = new JsonPrimitive(quantityType.toFullString());
+                        log.debug("Serialized to " + p);
+                        return p;
+                    }
+                })
+                .registerTypeAdapter(QuantityType.class, new JsonDeserializer<QuantityType>() {
+                    @Override
+                    public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                        log.debug("Deserializing " + json.getAsString());
+                        QuantityType qt = new QuantityType(json.getAsString());
+                        log.debug("Deserialized to " + qt);
+
+                        return qt;
+                    }
+                })
                 .create();
 
 return gson;
