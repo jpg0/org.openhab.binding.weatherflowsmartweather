@@ -24,8 +24,6 @@ import org.eclipse.smarthome.automation.handler.ModuleHandler;
 import org.eclipse.smarthome.automation.handler.ModuleHandlerFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,8 +102,7 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
      *
      * @param bundleContext - the {@link ComponentContext} of the HandlerFactory component.
      */
-    @Activate
-    protected void activate(BundleContext bundleContext) {
+    public void activate(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
         LOGGER.warn("activate()");
     }
@@ -113,9 +110,8 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
     /**
      * This method is called when a service that is required from this factory becomes unavailable.
      */
-    @Deactivate
     @Override
-    protected void deactivate() {
+    public void deactivate() {
         super.deactivate();
     }
 }
