@@ -42,6 +42,7 @@ public class SmartWeatherDeserializer implements JsonDeserializer<SmartWeatherMe
                 return gson.fromJson(je, HubStatusMessage.class);
             case "hub_status":
                 return gson.fromJson(je, HubStatusV30Message.class);
+            case "calibration":
             case "light_debug":
             case "wind_debug":
                 if(log.isDebugEnabled()) {
