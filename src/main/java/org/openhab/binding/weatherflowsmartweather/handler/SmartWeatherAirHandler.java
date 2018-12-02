@@ -131,7 +131,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
         ThingUID uid = getThing().getUID();
 
         for (List obs : l) {
-            logger.info("parsing observation record: " + obs);
+   //         logger.info("parsing observation record: " + obs);
 
             String[] fields = { CHANNEL_EPOCH, CHANNEL_PRESSURE, CHANNEL_TEMPERATURE, CHANNEL_HUMIDITY,
                     CHANNEL_STRIKE_COUNT, CHANNEL_STRIKE_DISTANCE, CHANNEL_BATTERY_LEVEL };
@@ -165,11 +165,14 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
                         logger.info("Received unknown field " + f + " with value " + val);
                 }
 
-                logger.debug("posting field = " + f + ", type = " + type);
+     //           logger.warn("posting field = " + f + ", type = " + type.getClass() + ", value = " + type);
+     //           logger.warn("thing handler callback: " + this.getCallback());
                 this.updateState(new ChannelUID(this.getThing().getUID(), f), type);
             }
         }
     }
+
+
 
     private void goOnline() {
         this.updateStatus(ThingStatus.ONLINE);

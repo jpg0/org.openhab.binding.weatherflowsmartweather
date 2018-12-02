@@ -2,13 +2,13 @@ package org.openhab.binding.weatherflowsmartweather.automation;
 
 import org.eclipse.smarthome.automation.Trigger;
 import org.eclipse.smarthome.automation.handler.BaseModuleHandler;
-import org.eclipse.smarthome.automation.handler.TriggerHandlerCallback;
 import org.eclipse.smarthome.automation.handler.TriggerHandler;
+import org.eclipse.smarthome.automation.handler.TriggerHandlerCallback;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.core.events.EventFilter;
 import org.eclipse.smarthome.core.events.EventSubscriber;
-import org.openhab.binding.weatherflowsmartweather.event.RapidWindEvent;
-import org.openhab.binding.weatherflowsmartweather.model.RapidWindData;
+import org.openhab.binding.weatherflowsmartweather.event.PrecipitationStartedEvent;
+import org.openhab.binding.weatherflowsmartweather.model.PrecipitationStartedData;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.event.Event;
@@ -19,21 +19,21 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class RapidWindTrigger extends BaseModuleHandler<Trigger> implements TriggerHandler, EventSubscriber,
+public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> implements TriggerHandler, EventSubscriber,
         EventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(RapidWindTrigger.class);
+    private static final Logger log = LoggerFactory.getLogger(PrecipitationStartedTrigger.class);
     /**
      * This constant is used by {@link HandlerFactory} to create a correct handler instance. It must be the same as in
      * JSON definition of the module type.
      */
-    public static final String UID = "RapidWindTrigger";
-    public static final String EVENT_TOPIC = "smarthome/things/{uid}/rapidwind";
+    public static final String UID = "PrecipitationStartedTrigger";
+    public static final String EVENT_TOPIC = "smarthome/things/{uid}/precipitationstarted";
 
     /**
      * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s {@link Configuration}.
      */
-    private static final String SKY_UID = "skyThingUid";
+    private static final String AIR_UID = "skyThingUid";
 
     /**
      * This constant defines the output name of this {@link Trigger} handler.
@@ -59,15 +59,15 @@ public class RapidWindTrigger extends BaseModuleHandler<Trigger> implements Trig
     private TriggerHandlerCallback ruleEngineCallback;
     private String topic;
     /**
-     * Constructs a {@link RapidWindTrigger} instance.
+     * Constructs a {@link PrecipitationStartedTrigger} instance.
      *
      * @param module - the {@link Trigger} for which the instance is created.
      * @param context - a bundle's execution context within the Framework.
      */
-    public RapidWindTrigger(final Trigger module, final BundleContext context) {
+    public PrecipitationStartedTrigger(final Trigger module, final BundleContext context) {
         super(module);
 
-        log.warn("Creating RapidWindTrigger.");
+        log.warn("Creating PrecipitationStartedTrigger.");
         if (module == null) {
             throw new IllegalArgumentException("'module' can not be null.");
         }
@@ -75,7 +75,7 @@ public class RapidWindTrigger extends BaseModuleHandler<Trigger> implements Trig
         if (configuration == null) {
             throw new IllegalArgumentException("Configuration can't be null.");
         }
-        skyThingUid = (String) configuration.get(SKY_UID);
+        skyThingUid = (String) configuration.get(AIR_UID);
         if (skyThingUid == null) {
             throw new IllegalArgumentException("'skyThingUid' can not be null.");
         }
@@ -99,7 +99,7 @@ public class RapidWindTrigger extends BaseModuleHandler<Trigger> implements Trig
         if(true) return;
         log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
         if(!skyThingUid.equals(event.getProperty("source"))) {
-            log.warn("Got rapid wind event, but not for us...");
+            log.warn("Got precipitation start event, but not for us...");
             return;
         }
 
@@ -110,14 +110,14 @@ public class RapidWindTrigger extends BaseModuleHandler<Trigger> implements Trig
 
         Object data = event.getProperty("payload");
 
-        if(data instanceof RapidWindData) {
+        if(data instanceof PrecipitationStartedData) {
             log.warn("Triggering rule!");
-            final RapidWindData outputValue = (RapidWindData)data;
+            final PrecipitationStartedData outputValue = (PrecipitationStartedData)data;
             final Map<String, Object> outputProps = new HashMap<String, Object>();
             outputProps.put(OUTPUT_NAME, outputValue);
             ruleEngineCallback.triggered(module, outputProps);
         } else {
-            log.warn("Got event but data not of type RapidWindData");
+            log.warn("Got event but data not of type LightningStrikeData");
         }
     }
 
@@ -151,7 +151,7 @@ public class RapidWindTrigger extends BaseModuleHandler<Trigger> implements Trig
     @Override
     public Set<String> getSubscribedEventTypes() {
         Set<String> s = new HashSet<>();
-        s.add(RapidWindEvent.TYPE);
+        s.add(PrecipitationStartedEvent.TYPE);
         return s;
     }
 
@@ -164,7 +164,7 @@ public class RapidWindTrigger extends BaseModuleHandler<Trigger> implements Trig
     public void receive(org.eclipse.smarthome.core.events.Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
         if(!skyThingUid.equals(event.getSource())) {
-//            log.warn("Got rapid wind event, but not for us...");
+//            log.warn("Got precipitation started event, but not for us...");
             return;
         }
 
@@ -173,15 +173,15 @@ public class RapidWindTrigger extends BaseModuleHandler<Trigger> implements Trig
             return;
         }
 
-        if(event.getType() != RapidWindEvent.TYPE) {
+        if(event.getType() != PrecipitationStartedEvent.TYPE) {
             log.warn("Got event without correct type. this should not happen.");
             return;
         }
 
-        RapidWindData data = ((RapidWindEvent)event).getRapidWindData();
+        PrecipitationStartedData data = ((PrecipitationStartedEvent)event).getPrecipitationStartedData();
 
         log.debug("Triggering rule!");
-        final RapidWindData outputValue = (RapidWindData)data;
+        final PrecipitationStartedData outputValue = (PrecipitationStartedData)data;
         final Map<String, Object> outputProps = new HashMap<String, Object>();
         outputProps.put(OUTPUT_NAME, outputValue);
         ruleEngineCallback.triggered(module, outputProps);

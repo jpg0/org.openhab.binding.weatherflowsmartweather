@@ -33,8 +33,6 @@ import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherAirHandle
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherHubHandler;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherSkyHandler;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

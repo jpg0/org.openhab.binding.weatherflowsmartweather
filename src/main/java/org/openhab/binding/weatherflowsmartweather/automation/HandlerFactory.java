@@ -57,6 +57,7 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
     static {
         final List<String> temp = new ArrayList<String>();
         temp.add(RapidWindTrigger.UID);
+        temp.add(LightningStrikeTrigger.UID);
         TYPES = Collections.unmodifiableCollection(temp);
 
         LOGGER = LoggerFactory.getLogger(HandlerFactory.class);
@@ -81,8 +82,13 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
         LOGGER.warn("internalCreate " + module.getTypeUID() + " " + ruleUID);
         if (RapidWindTrigger.UID.equals(module.getTypeUID())) {
             return new RapidWindTrigger((Trigger) module, bundleContext);
-        }  else {
-            LOGGER.error(MODULE_HANDLER_FACTORY_NAME + "Not supported moduleHandler: {}", module.getTypeUID());
+        } else if (LightningStrikeTrigger.UID.equals(module.getTypeUID())) {
+            return new LightningStrikeTrigger((Trigger) module, bundleContext);
+        } else if (PrecipitationStartedTrigger.UID.equals(module.getTypeUID())) {
+            return new PrecipitationStartedTrigger((Trigger) module, bundleContext);
+        }
+        else {
+            LOGGER.error(MODULE_HANDLER_FACTORY_NAME + " Not supported moduleHandler: {}", module.getTypeUID());
         }
 
         return null;

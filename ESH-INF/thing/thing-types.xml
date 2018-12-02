@@ -14,7 +14,7 @@
 
         <channels>
             <channel id="epoch" typeId="epoch"/>
-            <channel id="temperature" typeId="temperature"/>
+            <channel id="temperature" typeId="airTemperature"/>
             <channel id="pressure" typeId="pressure"/>
             <channel id="humidity" typeId="humidity"/>
             <channel id="strike_count" typeId="count"/>
@@ -157,7 +157,7 @@
         <state pattern="%.1f %unit%" readOnly="true"></state>
     </channel-type>
 
-    <channel-type id="temperature">
+    <channel-type id="airTemperature">
         <item-type>Number:Temperature</item-type>
         <label>Temperature</label>
         <description>Temperature</description>

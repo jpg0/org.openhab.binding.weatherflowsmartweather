@@ -2,16 +2,17 @@ package org.openhab.binding.weatherflowsmartweather.event;
 
 import org.eclipse.smarthome.core.events.AbstractEvent;
 import org.openhab.binding.weatherflowsmartweather.model.EventRapidWindMessage;
+import org.openhab.binding.weatherflowsmartweather.model.PrecipitationStartedData;
 import org.openhab.binding.weatherflowsmartweather.model.RapidWindData;
 
 public class PrecipitationStartedEvent extends AbstractEvent {
     public static final String TYPE = PrecipitationStartedEvent.class.getSimpleName();
 
-    private final RapidWindData rapidWindData;
+    private final PrecipitationStartedData precipitationStartedData;
 
-    PrecipitationStartedEvent(String topic, String payload, RapidWindData rapidWindData) {
+    PrecipitationStartedEvent(String topic, String payload, PrecipitationStartedData precipitationStartedData) {
         super(topic, payload, null);
-        this.rapidWindData = rapidWindData;
+        this.precipitationStartedData = precipitationStartedData;
     }
 
     @Override
@@ -19,12 +20,12 @@ public class PrecipitationStartedEvent extends AbstractEvent {
         return TYPE;
     }
 
-    public RapidWindData getRapidWindData() {
-        return rapidWindData;
+    public PrecipitationStartedData getPrecipitationStartedData() {
+        return precipitationStartedData;
     }
 
     @Override
     public String toString() {
-        return "Rapid Wind at '" + rapidWindData.toString() + "'.";
+        return "Rapid Wind at '" + precipitationStartedData.toString() + "'.";
     }
 }

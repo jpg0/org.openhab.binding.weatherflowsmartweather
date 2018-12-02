@@ -1,0 +1,27 @@
+{  
+   "triggers":[  
+      {  
+         "uid":"LightningStrikeTrigger",
+         "label":"when a rapid wind event happens",
+         "description":"Triggers the Rule on Lightning Strike Event",
+         "configDescriptions":[
+            {  
+               "name":"airThingUid",
+               "type":"TEXT",
+               "context":"thing",
+               "label":"Air Thing",
+               "description":"The WeatherFlow Air device to use as the source for this trigger.",
+               "required":true
+            }
+         ],
+         "outputs":[  
+            {  
+               "name":"outputValue",
+               "type":"org.openhab.binding.weatherflowsmartweather.model.LightningStrikeData",
+               "label":"Output value",
+               "description":"Output value"
+            }
+         ]
+      }
+   ]
+}
