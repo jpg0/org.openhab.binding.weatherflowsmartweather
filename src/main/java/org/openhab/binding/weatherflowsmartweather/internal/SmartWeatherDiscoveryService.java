@@ -93,7 +93,7 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
 
             DiscoveryResult result = DiscoveryResultBuilder.create(thingUid).withLabel("SmartWeather Hub")
                     .withRepresentationProperty(serial).withProperty("serial_number", serial).build();
-            logger.info("New SmartWeather Hub discovered with ID=<" + serial + ">.");
+            logger.debug("New SmartWeather Hub discovered with ID=<" + serial + ">.");
             this.thingDiscovered(result);
 
         }
