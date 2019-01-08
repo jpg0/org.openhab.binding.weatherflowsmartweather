@@ -185,7 +185,7 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
             return;
         }
 
-        log.warn("EventType: " + event.getType() + ", expected " + RapidWindEvent.TYPE);
+        log.debug("EventType: " + event.getType() + ", expected " + RapidWindEvent.TYPE);
         if(event.getType() != RapidWindEvent.TYPE) {
             log.warn("Got event without correct type. this should not happen.");
             return;
