@@ -1,8 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.automation;
 
 import org.eclipse.smarthome.automation.Trigger;
-import org.eclipse.smarthome.automation.handler.BaseModuleHandler;
-import org.eclipse.smarthome.automation.handler.TriggerHandler;
+import org.eclipse.smarthome.automation.handler.BaseTriggerModuleHandler;
 import org.eclipse.smarthome.automation.handler.TriggerHandlerCallback;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.core.events.EventFilter;
@@ -19,8 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class LightningStrikeTrigger extends BaseModuleHandler<Trigger> implements TriggerHandler, EventSubscriber,
-        EventHandler {
+public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements EventSubscriber, EventFilter {
 
     private static final Logger log = LoggerFactory.getLogger(LightningStrikeTrigger.class);
     /**
@@ -38,7 +36,8 @@ public class LightningStrikeTrigger extends BaseModuleHandler<Trigger> implement
     /**
      * This constant defines the output name of this {@link Trigger} handler.
      */
-    private static final String OUTPUT_NAME = "outputValue";
+    private static final String EVENT_NAME = "event";
+    private static final String OUTPUT_NAME = "eventData";
 
     /**
      * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for {@link Event}s.
@@ -56,7 +55,6 @@ public class LightningStrikeTrigger extends BaseModuleHandler<Trigger> implement
      */
     @SuppressWarnings("rawtypes")
     private ServiceRegistration registration;
-    private TriggerHandlerCallback ruleEngineCallback;
     private String topic;
     /**
      * Constructs a {@link LightningStrikeTrigger} instance.
@@ -67,7 +65,7 @@ public class LightningStrikeTrigger extends BaseModuleHandler<Trigger> implement
     public LightningStrikeTrigger(final Trigger module, final BundleContext context) {
         super(module);
 
-        log.warn("Creating LightningStrikeTrigger.");
+        log.debug("Creating LightningStrikeTrigger.");
         if (module == null) {
             throw new IllegalArgumentException("'module' can not be null.");
         }
@@ -82,9 +80,15 @@ public class LightningStrikeTrigger extends BaseModuleHandler<Trigger> implement
 
         topic = EVENT_TOPIC.replace("{uid}", airThingUid);
 
-        log.warn("Created for " + airThingUid + ".");
+        log.debug("Created for " + airThingUid + ".");
 
         this.context = context;
+
+        Dictionary<String, Object> properties = new Hashtable();
+        properties.put("event.topics", topic);
+
+        this.registration = context.registerService(EventSubscriber.class, this, properties);
+        log.info("Trigger Registered EventSubscriber: Topic: {}", new Object[]{this.topic});
     }
 
     /**
@@ -94,58 +98,62 @@ public class LightningStrikeTrigger extends BaseModuleHandler<Trigger> implement
      *
      * @param event - {@link Event} that is passed from {@link EventAdmin} service.
      */
-    @Override
-    public void handleEvent(Event event) {
-        if(true) return;
-        log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
-        if(!airThingUid.equals(event.getProperty("source"))) {
-            log.warn("Got lightning strike event, but not for us...");
-            return;
-        }
-
-        if(event.getProperty("payload") == null) {
-            log.warn("Got event without payload.");
-            return;
-        }
-
-        Object data = event.getProperty("payload");
-
-        if(data instanceof LightningStrikeData) {
-            log.warn("Triggering rule!");
-            final LightningStrikeData outputValue = (LightningStrikeData)data;
-            final Map<String, Object> outputProps = new HashMap<String, Object>();
-            outputProps.put(OUTPUT_NAME, outputValue);
-            ruleEngineCallback.triggered(module, outputProps);
-        } else {
-            log.warn("Got event but data not of type LightningStrikeData");
-        }
-    }
+//    @Override
+//    public void handleEvent(Event event) {
+//        if(true) return;
+//        log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
+//        if(!airThingUid.equals(event.getProperty("source"))) {
+//            log.warn("Got lightning strike event, but not for us...");
+//            return;
+//        }
+//
+//        if(event.getProperty("payload") == null) {
+//            log.warn("Got event without payload.");
+//            return;
+//        }
+//
+//        Object data = event.getProperty("payload");
+//
+//        if(data instanceof LightningStrikeData) {
+//            log.warn("Triggering rule!");
+//            final LightningStrikeData outputValue = (LightningStrikeData)data;
+//            final Map<String, Object> outputProps = new HashMap<String, Object>();
+//            outputProps.put(OUTPUT_NAME, outputValue);
+//            ruleEngineCallback.triggered(module, outputProps);
+//        } else {
+//            log.warn("Got event but data not of type LightningStrikeData");
+//        }
+//    }
 
     /**
      * This method is used to set a callback object to the RuleEngine
      *
      * @param callback a callback object to the RuleEngine.
      */
-    public void setRuleEngineCallback(final TriggerHandlerCallback callback) {
-        ruleEngineCallback = callback;
-        log.warn("setCallback(" + callback + ")");
-        final Dictionary<String, Object> registrationProperties = new Hashtable<String, Object>();
-        String topic = EVENT_TOPIC.replace("{uid}", airThingUid);
-      //  String [] topics = {topic};
-        log.warn("topic: " + topic);
-        registrationProperties.put(EventConstants.EVENT_TOPIC, topic);
-        registration = context.registerService(EventSubscriber.class, this, registrationProperties);
-        log.warn("registration: " + registration);
-    }
+
+//    @Override
+//    public void setRuleEngineCallback(final TriggerHandlerCallback callback) {
+//        ruleEngineCallback = callback;
+//        log.warn("setCallback(" + callback + ")");
+//        final Dictionary<String, Object> registrationProperties = new Hashtable<String, Object>();
+//        String topic = EVENT_TOPIC.replace("{uid}", airThingUid);
+//      //  String [] topics = {topic};
+//        log.warn("topic: " + topic);
+//        registrationProperties.put(EventConstants.EVENT_TOPIC, topic);
+//        registration = context.registerService(EventSubscriber.class, this, registrationProperties);
+//        log.warn("registration: " + registration);
+//    }
 
     /**
      * This method is used to unregister this handler.
      */
     @Override
     public void dispose() {
-        registration.unregister();
-        registration = null;
         super.dispose();
+        if(registration != null) {
+            registration.unregister();
+            registration = null;
+        }
     }
 
     @Override
@@ -157,7 +165,7 @@ public class LightningStrikeTrigger extends BaseModuleHandler<Trigger> implement
 
     @Override
     public EventFilter getEventFilter() {
-        return null;
+        return this;
     }
 
     @Override
@@ -178,12 +186,25 @@ public class LightningStrikeTrigger extends BaseModuleHandler<Trigger> implement
             return;
         }
 
-        LightningStrikeData data = ((LightningStrikeEvent)event).getLightningStrikeData();
 
-        log.debug("Triggering rule!");
-        final LightningStrikeData outputValue = (LightningStrikeData)data;
-        final Map<String, Object> outputProps = new HashMap<String, Object>();
-        outputProps.put(OUTPUT_NAME, outputValue);
-        ruleEngineCallback.triggered(module, outputProps);
+        if(this.callback != null) {
+            LightningStrikeData data = ((LightningStrikeEvent) event).getLightningStrikeData();
+
+            log.debug("Triggering rule!");
+            final LightningStrikeData outputValue = (LightningStrikeData) data;
+            final Map<String, Object> outputProps = new HashMap<String, Object>();
+            outputProps.put(EVENT_NAME, event);
+            outputProps.put(OUTPUT_NAME, outputValue);
+            ((TriggerHandlerCallback) this.callback).triggered((Trigger) this.module, outputProps);
+
+        } else {
+            log.warn("No callback!");
+        }
+    }
+
+
+    public boolean apply(org.eclipse.smarthome.core.events.Event event) {
+        log.debug("->FILTER: {}:{}", event.getTopic(), topic);
+        return event.getTopic().equals(topic);
     }
 }

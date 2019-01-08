@@ -2,25 +2,23 @@ package org.openhab.binding.weatherflowsmartweather.automation;
 
 import org.eclipse.smarthome.automation.Trigger;
 import org.eclipse.smarthome.automation.handler.BaseModuleHandler;
+import org.eclipse.smarthome.automation.handler.BaseTriggerModuleHandler;
 import org.eclipse.smarthome.automation.handler.TriggerHandler;
 import org.eclipse.smarthome.automation.handler.TriggerHandlerCallback;
 import org.eclipse.smarthome.config.core.Configuration;
+import org.eclipse.smarthome.core.events.Event;
 import org.eclipse.smarthome.core.events.EventFilter;
 import org.eclipse.smarthome.core.events.EventSubscriber;
 import org.openhab.binding.weatherflowsmartweather.event.PrecipitationStartedEvent;
 import org.openhab.binding.weatherflowsmartweather.model.PrecipitationStartedData;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
-import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> implements TriggerHandler, EventSubscriber,
-        EventHandler {
+public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implements EventSubscriber, EventFilter {
 
     private static final Logger log = LoggerFactory.getLogger(PrecipitationStartedTrigger.class);
     /**
@@ -38,7 +36,8 @@ public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> impl
     /**
      * This constant defines the output name of this {@link Trigger} handler.
      */
-    private static final String OUTPUT_NAME = "outputValue";
+    private static final String EVENT_NAME = "event";
+    private static final String OUTPUT_NAME = "eventData";
 
     /**
      * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for {@link Event}s.
@@ -56,7 +55,6 @@ public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> impl
      */
     @SuppressWarnings("rawtypes")
     private ServiceRegistration registration;
-    private TriggerHandlerCallback ruleEngineCallback;
     private String topic;
     /**
      * Constructs a {@link PrecipitationStartedTrigger} instance.
@@ -67,7 +65,7 @@ public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> impl
     public PrecipitationStartedTrigger(final Trigger module, final BundleContext context) {
         super(module);
 
-        log.warn("Creating PrecipitationStartedTrigger.");
+        log.debug("Creating PrecipitationStartedTrigger.");
         if (module == null) {
             throw new IllegalArgumentException("'module' can not be null.");
         }
@@ -85,6 +83,12 @@ public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> impl
         log.warn("Created for " + skyThingUid + ".");
 
         this.context = context;
+
+        Dictionary<String, Object> properties = new Hashtable();
+        properties.put("event.topics", this.topic);
+
+        registration = this.context.registerService(EventSubscriber.class, this, properties);
+        log.info("Trigger Registered EventSubscriber: Topic: {}", new Object[]{topic});
     }
 
     /**
@@ -94,58 +98,60 @@ public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> impl
      *
      * @param event - {@link Event} that is passed from {@link EventAdmin} service.
      */
-    @Override
-    public void handleEvent(Event event) {
-        if(true) return;
-        log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
-        if(!skyThingUid.equals(event.getProperty("source"))) {
-            log.warn("Got precipitation start event, but not for us...");
-            return;
-        }
-
-        if(event.getProperty("payload") == null) {
-            log.warn("Got event without payload.");
-            return;
-        }
-
-        Object data = event.getProperty("payload");
-
-        if(data instanceof PrecipitationStartedData) {
-            log.warn("Triggering rule!");
-            final PrecipitationStartedData outputValue = (PrecipitationStartedData)data;
-            final Map<String, Object> outputProps = new HashMap<String, Object>();
-            outputProps.put(OUTPUT_NAME, outputValue);
-            ruleEngineCallback.triggered(module, outputProps);
-        } else {
-            log.warn("Got event but data not of type LightningStrikeData");
-        }
-    }
+//    @Override
+//    public void handleEvent(Event event) {
+//        if(true) return;
+//        log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
+//        if(!skyThingUid.equals(event.getProperty("source"))) {
+//            log.warn("Got precipitation start event, but not for us...");
+//            return;
+//        }
+//
+//        if(event.getProperty("payload") == null) {
+//            log.warn("Got event without payload.");
+//            return;
+//        }
+//
+//        Object data = event.getProperty("payload");
+//
+//        if(data instanceof PrecipitationStartedData) {
+//            log.warn("Triggering rule!");
+//            final PrecipitationStartedData outputValue = (PrecipitationStartedData)data;
+//            final Map<String, Object> outputProps = new HashMap<String, Object>();
+//            outputProps.put(OUTPUT_NAME, outputValue);
+//            ruleEngineCallback.triggered(module, outputProps);
+//        } else {
+//            log.warn("Got event but data not of type LightningStrikeData");
+//        }
+//    }
 
     /**
      * This method is used to set a callback object to the RuleEngine
      *
      * @param callback a callback object to the RuleEngine.
      */
-    public void setRuleEngineCallback(final TriggerHandlerCallback callback) {
-        ruleEngineCallback = callback;
-        log.warn("setCallback(" + callback + ")");
-        final Dictionary<String, Object> registrationProperties = new Hashtable<String, Object>();
-        String topic = EVENT_TOPIC.replace("{uid}", skyThingUid);
-      //  String [] topics = {topic};
-        log.warn("topic: " + topic);
-        registrationProperties.put(EventConstants.EVENT_TOPIC, topic);
-        registration = context.registerService(EventSubscriber.class, this, registrationProperties);
-        log.warn("registration: " + registration);
-    }
+//    public void setRuleEngineCallback(final TriggerHandlerCallback callback) {
+//        ruleEngineCallback = callback;
+//        log.warn("setCallback(" + callback + ")");
+//        final Dictionary<String, Object> registrationProperties = new Hashtable<String, Object>();
+//        String topic = EVENT_TOPIC.replace("{uid}", skyThingUid);
+//      //  String [] topics = {topic};
+//        log.warn("topic: " + topic);
+//        registrationProperties.put(EventConstants.EVENT_TOPIC, topic);
+//        registration = context.registerService(EventSubscriber.class, this, registrationProperties);
+//        log.warn("registration: " + registration);
+//    }
 
     /**
      * This method is used to unregister this handler.
      */
     @Override
     public void dispose() {
-        registration.unregister();
-        registration = null;
         super.dispose();
+        if(registration != null) {
+            registration.unregister();
+            registration = null;
+        }
     }
 
     @Override
@@ -155,13 +161,21 @@ public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> impl
         return s;
     }
 
-    @Override
-    public EventFilter getEventFilter() {
-        return null;
+    public String getTopic() {
+        return this.topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     @Override
-    public void receive(org.eclipse.smarthome.core.events.Event event) {
+    public EventFilter getEventFilter() {
+        return this;
+    }
+
+    @Override
+    public void receive(Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
         if(!skyThingUid.equals(event.getSource())) {
 //            log.warn("Got precipitation started event, but not for us...");
@@ -169,7 +183,7 @@ public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> impl
         }
 
         if(!topic.equals(event.getTopic())) {
-  //          log.warn("Got event without correct topic.");
+              log.warn("Got event without correct topic.");
             return;
         }
 
@@ -180,10 +194,21 @@ public class PrecipitationStartedTrigger extends BaseModuleHandler<Trigger> impl
 
         PrecipitationStartedData data = ((PrecipitationStartedEvent)event).getPrecipitationStartedData();
 
-        log.debug("Triggering rule!");
-        final PrecipitationStartedData outputValue = (PrecipitationStartedData)data;
-        final Map<String, Object> outputProps = new HashMap<String, Object>();
-        outputProps.put(OUTPUT_NAME, outputValue);
-        ruleEngineCallback.triggered(module, outputProps);
+        if(this.callback != null) {
+            log.debug("Triggering rule!");
+            final PrecipitationStartedData outputValue = (PrecipitationStartedData)data;
+            final Map<String, Object> outputProps = new HashMap<String, Object>();
+            outputProps.put(EVENT_NAME, event);
+            outputProps.put(OUTPUT_NAME, outputValue);
+            ((TriggerHandlerCallback) this.callback).triggered((Trigger) this.module, outputProps);
+        } else {
+            log.warn("No callback!");
+        }
     }
+
+    public boolean apply(Event event) {
+        log.debug("->FILTER: {}:{}", event.getTopic(), topic);
+        return event.getTopic().equals(topic);
+    }
+
 }

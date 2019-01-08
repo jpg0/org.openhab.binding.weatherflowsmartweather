@@ -38,8 +38,8 @@ public class LightningStrikeEventFactoryImpl extends AbstractEventFactory implem
 
     @Override
     protected Event createEventByType(String eventType, String topic, String payload, String source) throws Exception {
-        log.debug("creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
-        if (RapidWindEvent.TYPE.equals(eventType)) {
+        if (LightningStrikeEvent.TYPE.equals(eventType)) {
+            log.debug("creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
             return createLightningStrikeEvent(topic, payload);
         }
         return null;
