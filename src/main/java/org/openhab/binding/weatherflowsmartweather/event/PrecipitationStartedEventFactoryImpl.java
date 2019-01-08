@@ -8,19 +8,18 @@ import org.eclipse.smarthome.core.library.types.QuantityType;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.openhab.binding.weatherflowsmartweather.model.PrecipitationStartedData;
-import org.openhab.binding.weatherflowsmartweather.model.RapidWindData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
-public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory implements RapidWindEventFactory {
+public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory implements PrecipitationStartedEventFactory {
 
     static final String PRECIPITATION_STARTED_EVENT_TOPIC = "smarthome/things/{thingUID}/precipitation_started";
 
     private static final Logger log = LoggerFactory.getLogger(PrecipitationStartedEventFactoryImpl.class);
     public PrecipitationStartedEventFactoryImpl() {
-        super(Sets.newHashSet(RapidWindEvent.TYPE));
+        super(Sets.newHashSet(PrecipitationStartedEvent.TYPE));
     }
 
     public static PrecipitationStartedEvent createPrecipitionEvent(PrecipitationStartedData precipitation_started) {
@@ -51,8 +50,8 @@ public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory i
     }
 
     private Event createPrecipitionEvent(String topic, String payload) {
-        PrecipitationStartedData rapidWindData = myDeserializePayload(payload, PrecipitationStartedData.class);
-        return new PrecipitationStartedEvent(topic, payload, rapidWindData);
+        PrecipitationStartedData precipitationStartedData = myDeserializePayload(payload, PrecipitationStartedData.class);
+        return new PrecipitationStartedEvent(topic, payload, precipitationStartedData);
     }
 
     protected static <T> T myDeserializePayload(String payload, Class<T> classOfPayload) {
@@ -103,6 +102,6 @@ public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory i
                 })
                 .create();
 
-return gson;
+        return gson;
     }
 }

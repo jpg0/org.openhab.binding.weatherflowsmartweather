@@ -19,7 +19,7 @@ public class LightningStrikeEventFactoryImpl extends AbstractEventFactory implem
 
     private static final Logger log = LoggerFactory.getLogger(LightningStrikeEventFactoryImpl.class);
     public LightningStrikeEventFactoryImpl() {
-        super(Sets.newHashSet(RapidWindEvent.TYPE));
+        super(Sets.newHashSet(LightningStrikeEvent.TYPE));
     }
 
     public static LightningStrikeEvent createLightningStrikeEvent(LightningStrikeData lightning_strike) {
