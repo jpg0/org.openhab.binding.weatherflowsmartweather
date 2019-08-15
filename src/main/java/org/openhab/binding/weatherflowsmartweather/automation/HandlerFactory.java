@@ -17,11 +17,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.smarthome.automation.Module;
-import org.eclipse.smarthome.automation.Trigger;
-import org.eclipse.smarthome.automation.handler.BaseModuleHandlerFactory;
-import org.eclipse.smarthome.automation.handler.ModuleHandler;
-import org.eclipse.smarthome.automation.handler.ModuleHandlerFactory;
+
+import org.openhab.core.automation.Module;
+import org.openhab.core.automation.Trigger;
+import org.openhab.core.automation.handler.BaseModuleHandlerFactory;
+import org.openhab.core.automation.handler.ModuleHandler;
+import org.openhab.core.automation.handler.ModuleHandlerFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;

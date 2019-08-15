@@ -2,6 +2,7 @@ package org.openhab.binding.weatherflowsmartweather.event;
 
 import java.util.Collection;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.smarthome.core.events.AbstractTypedEventSubscriber;
 import org.eclipse.smarthome.core.events.Event;
 import org.eclipse.smarthome.core.events.EventFilter;
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 @Component(service = { EventSubscriber.class,
         WeatherFlowEventSubscriber.class }, configurationPid = "binding.weatherflowsmartweather")
-public class WeatherFlowEventSubscriberImpl extends AbstractTypedEventSubscriber<Event>
+public class WeatherFlowEventSubscriberImpl extends AbstractTypedEventSubscriber<@NonNull Event>
         implements WeatherFlowEventSubscriber {
 
     private final Logger logger = LoggerFactory.getLogger(WeatherFlowEventSubscriberImpl.class);

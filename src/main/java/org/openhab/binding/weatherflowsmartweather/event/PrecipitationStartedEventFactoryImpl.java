@@ -1,7 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
-import com.google.common.collect.Sets;
 import com.google.gson.*;
+import jersey.repackaged.com.google.common.collect.Sets;
 import org.eclipse.smarthome.core.events.AbstractEventFactory;
 import org.eclipse.smarthome.core.events.Event;
 import org.eclipse.smarthome.core.library.types.QuantityType;
@@ -42,7 +42,7 @@ public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory i
            log.debug("creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
            return createPrecipitionEvent(topic, payload);
         }
-        return null;
+        throw new IllegalArgumentException("Unsupported event type " + eventType);
     }
 
     protected static String buildTopic(String topic, String thingUID) {

@@ -1,13 +1,13 @@
 package org.openhab.binding.weatherflowsmartweather.automation;
 
-import org.eclipse.smarthome.automation.Trigger;
-import org.eclipse.smarthome.automation.handler.BaseTriggerModuleHandler;
-import org.eclipse.smarthome.automation.handler.TriggerHandlerCallback;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.core.events.EventFilter;
 import org.eclipse.smarthome.core.events.EventSubscriber;
 import org.openhab.binding.weatherflowsmartweather.event.RapidWindEvent;
 import org.openhab.binding.weatherflowsmartweather.model.RapidWindData;
+import org.openhab.core.automation.Trigger;
+import org.openhab.core.automation.handler.BaseTriggerModuleHandler;
+import org.openhab.core.automation.handler.TriggerHandlerCallback;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.eclipse.smarthome.core.events.Event;

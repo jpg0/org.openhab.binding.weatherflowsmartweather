@@ -12,11 +12,12 @@
  */
 package org.openhab.binding.weatherflowsmartweather;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import jersey.repackaged.com.google.common.collect.ImmutableSet;
+import jersey.repackaged.com.google.common.collect.Sets;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * The {@link WeatherFlowSmartWeatherBindingConstants} class defines common constants, which are
@@ -68,9 +69,14 @@ public class WeatherFlowSmartWeatherBindingConstants {
     public static final String CHANNEL_RAPID_WIND_EVENTS = "rapid_wind_events";
     public static final String CHANNEL_PRECIPITATION_START_EVENTS = "precipitation_start_events";
 
-    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES = ImmutableSet.of(THING_TYPE_SMART_WEATHER_HUB,
-            THING_TYPE_SMART_WEATHER_AIR, THING_TYPE_SMART_WEATHER_SKY);
-
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES;
+    static {
+        Set<ThingTypeUID> thingTypes = new HashSet<>();
+        thingTypes.add(THING_TYPE_SMART_WEATHER_HUB);
+        thingTypes.add(THING_TYPE_SMART_WEATHER_AIR);
+        thingTypes.add(THING_TYPE_SMART_WEATHER_SKY);
+        SUPPORTED_THING_TYPES = ImmutableSet.copyOf(thingTypes);
+    }
     public static final String PROPERTY_SERIAL_NUMBER = "serial_number";
 
     public static final String MIME_TYPE_JSON = "application/json";
