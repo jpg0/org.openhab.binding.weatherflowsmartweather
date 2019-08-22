@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" configuration-pid="binding.weatherflowsmartweather" name="org.openhab.binding.weatherflowsmartweather.internal.WeatherFlowEventSubscriberImpl">
-   <scr:service>
-      <scr:provide interface="org.eclipse.smarthome.core.events.EventSubscriber"/>
-      <scr:provide interface="org.openhab.binding.weatherflowsmartweather.event.WeatherFlowEventSubscriber"/>
-   </scr:service>
-   <scr:implementation class="org.openhab.binding.weatherflowsmartweather.event.WeatherFlowEventSubscriberImpl"/>
-</scr:component>

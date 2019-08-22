@@ -33,7 +33,7 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
         super(supportedDevices, 30, true);
         this.udpListener = udpListener;
         this.hubHandler = hubHandler;
-        logger.info("Creating discovery service");
+        logger.info("Creating discovery service: " + udpListener);
     }
 
     public void activate() {
@@ -47,6 +47,7 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
 
     @Override
     protected void startScan() {
+        logger.info("Starting scan: this: " + this + " udpListener: " + udpListener);
         udpListener.registerListener(this);
     }
 

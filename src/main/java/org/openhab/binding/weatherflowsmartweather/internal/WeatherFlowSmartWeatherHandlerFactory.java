@@ -17,6 +17,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.eclipse.smarthome.config.discovery.DiscoveryService;
 import org.eclipse.smarthome.core.events.EventPublisher;
 import org.eclipse.smarthome.core.thing.Bridge;
@@ -42,7 +44,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author William Welliver - Initial contribution
  */
-//@Component(service = ThingHandlerFactory.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
+@Component(service = ThingHandlerFactory.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
 public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFactory {
 
     protected static final Logger logger = LoggerFactory.getLogger(WeatherFlowSmartWeatherHandlerFactory.class);
@@ -54,7 +56,7 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
     private RapidWindEventFactory rapidWindEventFactory;
     private EventPublisher eventPublisher;
 
-   // @Reference()
+    @Reference()
     protected void setUdpListener(SmartWeatherUDPListenerService service) {
         udpListener = service;
     };
@@ -63,12 +65,12 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
         udpListener = null;
     };
 
-    //@Reference()
+    @Reference()
     protected void setRapidWindEventFactory(RapidWindEventFactory factory) { rapidWindEventFactory = factory; }
 
     protected void unsetRapidWindEventFactory(RapidWindEventFactory factory) { rapidWindEventFactory = null; }
 
-   // @Reference()
+    @Reference()
     protected void setEventPublisher(EventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
