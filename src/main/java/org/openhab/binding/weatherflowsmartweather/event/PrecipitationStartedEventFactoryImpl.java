@@ -4,15 +4,19 @@ import com.google.gson.*;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.eclipse.smarthome.core.events.AbstractEventFactory;
 import org.eclipse.smarthome.core.events.Event;
+import org.eclipse.smarthome.core.events.EventFactory;
 import org.eclipse.smarthome.core.library.types.QuantityType;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.openhab.binding.weatherflowsmartweather.model.PrecipitationStartedData;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
+@Component(service = { EventFactory.class,
+        PrecipitationStartedEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
 public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory implements PrecipitationStartedEventFactory {
 
     static final String PRECIPITATION_STARTED_EVENT_TOPIC = "smarthome/things/{thingUID}/precipitation_started";

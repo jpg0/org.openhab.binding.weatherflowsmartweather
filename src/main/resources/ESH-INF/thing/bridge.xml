@@ -33,7 +33,7 @@
       </channel-type>
         
      <channel-type id="version">
-        <item-type>Number</item-type>
+        <item-type>String</item-type>
         <label>Firmware Version</label>
         <description>Version of Firmware</description>
         <category>Network</category>

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 @Component(service = DiscoveryService.class, immediate = true, configurationPid = "binding.weatherflowsmartweather", name = "org.openhab.binding.weatherflowsmartweather.discovery.hub")
 public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
-        implements ExtendedDiscoveryService, SmartWeatherEventListener {
+        implements SmartWeatherEventListener {
 
     protected final static Logger logger = LoggerFactory.getLogger(SmartWeatherDiscoveryService.class);
 
@@ -76,37 +76,37 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService
             ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_HUB,
                     serial);
 
-            logger.debug("Got discovered device.");
-            if (getDiscoveryServiceCallback() != null) {
-                logger.debug("Looking to see if this thing exists already.");
-                Thing thing = getDiscoveryServiceCallback().getExistingThing(thingUid);
-                if (thing != null) {
-                    logger.debug("Already have thing with ID=<" + thingUid + ">");
-                    return;
-                } else {
-                    logger.debug("Nope. This should trigger a new inbox entry.");
-                }
-            } else {
-                logger.warn("DiscoveryServiceCallback not set. This shouldn't happen!");
-                return;
-            }
+            logger.debug("Got discovered device: " + thingUid + ".");
+//            if (getDiscoveryServiceCallback() != null) {
+//                logger.debug("Looking to see if this thing exists already.");
+//                Thing thing = getDiscoveryServiceCallback().getExistingThing(thingUid);
+//                if (thing != null) {
+//                    logger.debug("Already have thing with ID=<" + thingUid + ">");
+//                    return;
+//                } else {
+//                    logger.debug("Nope. This should trigger a new inbox entry.");
+//                }
+//            } else {
+//                logger.warn("DiscoveryServiceCallback not set. This shouldn't happen!");
+//                return;
+//            }
 
             DiscoveryResult result = DiscoveryResultBuilder.create(thingUid).withLabel("SmartWeather Hub")
                     .withRepresentationProperty(serial).withProperty("serial_number", serial).build();
-            logger.debug("New SmartWeather Hub discovered with ID=<" + serial + ">.");
+          //  logger.debug("New SmartWeather Hub discovered with ID=<" + serial + ">.");
             this.thingDiscovered(result);
 
         }
     }
 
-    @Override
-    public void setDiscoveryServiceCallback(DiscoveryServiceCallback discoveryServiceCallback) {
-       // logger.warn("setDiscoveryServiceCallback()");
-        this.discoveryServiceCallback = discoveryServiceCallback;
-    }
-
-    public DiscoveryServiceCallback getDiscoveryServiceCallback() {
-        return discoveryServiceCallback;
-    }
+//    @Override
+//    public void setDiscoveryServiceCallback(DiscoveryServiceCallback discoveryServiceCallback) {
+//       // logger.warn("setDiscoveryServiceCallback()");
+//        this.discoveryServiceCallback = discoveryServiceCallback;
+//    }
+//
+//    public DiscoveryServiceCallback getDiscoveryServiceCallback() {
+//        return discoveryServiceCallback;
+//    }
 
 }

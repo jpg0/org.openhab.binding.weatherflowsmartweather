@@ -108,7 +108,7 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
 
         ThingUID thingUid = new ThingUID(thingType, hubHandler.getThing().getUID(), serial);
 
-        logger.debug("Got discovered device.");
+        logger.debug("Got discovered device: " + thingUid + ".");
 
         Thing thing = hubHandler.getThingByUID(thingUid);
         if (thing != null) {

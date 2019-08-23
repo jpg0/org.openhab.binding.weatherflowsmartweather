@@ -4,15 +4,19 @@ import com.google.gson.*;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.eclipse.smarthome.core.events.AbstractEventFactory;
 import org.eclipse.smarthome.core.events.Event;
+import org.eclipse.smarthome.core.events.EventFactory;
 import org.eclipse.smarthome.core.library.types.QuantityType;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.openhab.binding.weatherflowsmartweather.model.RapidWindData;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
+@Component(service = { EventFactory.class,
+        RapidWindEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
 public class RapidWindEventFactoryImpl extends AbstractEventFactory implements RapidWindEventFactory {
 
     static final String RAPID_WIND_EVENT_TOPIC = "smarthome/things/{thingUID}/rapidwind";

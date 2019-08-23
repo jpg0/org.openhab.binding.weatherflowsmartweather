@@ -29,7 +29,6 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
-import org.openhab.binding.weatherflowsmartweather.event.RapidWindEvent;
 import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactory;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherAirHandler;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherHubHandler;
@@ -44,7 +43,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author William Welliver - Initial contribution
  */
-@Component(service = ThingHandlerFactory.class, immediate = true, configurationPid = "binding.weatherflowsmartweather")
+
+@Component(service = ThingHandlerFactory.class, configurationPid = "binding.weatherflowsmartweather")
 public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFactory {
 
     protected static final Logger logger = LoggerFactory.getLogger(WeatherFlowSmartWeatherHandlerFactory.class);
@@ -55,6 +55,10 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
     SmartWeatherUDPListenerService udpListener;
     private RapidWindEventFactory rapidWindEventFactory;
     private EventPublisher eventPublisher;
+
+    public WeatherFlowSmartWeatherHandlerFactory() {
+        logger.info("Creating WeatherFlowSmartWeatherFactory.");
+    }
 
     @Reference()
     protected void setUdpListener(SmartWeatherUDPListenerService service) {
@@ -89,27 +93,25 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
     protected ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
+        logger.info("Creating handler for thing=" + thing);
         if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_HUB)) {
             SmartWeatherHubHandler hubHandler = new SmartWeatherHubHandler((Bridge) thing, udpListener);
             registerDeviceDiscoveryService(hubHandler);
             return hubHandler;
         }
-
         else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR)) {
             return new SmartWeatherAirHandler(thing);
         }
-
         else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY)) {
             return new SmartWeatherSkyHandler(thing, rapidWindEventFactory, eventPublisher);
         }
-
         else {
-            logger.warn("huhh???");
-            throw new RuntimeException("whaaaaaa?");
+           throw new RuntimeException("whaaaaaa?");
         }
     }
 
     private synchronized void registerDeviceDiscoveryService(SmartWeatherHubHandler hubHandler) {
+        logger.debug("Registering Device Discovery Service " + hubHandler);
         SmartWeatherStationDiscoveryService discoveryService = new SmartWeatherStationDiscoveryService(udpListener,
                 hubHandler);
         discoveryService.activate();

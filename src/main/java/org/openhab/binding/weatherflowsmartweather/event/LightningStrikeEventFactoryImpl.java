@@ -4,16 +4,19 @@ import com.google.gson.*;
 import jersey.repackaged.com.google.common.collect.Sets;
 import org.eclipse.smarthome.core.events.AbstractEventFactory;
 import org.eclipse.smarthome.core.events.Event;
+import org.eclipse.smarthome.core.events.EventFactory;
 import org.eclipse.smarthome.core.library.types.QuantityType;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.openhab.binding.weatherflowsmartweather.model.LightningStrikeData;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.constraints.Null;
 import java.lang.reflect.Type;
 
+@Component(service = { EventFactory.class,
+        LightningStrikeEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
 public class LightningStrikeEventFactoryImpl extends AbstractEventFactory implements LightningStrikeEventFactory {
 
     static final String LIGHTNING_STRIKE_EVENT_TOPIC = "smarthome/things/{thingUID}/lightningstrike";
