@@ -67,9 +67,8 @@ public class StationStatusMessage extends SmartWeatherMessage {
 
     @Override
     public String toString() {
-        return "StationStatusMessage [fimware_revision=" + firmware_revision + ", uptime=" + uptime + ", rssi=" + rssi + ", timestamp="
-                + timestamp + ", hub_sn=" + hub_sn + ", voltage=" + voltage + ", sensor_status=" + sensor_status
-                + ", serial_number=" + serial_number + "]";
+        return "StationStatusMessage [fimware_revision=" + firmware_revision + ", uptime=" + uptime + ", rssi=" + rssi
+                + ", timestamp=" + timestamp + ", hub_sn=" + hub_sn + ", voltage=" + voltage + ", sensor_status="
+                + sensor_status + ", serial_number=" + serial_number + "]";
     }
-
 }

@@ -77,7 +77,7 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
             StationStatusMessage message = (StationStatusMessage) data;
             serial = message.getSerial_number();
             hubSerial = message.getHub_sn();
-        } else if(data instanceof DeviceStatusMessage) {
+        } else if (data instanceof DeviceStatusMessage) {
             DeviceStatusMessage message = (DeviceStatusMessage) data;
             serial = message.getSerial_number();
             hubSerial = message.getHub_sn();
@@ -87,12 +87,14 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
             // we have an AIR sensor.
             label = "SmartWeather Air";
             thingType = WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR;
-        }
-
-        if (serial != null && serial.startsWith("SK")) {
+        } else if (serial != null && serial.startsWith("SK")) {
             // we have a SKY sensor.
             label = "SmartWeather Sky";
             thingType = WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY;
+        } else if (serial != null && serial.startsWith("ST")) {
+            // we have a SKY sensor.
+            label = "SmartWeather Tempest";
+            thingType = WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_TEMPEST;
         }
 
         // were we able to determine the thing type?
@@ -101,8 +103,8 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
         }
 
         // is this sensor attached to this hub?
-        if (!hubHandler.getThing().getProperties()
-                .get(WeatherFlowSmartWeatherBindingConstants.PROPERTY_SERIAL_NUMBER).equals(hubSerial)) {
+        if (!hubHandler.getThing().getProperties().get(WeatherFlowSmartWeatherBindingConstants.PROPERTY_SERIAL_NUMBER)
+                .equals(hubSerial)) {
             return;
         }
 
@@ -123,6 +125,5 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
                 .withProperty("serial_number", serial).build();
         logger.info("New " + label + " discovered with ID=<" + serial + ">.");
         this.thingDiscovered(result);
-
     }
 }

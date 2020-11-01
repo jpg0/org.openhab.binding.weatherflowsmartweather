@@ -45,5 +45,4 @@ public class EventStrikeMessage extends SmartWeatherMessage {
         return "EventStrikeMessage [firmware_revision=" + firmware_revision + ", hub_sn=" + hub_sn + ", device_id="
                 + device_id + ", evt=" + Arrays.toString(evt) + ", serial_number=" + serial_number + "]";
     }
-
 }

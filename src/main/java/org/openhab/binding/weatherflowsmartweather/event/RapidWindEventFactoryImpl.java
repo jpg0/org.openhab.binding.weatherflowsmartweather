@@ -1,7 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
-import com.google.gson.*;
-import jersey.repackaged.com.google.common.collect.Sets;
+import java.lang.reflect.Type;
+
 import org.eclipse.smarthome.core.events.AbstractEventFactory;
 import org.eclipse.smarthome.core.events.Event;
 import org.eclipse.smarthome.core.events.EventFactory;
@@ -13,7 +13,9 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Type;
+import com.google.gson.*;
+
+import jersey.repackaged.com.google.common.collect.Sets;
 
 @Component(service = { EventFactory.class,
         RapidWindEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
@@ -22,12 +24,14 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
     static final String RAPID_WIND_EVENT_TOPIC = "smarthome/things/{thingUID}/rapidwind";
 
     private static final Logger log = LoggerFactory.getLogger(RapidWindEventFactoryImpl.class);
+
     public RapidWindEventFactoryImpl() {
         super(Sets.newHashSet(RapidWindEvent.TYPE));
     }
 
     public static RapidWindEvent createRapidWindEvent(RapidWindData rapid_wind) {
-        String topic = RapidWindEventFactoryImpl.buildTopic(RapidWindEventFactoryImpl.RAPID_WIND_EVENT_TOPIC, rapid_wind.getThingUID());
+        String topic = RapidWindEventFactoryImpl.buildTopic(RapidWindEventFactoryImpl.RAPID_WIND_EVENT_TOPIC,
+                rapid_wind.getThingUID());
         log.debug("Topic: " + topic);
         String payload = null;
 
@@ -44,7 +48,8 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
     protected Event createEventByType(String eventType, String topic, String payload, String source) throws Exception {
         log.debug("Creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
         if (RapidWindEvent.TYPE.equals(eventType)) {
-            log.debug("Creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
+            log.debug(
+                    "Creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
             return createRapidWindEvent(topic, payload);
         }
         throw new IllegalArgumentException("Unsupported event type " + eventType);
@@ -68,9 +73,8 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
     }
 
     public static Gson gsonDateTime() {
-        Gson gson = //new Gson();
-        new GsonBuilder()
-                .registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {
+        Gson gson = // new Gson();
+                new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {
                     @Override
                     public JsonElement serialize(DateTime json, Type typeOfSrc, JsonSerializationContext context) {
                         log.debug("Serializing " + json);
@@ -78,35 +82,34 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
                         log.debug("Serialized to " + p);
                         return p;
                     }
-                })
-                .registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
+                }).registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
                     @Override
-                    public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                            throws JsonParseException {
                         DateTime dt = ISODateTimeFormat.dateTime().parseDateTime(json.getAsString());
                         return dt;
                     }
-                })
-                .registerTypeAdapter(QuantityType.class, new JsonSerializer<QuantityType>() {
+                }).registerTypeAdapter(QuantityType.class, new JsonSerializer<QuantityType>() {
                     @Override
-                    public JsonElement serialize(QuantityType quantityType, Type typeOfSrc, JsonSerializationContext context) {
+                    public JsonElement serialize(QuantityType quantityType, Type typeOfSrc,
+                            JsonSerializationContext context) {
                         log.debug("Serializing " + quantityType);
                         JsonPrimitive p = new JsonPrimitive(quantityType.toFullString());
                         log.debug("Serialized to " + p);
                         return p;
                     }
-                })
-                .registerTypeAdapter(QuantityType.class, new JsonDeserializer<QuantityType>() {
+                }).registerTypeAdapter(QuantityType.class, new JsonDeserializer<QuantityType>() {
                     @Override
-                    public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                            throws JsonParseException {
                         log.debug("Deserializing " + json.getAsString());
                         QuantityType qt = new QuantityType(json.getAsString());
                         log.debug("Deserialized to " + qt);
 
                         return qt;
                     }
-                })
-                .create();
+                }).create();
 
-return gson;
+        return gson;
     }
 }

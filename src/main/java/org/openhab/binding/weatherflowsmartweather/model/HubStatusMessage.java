@@ -41,8 +41,6 @@ public class HubStatusMessage extends SmartWeatherMessage {
     @Override
     public String toString() {
         return "HubStatusMessage [firmware_version=" + firmware_revision + ", uptime=" + uptime + ", rssi=" + rssi
-                + ", timestamp=" + timestamp + ", serial_number="
-                + serial_number + "]";
+                + ", timestamp=" + timestamp + ", serial_number=" + serial_number + "]";
     }
-
 }

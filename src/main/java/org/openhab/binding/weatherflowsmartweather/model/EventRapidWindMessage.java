@@ -46,5 +46,4 @@ public class EventRapidWindMessage extends SmartWeatherMessage {
         return "EventRapidWindMessage [firmware_revision=" + firmware_revision + ", hub_sn=" + hub_sn + ", device_id="
                 + device_id + ", ob=" + Arrays.toString(ob.toArray()) + ", serial_number=" + serial_number + "]";
     }
-
 }

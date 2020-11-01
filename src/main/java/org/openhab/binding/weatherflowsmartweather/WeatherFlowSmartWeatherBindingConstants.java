@@ -15,9 +15,9 @@ package org.openhab.binding.weatherflowsmartweather;
 import java.util.HashSet;
 import java.util.Set;
 
-import jersey.repackaged.com.google.common.collect.ImmutableSet;
-import jersey.repackaged.com.google.common.collect.Sets;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
+
+import jersey.repackaged.com.google.common.collect.ImmutableSet;
 
 /**
  * The {@link WeatherFlowSmartWeatherBindingConstants} class defines common constants, which are
@@ -34,6 +34,7 @@ public class WeatherFlowSmartWeatherBindingConstants {
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_HUB = new ThingTypeUID(BINDING_ID, "hub");
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_AIR = new ThingTypeUID(BINDING_ID, "air");
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_SKY = new ThingTypeUID(BINDING_ID, "sky");
+    public static final ThingTypeUID THING_TYPE_SMART_WEATHER_TEMPEST = new ThingTypeUID(BINDING_ID, "tempest");
 
     // List of all Hub Channel ids
     public static final String CHANNEL_RSSI = "rssi";
@@ -75,6 +76,7 @@ public class WeatherFlowSmartWeatherBindingConstants {
         thingTypes.add(THING_TYPE_SMART_WEATHER_HUB);
         thingTypes.add(THING_TYPE_SMART_WEATHER_AIR);
         thingTypes.add(THING_TYPE_SMART_WEATHER_SKY);
+        thingTypes.add(THING_TYPE_SMART_WEATHER_TEMPEST);
         SUPPORTED_THING_TYPES = ImmutableSet.copyOf(thingTypes);
     }
     public static final String PROPERTY_SERIAL_NUMBER = "serial_number";

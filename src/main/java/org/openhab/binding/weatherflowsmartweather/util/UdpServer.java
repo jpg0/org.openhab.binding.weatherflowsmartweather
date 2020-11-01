@@ -703,7 +703,6 @@ public class UdpServer {
          * @see Event#getPacket
          */
         public abstract void packetReceived(UdpServer.Event evt);
-
     } // end inner static class Listener
 
     /* ******** ******** */
@@ -868,7 +867,5 @@ public class UdpServer {
         public void send(DatagramPacket packet) throws IOException {
             this.getUdpServer().send(packet);
         }
-
     } // end static inner class Event
-
 } // end class UdpServer

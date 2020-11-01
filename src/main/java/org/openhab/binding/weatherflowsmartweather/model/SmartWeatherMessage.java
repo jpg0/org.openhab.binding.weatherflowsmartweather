@@ -24,5 +24,4 @@ public class SmartWeatherMessage {
     public String toString() {
         return "SmartWeatherMessage [type=" + type + ", serial_number=" + serial_number + "]";
     }
-
 }

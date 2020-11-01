@@ -28,6 +28,8 @@ public class SmartWeatherDeserializer implements JsonDeserializer<SmartWeatherMe
                 return gson.fromJson(je, ObservationAirMessage.class);
             case "obs_sky":
                 return gson.fromJson(je, ObservationSkyMessage.class);
+            case "obs_st":
+                return gson.fromJson(je, ObservationTempestMessage.class);
             case "evt_precip":
                 return gson.fromJson(je, EventPrecipitationMessage.class);
             case "evt_strike":
@@ -45,12 +47,13 @@ public class SmartWeatherDeserializer implements JsonDeserializer<SmartWeatherMe
             case "calibration":
             case "light_debug":
             case "wind_debug":
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug("Received " + messageType + " with content: " + je.toString());
                 }
                 break;
             default:
-                log.error("Received unknown SmartWeather message type: " + messageType + " with content: " + je.toString());
+                log.error("Received unknown SmartWeather message type: " + messageType + " with content: "
+                        + je.toString());
                 break;
         }
         return message;

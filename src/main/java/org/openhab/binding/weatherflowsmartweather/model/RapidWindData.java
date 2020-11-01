@@ -1,15 +1,14 @@
 package org.openhab.binding.weatherflowsmartweather.model;
 
+import java.util.List;
+
+import javax.measure.quantity.Angle;
+import javax.measure.quantity.Speed;
+
 import org.eclipse.smarthome.core.library.types.QuantityType;
 import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.measure.quantity.Angle;
-import javax.measure.quantity.Speed;
-import java.util.List;
 
 public class RapidWindData {
     private String bridgeUID;
@@ -22,7 +21,7 @@ public class RapidWindData {
     private final QuantityType<Angle> windDirection;
     private final QuantityType<Speed> windSpeed;
 
-//    private Logger log = LoggerFactory.getLogger(RapidWindData.class);
+    // private Logger log = LoggerFactory.getLogger(RapidWindData.class);
 
     public RapidWindData(Thing sky, EventRapidWindMessage message) {
         bridgeUID = sky.getBridgeUID().getAsString();
@@ -54,9 +53,9 @@ public class RapidWindData {
         return serialNumber;
     }
 
-    public DateTime getEpoch() { return epoch; }
-
-
+    public DateTime getEpoch() {
+        return epoch;
+    }
 
     public QuantityType<Angle> getWindDirection() {
         return windDirection;
@@ -68,12 +67,7 @@ public class RapidWindData {
 
     @Override
     public String toString() {
-        return "RapidWindData{" +
-                "bridgeUID=" + bridgeUID +
-                ", thingUID=" + thingUID +
-                ", epoch=" + epoch +
-                ", windDirection=" + windDirection +
-                ", windSpeed=" + windSpeed +
-                '}';
+        return "RapidWindData{" + "bridgeUID=" + bridgeUID + ", thingUID=" + thingUID + ", epoch=" + epoch
+                + ", windDirection=" + windDirection + ", windSpeed=" + windSpeed + '}';
     }
 }

@@ -85,18 +85,9 @@ public class DeviceStatusMessage extends SmartWeatherMessage {
 
     @Override
     public String toString() {
-        return "DeviceStatusMessage{" +
-                "hub_sn='" + hub_sn + '\'' +
-                ", timestamp=" + timestamp +
-                ", uptime=" + uptime +
-                ", firmware_revision=" + firmware_revision +
-                ", rssi=" + rssi +
-                ", hub_rssi=" + hub_rssi +
-                ", voltage=" + voltage +
-                ", sensor_status=" + sensor_status +
-                ", debug=" + debug +
-                ", type='" + type + '\'' +
-                ", serial_number='" + serial_number + '\'' +
-                '}';
+        return "DeviceStatusMessage{" + "hub_sn='" + hub_sn + '\'' + ", timestamp=" + timestamp + ", uptime=" + uptime
+                + ", firmware_revision=" + firmware_revision + ", rssi=" + rssi + ", hub_rssi=" + hub_rssi
+                + ", voltage=" + voltage + ", sensor_status=" + sensor_status + ", debug=" + debug + ", type='" + type
+                + '\'' + ", serial_number='" + serial_number + '\'' + '}';
     }
 }

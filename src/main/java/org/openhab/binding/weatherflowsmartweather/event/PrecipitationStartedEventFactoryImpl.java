@@ -1,7 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
-import com.google.gson.*;
-import jersey.repackaged.com.google.common.collect.Sets;
+import java.lang.reflect.Type;
+
 import org.eclipse.smarthome.core.events.AbstractEventFactory;
 import org.eclipse.smarthome.core.events.Event;
 import org.eclipse.smarthome.core.events.EventFactory;
@@ -13,21 +13,27 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Type;
+import com.google.gson.*;
+
+import jersey.repackaged.com.google.common.collect.Sets;
 
 @Component(service = { EventFactory.class,
         PrecipitationStartedEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
-public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory implements PrecipitationStartedEventFactory {
+public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory
+        implements PrecipitationStartedEventFactory {
 
     static final String PRECIPITATION_STARTED_EVENT_TOPIC = "smarthome/things/{thingUID}/precipitation_started";
 
     private static final Logger log = LoggerFactory.getLogger(PrecipitationStartedEventFactoryImpl.class);
+
     public PrecipitationStartedEventFactoryImpl() {
         super(Sets.newHashSet(PrecipitationStartedEvent.TYPE));
     }
 
     public static PrecipitationStartedEvent createPrecipitionEvent(PrecipitationStartedData precipitation_started) {
-        String topic = PrecipitationStartedEventFactoryImpl.buildTopic(PrecipitationStartedEventFactoryImpl.PRECIPITATION_STARTED_EVENT_TOPIC, precipitation_started.getThingUID());
+        String topic = PrecipitationStartedEventFactoryImpl.buildTopic(
+                PrecipitationStartedEventFactoryImpl.PRECIPITATION_STARTED_EVENT_TOPIC,
+                precipitation_started.getThingUID());
         log.debug("Topic: " + topic);
         String payload = null;
 
@@ -42,9 +48,10 @@ public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory i
 
     @Override
     protected Event createEventByType(String eventType, String topic, String payload, String source) throws Exception {
-       if (PrecipitationStartedEvent.TYPE.equals(eventType)) {
-           log.debug("creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
-           return createPrecipitionEvent(topic, payload);
+        if (PrecipitationStartedEvent.TYPE.equals(eventType)) {
+            log.debug(
+                    "creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
+            return createPrecipitionEvent(topic, payload);
         }
         throw new IllegalArgumentException("Unsupported event type " + eventType);
     }
@@ -54,7 +61,8 @@ public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory i
     }
 
     private Event createPrecipitionEvent(String topic, String payload) {
-        PrecipitationStartedData precipitationStartedData = myDeserializePayload(payload, PrecipitationStartedData.class);
+        PrecipitationStartedData precipitationStartedData = myDeserializePayload(payload,
+                PrecipitationStartedData.class);
         return new PrecipitationStartedEvent(topic, payload, precipitationStartedData);
     }
 
@@ -67,9 +75,8 @@ public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory i
     }
 
     public static Gson gsonDateTime() {
-        Gson gson = //new Gson();
-        new GsonBuilder()
-                .registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {
+        Gson gson = // new Gson();
+                new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {
                     @Override
                     public JsonElement serialize(DateTime json, Type typeOfSrc, JsonSerializationContext context) {
                         log.debug("Serializing " + json);
@@ -77,34 +84,33 @@ public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory i
                         log.debug("Serialized to " + p);
                         return p;
                     }
-                })
-                .registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
+                }).registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
                     @Override
-                    public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                            throws JsonParseException {
                         DateTime dt = ISODateTimeFormat.dateTime().parseDateTime(json.getAsString());
                         return dt;
                     }
-                })
-                .registerTypeAdapter(QuantityType.class, new JsonSerializer<QuantityType>() {
+                }).registerTypeAdapter(QuantityType.class, new JsonSerializer<QuantityType>() {
                     @Override
-                    public JsonElement serialize(QuantityType quantityType, Type typeOfSrc, JsonSerializationContext context) {
+                    public JsonElement serialize(QuantityType quantityType, Type typeOfSrc,
+                            JsonSerializationContext context) {
                         log.debug("Serializing " + quantityType);
                         JsonPrimitive p = new JsonPrimitive(quantityType.toFullString());
                         log.debug("Serialized to " + p);
                         return p;
                     }
-                })
-                .registerTypeAdapter(QuantityType.class, new JsonDeserializer<QuantityType>() {
+                }).registerTypeAdapter(QuantityType.class, new JsonDeserializer<QuantityType>() {
                     @Override
-                    public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                            throws JsonParseException {
                         log.debug("Deserializing " + json.getAsString());
                         QuantityType qt = new QuantityType(json.getAsString());
                         log.debug("Deserialized to " + qt);
 
                         return qt;
                     }
-                })
-                .create();
+                }).create();
 
         return gson;
     }

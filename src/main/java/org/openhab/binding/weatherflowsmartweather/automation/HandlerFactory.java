@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-
 import org.openhab.core.automation.Module;
 import org.openhab.core.automation.Trigger;
 import org.openhab.core.automation.handler.BaseModuleHandlerFactory;
@@ -87,8 +86,7 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
             return new LightningStrikeTrigger((Trigger) module, bundleContext);
         } else if (PrecipitationStartedTrigger.UID.equals(module.getTypeUID())) {
             return new PrecipitationStartedTrigger((Trigger) module, bundleContext);
-        }
-        else {
+        } else {
             LOGGER.error(MODULE_HANDLER_FACTORY_NAME + " Not supported moduleHandler: {}", module.getTypeUID());
         }
 

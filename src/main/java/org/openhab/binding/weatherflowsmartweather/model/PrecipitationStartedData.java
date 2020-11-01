@@ -1,14 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.model;
 
-import org.eclipse.smarthome.core.library.types.DecimalType;
-import org.eclipse.smarthome.core.library.types.QuantityType;
-import org.eclipse.smarthome.core.library.unit.SIUnits;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.joda.time.DateTime;
-
-import javax.measure.quantity.Length;
-
-import static org.eclipse.smarthome.core.library.unit.MetricPrefix.KILO;
 
 public class PrecipitationStartedData {
     private String bridgeUID;
@@ -19,7 +12,7 @@ public class PrecipitationStartedData {
 
     private DateTime epoch;
 
-//    private Logger log = LoggerFactory.getLogger(RapidWindData.class);
+    // private Logger log = LoggerFactory.getLogger(RapidWindData.class);
 
     public PrecipitationStartedData(Thing sky, EventPrecipitationMessage message) {
         bridgeUID = sky.getBridgeUID().getAsString();
@@ -48,15 +41,13 @@ public class PrecipitationStartedData {
         return serialNumber;
     }
 
-    public DateTime getEpoch() { return epoch; }
-
+    public DateTime getEpoch() {
+        return epoch;
+    }
 
     @Override
     public String toString() {
-        return "PrecipitationStartedData{" +
-                "bridgeUID=" + bridgeUID +
-                ", thingUID=" + thingUID +
-                ", epoch=" + epoch +
-                '}';
+        return "PrecipitationStartedData{" + "bridgeUID=" + bridgeUID + ", thingUID=" + thingUID + ", epoch=" + epoch
+                + '}';
     }
 }

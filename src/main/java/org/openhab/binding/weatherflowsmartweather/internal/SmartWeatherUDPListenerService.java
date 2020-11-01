@@ -7,5 +7,4 @@ public interface SmartWeatherUDPListenerService {
     public void registerListener(SmartWeatherEventListener listener);
 
     public void unregisterListener(SmartWeatherEventListener listener);
-
 }

@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import com.google.gson.Gson;
+import javax.measure.quantity.*;
+
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.QuantityType;
-import org.eclipse.smarthome.core.library.types.RawType;
 import org.eclipse.smarthome.core.library.unit.SIUnits;
 import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -40,7 +40,7 @@ import org.openhab.binding.weatherflowsmartweather.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.measure.quantity.*;
+import com.google.gson.Gson;
 
 /**
  * The {@link SmartWeatherAirHandler} is responsible for handling commands, which are
@@ -110,20 +110,29 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
             // TODO update station status fields
         } else if (data instanceof ObservationAirMessage) {
             handleObservationMessage((ObservationAirMessage) data);
-        }  else if (data instanceof EventStrikeMessage) {
-//            handleEventStrikeMessage((EventStrikeMessage) data);
-
-        } else
-        {
+        } else if (data instanceof EventStrikeMessage) {
+            logger.debug("Received Strike Message.");
+            handleEventStrikeMessage((EventStrikeMessage) data);
+        } else {
             logger.warn("not handling message: " + data);
         }
     }
-/*
+    /*
+     * private void handleEventStrikeMessage(EventStrikeMessage data) {
+     * ThingUID uid = getThing().getUID();
+     * String s = gson.toJson(data);
+     * updateState(new ChannelUID(uid, CHANNEL_STRIKE_EVENTS), new RawType(s.getBytes(), MIME_TYPE_JSON));
+     * }
+     */
+
     private void handleEventStrikeMessage(EventStrikeMessage data) {
         ThingUID uid = getThing().getUID();
-        String s = gson.toJson(data);
-        updateState(new ChannelUID(uid, CHANNEL_STRIKE_EVENTS), new RawType(s.getBytes(), MIME_TYPE_JSON));
-    }*/
+        LightningStrikeData lightningStrikeData = new LightningStrikeData(getThing(), data);
+        logger.debug("handling lightning strike record: " + lightningStrikeData);
+        // Event event = precipitationEventFactory.createPrecipitationEvent(precipitationStartedData);
+        // logger.debug("publisher: " + eventPublisher + ", event: " + event);
+        // eventPublisher.post(event);
+    }
 
     public void handleObservationMessage(ObservationAirMessage data) {
         // logger.warn("Received observation message: " + data);
@@ -131,7 +140,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
         ThingUID uid = getThing().getUID();
 
         for (List obs : l) {
-   //         logger.info("parsing observation record: " + obs);
+            // logger.info("parsing observation record: " + obs);
 
             String[] fields = { CHANNEL_EPOCH, CHANNEL_PRESSURE, CHANNEL_TEMPERATURE, CHANNEL_HUMIDITY,
                     CHANNEL_STRIKE_COUNT, CHANNEL_STRIKE_DISTANCE, CHANNEL_BATTERY_LEVEL };
@@ -139,7 +148,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
             for (String f : fields) {
                 Double val = (Double) obs.get(i++);
                 State type = null;
-                switch(f) {
+                switch (f) {
                     case CHANNEL_EPOCH:
                         type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
                         break;
@@ -165,14 +174,12 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
                         logger.info("Received unknown field " + f + " with value " + val);
                 }
 
-     //           logger.warn("posting field = " + f + ", type = " + type.getClass() + ", value = " + type);
-     //           logger.warn("thing handler callback: " + this.getCallback());
+                // logger.warn("posting field = " + f + ", type = " + type.getClass() + ", value = " + type);
+                // logger.warn("thing handler callback: " + this.getCallback());
                 this.updateState(new ChannelUID(this.getThing().getUID(), f), type);
             }
         }
     }
-
-
 
     private void goOnline() {
         this.updateStatus(ThingStatus.ONLINE);

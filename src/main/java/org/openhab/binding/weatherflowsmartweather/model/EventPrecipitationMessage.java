@@ -32,7 +32,9 @@ public class EventPrecipitationMessage extends SmartWeatherMessage {
         this.device_id = device_id;
     }
 
-    public Object[] getEvt() { return evt; }
+    public Object[] getEvt() {
+        return evt;
+    }
 
     public void setEvt(Object[] evt) {
         this.evt = evt;
@@ -40,8 +42,8 @@ public class EventPrecipitationMessage extends SmartWeatherMessage {
 
     @Override
     public String toString() {
-        return "EventPrecipitationMessage [firmware_revision=" + firmware_revision + ", hub_sn=" + hub_sn + ", device_id="
-                + device_id + ", evt=" + Arrays.toString(evt) + ", serial_number=" + serial_number + "]";
+        return "EventPrecipitationMessage [firmware_revision=" + firmware_revision + ", hub_sn=" + hub_sn
+                + ", device_id=" + device_id + ", evt=" + Arrays.toString(evt) + ", serial_number=" + serial_number
+                + "]";
     }
-
 }

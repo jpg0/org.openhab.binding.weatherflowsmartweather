@@ -1,14 +1,14 @@
 package org.openhab.binding.weatherflowsmartweather.model;
 
+import static org.eclipse.smarthome.core.library.unit.MetricPrefix.KILO;
+
+import javax.measure.quantity.Length;
+
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.QuantityType;
 import org.eclipse.smarthome.core.library.unit.SIUnits;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.joda.time.DateTime;
-
-import javax.measure.quantity.Length;
-
-import static org.eclipse.smarthome.core.library.unit.MetricPrefix.KILO;
 
 public class LightningStrikeData {
     private String bridgeUID;
@@ -21,7 +21,7 @@ public class LightningStrikeData {
     private final DecimalType energy;
     private final QuantityType<Length> distance;
 
-//    private Logger log = LoggerFactory.getLogger(RapidWindData.class);
+    // private Logger log = LoggerFactory.getLogger(RapidWindData.class);
 
     public LightningStrikeData(Thing sky, EventStrikeMessage message) {
         bridgeUID = sky.getBridgeUID().getAsString();
@@ -37,9 +37,13 @@ public class LightningStrikeData {
         energy = new DecimalType((Double) ob[2]);
     }
 
-    public DecimalType getEnergy() { return energy; }
+    public DecimalType getEnergy() {
+        return energy;
+    }
 
-    public QuantityType<Length> getDistance() { return distance; }
+    public QuantityType<Length> getDistance() {
+        return distance;
+    }
 
     public String getBridgeUID() {
         return bridgeUID;
@@ -57,17 +61,13 @@ public class LightningStrikeData {
         return serialNumber;
     }
 
-    public DateTime getEpoch() { return epoch; }
-
+    public DateTime getEpoch() {
+        return epoch;
+    }
 
     @Override
     public String toString() {
-        return "LightningStrikeData{" +
-                "bridgeUID=" + bridgeUID +
-                ", thingUID=" + thingUID +
-                ", epoch=" + epoch +
-                ", distance=" + distance +
-                ", energy=" + energy +
-                '}';
+        return "LightningStrikeData{" + "bridgeUID=" + bridgeUID + ", thingUID=" + thingUID + ", epoch=" + epoch
+                + ", distance=" + distance + ", energy=" + energy + '}';
     }
 }

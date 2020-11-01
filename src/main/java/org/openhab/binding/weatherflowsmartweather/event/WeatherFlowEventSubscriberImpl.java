@@ -1,7 +1,5 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
-import java.util.Collection;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.smarthome.core.events.AbstractTypedEventSubscriber;
 import org.eclipse.smarthome.core.events.Event;
@@ -21,7 +19,7 @@ public class WeatherFlowEventSubscriberImpl extends AbstractTypedEventSubscriber
     EventFilter eventFilter = new EventFilter() {
         @Override
         public boolean apply(Event event) {
-         //   logger.warn("Event: " + event);
+            // logger.warn("Event: " + event);
             return false;
         }
     };
@@ -38,8 +36,5 @@ public class WeatherFlowEventSubscriberImpl extends AbstractTypedEventSubscriber
 
     @Override
     protected void receiveTypedEvent(Event rapidWindEvent) {
-
     }
-
-
 }

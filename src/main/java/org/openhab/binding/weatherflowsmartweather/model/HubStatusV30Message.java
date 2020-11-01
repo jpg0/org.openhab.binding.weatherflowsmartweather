@@ -7,9 +7,9 @@ public class HubStatusV30Message extends HubStatusMessage {
 
     /* for internal use only */
     /*
-    private String stack;
-    private int fs;
-    */
+     * private String stack;
+     * private int fs;
+     */
 
     public String getReset_flags() {
         return reset_flags;
@@ -27,11 +27,9 @@ public class HubStatusV30Message extends HubStatusMessage {
         this.seq = seq;
     }
 
-
     @Override
     public String toString() {
         return "HubStatusV30Message [firmware_revision=" + firmware_revision + ", uptime=" + uptime + ", rssi=" + rssi
-                + ", timestamp=" + timestamp + ", reset_flags=" + reset_flags + ", seq=" + seq
-                + "]";
+                + ", timestamp=" + timestamp + ", reset_flags=" + reset_flags + ", seq=" + seq + "]";
     }
 }

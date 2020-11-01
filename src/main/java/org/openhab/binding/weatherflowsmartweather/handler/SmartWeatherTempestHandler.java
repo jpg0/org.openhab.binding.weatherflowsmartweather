@@ -12,6 +12,7 @@
  */
 package org.openhab.binding.weatherflowsmartweather.handler;
 
+import static org.eclipse.smarthome.core.library.unit.MetricPrefix.HECTO;
 import static org.eclipse.smarthome.core.library.unit.MetricPrefix.MILLI;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.*;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.CHANNEL_EPOCH;
@@ -47,22 +48,22 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 
 /**
- * The {@link SmartWeatherSkyHandler} is responsible for handling commands, which are
+ * The {@link SmartWeatherTempestHandler} is responsible for handling commands, which are
  * sent to one of the channels.
  *
  * @author William Welliver - Initial contribution
  */
 
-public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWeatherEventListener {
+public class SmartWeatherTempestHandler extends BaseThingHandler implements SmartWeatherEventListener {
 
-    private final Logger logger = LoggerFactory.getLogger(SmartWeatherSkyHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(SmartWeatherTempestHandler.class);
 
     private ScheduledFuture<?> messageTimeout;
     private Gson gson = new Gson();
     private RapidWindEventFactoryImpl rapidWindEventFactory;
     private EventPublisher eventPublisher;
 
-    public SmartWeatherSkyHandler(Thing thing, RapidWindEventFactory rapidWindEventFactory,
+    public SmartWeatherTempestHandler(Thing thing, RapidWindEventFactory rapidWindEventFactory,
             EventPublisher eventPublisher) {
         super(thing);
         this.rapidWindEventFactory = new RapidWindEventFactoryImpl();
@@ -97,7 +98,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
 
     @Override
     public void eventReceived(InetAddress source, SmartWeatherMessage data) {
-        logger.debug("SkyHandler received message " + data);
+        logger.debug("TempestHandler received message " + data);
         if (data instanceof StationStatusMessage || data instanceof DeviceStatusMessage) {
             logger.debug("got status message message: " + data);
 
@@ -115,14 +116,17 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
             }, 3, TimeUnit.MINUTES);
 
             // TODO update station status fields
-        } else if (data instanceof ObservationSkyMessage) {
-            handleObservationMessage((ObservationSkyMessage) data);
+        } else if (data instanceof ObservationTempestMessage) {
+            handleObservationMessage((ObservationTempestMessage) data);
         } else if (data instanceof EventRapidWindMessage) {
             logger.debug("Received Rapid Wind Message.");
             handleEventRapidWindMessage((EventRapidWindMessage) data);
         } else if (data instanceof EventPrecipitationMessage) {
             logger.debug("Received Precipitation Message.");
             handleEventPrecipitationMessage((EventPrecipitationMessage) data);
+        } else if (data instanceof EventStrikeMessage) {
+            logger.debug("Received Strike Message.");
+            handleEventStrikeMessage((EventStrikeMessage) data);
         } else {
             logger.warn("not handling message: " + data);
         }
@@ -146,7 +150,16 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
         // eventPublisher.post(event);
     }
 
-    public void handleObservationMessage(ObservationSkyMessage data) {
+    private void handleEventStrikeMessage(EventStrikeMessage data) {
+        ThingUID uid = getThing().getUID();
+        LightningStrikeData lightningStrikeData = new LightningStrikeData(getThing(), data);
+        logger.debug("handling lightning strike record: " + lightningStrikeData);
+        // Event event = precipitationEventFactory.createPrecipitationEvent(precipitationStartedData);
+        // logger.debug("publisher: " + eventPublisher + ", event: " + event);
+        // eventPublisher.post(event);
+    }
+
+    public void handleObservationMessage(ObservationTempestMessage data) {
         // logger.warn("Received observation message: " + data);
         List<List> l = data.getObs();
         ThingUID uid = getThing().getUID();
@@ -154,10 +167,11 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
         for (List obs : l) {
             logger.debug("parsing observation record: " + obs);
 
-            String[] fields = { CHANNEL_EPOCH, CHANNEL_ILLUMINANCE, CHANNEL_UV, CHANNEL_RAIN_ACCUMULATED,
-                    CHANNEL_WIND_LULL, CHANNEL_WIND_AVG, CHANNEL_WIND_GUST, CHANNEL_WIND_DIRECTION,
-                    CHANNEL_BATTERY_LEVEL, CHANNEL_REPORT_INTERVAL, CHANNEL_SOLAR_RADIATION,
-                    CHANNEL_LOCAL_DAY_RAIN_ACCUMULATION, CHANNEL_PRECIPITATION_TYPE, CHANNEL_WIND_SAMPLE_INTERVAL };
+            String[] fields = { CHANNEL_EPOCH, CHANNEL_WIND_LULL, CHANNEL_WIND_AVG, CHANNEL_WIND_GUST,
+                    CHANNEL_WIND_DIRECTION, CHANNEL_WIND_SAMPLE_INTERVAL, CHANNEL_PRESSURE, CHANNEL_TEMPERATURE,
+                    CHANNEL_HUMIDITY, CHANNEL_ILLUMINANCE, CHANNEL_UV, CHANNEL_SOLAR_RADIATION,
+                    CHANNEL_RAIN_ACCUMULATED, CHANNEL_PRECIPITATION_TYPE, CHANNEL_STRIKE_DISTANCE, CHANNEL_STRIKE_COUNT,
+                    CHANNEL_BATTERY_LEVEL, CHANNEL_REPORT_INTERVAL };
             int i = 0;
             for (String f : fields) {
                 Double val = (Double) obs.get(i++);
@@ -208,6 +222,21 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
                             break;
                         case CHANNEL_WIND_SAMPLE_INTERVAL:
                             type = new QuantityType<Time>(val, SmartHomeUnits.SECOND);
+                            break;
+                        case CHANNEL_PRESSURE:
+                            type = new QuantityType<Pressure>(val, HECTO(SIUnits.PASCAL));
+                            break;
+                        case CHANNEL_TEMPERATURE:
+                            type = new QuantityType<Temperature>(val, SIUnits.CELSIUS);
+                            break;
+                        case CHANNEL_HUMIDITY:
+                            type = new QuantityType<Dimensionless>(val, SmartHomeUnits.PERCENT);
+                            break;
+                        case CHANNEL_STRIKE_COUNT:
+                            type = new DecimalType(val);
+                            break;
+                        case CHANNEL_STRIKE_DISTANCE:
+                            type = new QuantityType<Length>(val, SIUnits.METRE.multiply(1000.0));
                             break;
                         default:
                             logger.info("Received unknown field " + f + " with value " + val);

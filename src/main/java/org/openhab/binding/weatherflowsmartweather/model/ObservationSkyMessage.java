@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ObservationSkyMessage extends SmartWeatherMessage {
     private String hub_sn;
-    // private int device_id;
+
     private List<List> obs;
 
     private int firmware_revision;
@@ -33,8 +33,6 @@ public class ObservationSkyMessage extends SmartWeatherMessage {
     // this.device_id = device_id;
     // }
 
-
-
     public List<List> getObs() {
         return obs;
     }
@@ -45,12 +43,7 @@ public class ObservationSkyMessage extends SmartWeatherMessage {
 
     @Override
     public String toString() {
-        return "ObservationSkyMessage{" +
-                "hub_sn='" + hub_sn + '\'' +
-                ", obs=" + obs +
-                ", firmware_revision=" + firmware_revision +
-                ", serial_number='" + serial_number + '\'' +
-                '}';
+        return "ObservationSkyMessage{" + "hub_sn='" + hub_sn + '\'' + ", obs=" + obs + ", firmware_revision="
+                + firmware_revision + ", serial_number='" + serial_number + '\'' + '}';
     }
-
 }

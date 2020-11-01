@@ -1,6 +1,9 @@
 package org.openhab.binding.weatherflowsmartweather.automation;
 
+import java.util.*;
+
 import org.eclipse.smarthome.config.core.Configuration;
+import org.eclipse.smarthome.core.events.Event;
 import org.eclipse.smarthome.core.events.EventFilter;
 import org.eclipse.smarthome.core.events.EventSubscriber;
 import org.openhab.binding.weatherflowsmartweather.event.RapidWindEvent;
@@ -10,11 +13,8 @@ import org.openhab.core.automation.handler.BaseTriggerModuleHandler;
 import org.openhab.core.automation.handler.TriggerHandlerCallback;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.eclipse.smarthome.core.events.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventFilter, EventSubscriber {
 
@@ -27,7 +27,8 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
     public static final String EVENT_TOPIC = "smarthome/things/{uid}/rapidwind";
 
     /**
-     * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s {@link Configuration}.
+     * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s
+     * {@link Configuration}.
      */
     private static final String SKY_UID = "skyThingUid";
 
@@ -38,7 +39,8 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
     private static final String OUTPUT_NAME = "eventData";
 
     /**
-     * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for {@link Event}s.
+     * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for
+     * {@link Event}s.
      */
     private final String skyThingUid;
 
@@ -54,6 +56,7 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
     @SuppressWarnings("rawtypes")
     private ServiceRegistration registration;
     private String topic;
+
     /**
      * Constructs a {@link RapidWindTrigger} instance.
      *
@@ -86,7 +89,8 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
         properties.put("event.topics", this.topic);
 
         registration = this.context.registerService(EventSubscriber.class, this, properties);
-        log.info("Trigger Registered EventSubscriber: Topic: {}, Properties: {}, Registration: {}", new Object[]{topic}, properties, registration);
+        log.info("Trigger Registered EventSubscriber: Topic: {}, Properties: {}, Registration: {}",
+                new Object[] { topic }, properties, registration);
     }
 
     /**
@@ -96,49 +100,49 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
      *
      * @param event - {@link Event} that is passed from {@link EventAdmin} service.
      */
-//    @Override
-//    public void handleEvent(Event event) {
-//        if(true) return;
-//        log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
-//        if(!skyThingUid.equals(event.getProperty("source"))) {
-//            log.warn("Got rapid wind event, but not for us...");
-//            return;
-//        }
-//
-//        if(event.getProperty("payload") == null) {
-//            log.warn("Got event without payload.");
-//            return;
-//        }
-//
-//        Object data = event.getProperty("payload");
-//
-//        if(data instanceof RapidWindData) {
-//            log.warn("Triggering rule!");
-//            final RapidWindData outputValue = (RapidWindData)data;
-//            final Map<String, Object> outputProps = new HashMap<String, Object>();
-//            outputProps.put(OUTPUT_NAME, outputValue);
-//            ruleEngineCallback.triggered(module, outputProps);
-//        } else {
-//            log.warn("Got event but data not of type RapidWindData");
-//        }
-//    }
+    // @Override
+    // public void handleEvent(Event event) {
+    // if(true) return;
+    // log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
+    // if(!skyThingUid.equals(event.getProperty("source"))) {
+    // log.warn("Got rapid wind event, but not for us...");
+    // return;
+    // }
+    //
+    // if(event.getProperty("payload") == null) {
+    // log.warn("Got event without payload.");
+    // return;
+    // }
+    //
+    // Object data = event.getProperty("payload");
+    //
+    // if(data instanceof RapidWindData) {
+    // log.warn("Triggering rule!");
+    // final RapidWindData outputValue = (RapidWindData)data;
+    // final Map<String, Object> outputProps = new HashMap<String, Object>();
+    // outputProps.put(OUTPUT_NAME, outputValue);
+    // ruleEngineCallback.triggered(module, outputProps);
+    // } else {
+    // log.warn("Got event but data not of type RapidWindData");
+    // }
+    // }
 
     /**
      * This method is used to set a callback object to the RuleEngine
      *
      * @param callback a callback object to the RuleEngine.
      */
-//    public void setRuleEngineCallback(final TriggerHandlerCallback callback) {
-//        ruleEngineCallback = callback;
-//        log.warn("setCallback(" + callback + ")");
-//        final Dictionary<String, Object> registrationProperties = new Hashtable<String, Object>();
-//        String topic = EVENT_TOPIC.replace("{uid}", skyThingUid);
-//      //  String [] topics = {topic};
-//        log.warn("topic: " + topic);
-//        registrationProperties.put(EventConstants.EVENT_TOPIC, topic);
-//        registration = context.registerService(EventSubscriber.class, this, registrationProperties);
-//        log.warn("registration: " + registration);
-//    }
+    // public void setRuleEngineCallback(final TriggerHandlerCallback callback) {
+    // ruleEngineCallback = callback;
+    // log.warn("setCallback(" + callback + ")");
+    // final Dictionary<String, Object> registrationProperties = new Hashtable<String, Object>();
+    // String topic = EVENT_TOPIC.replace("{uid}", skyThingUid);
+    // // String [] topics = {topic};
+    // log.warn("topic: " + topic);
+    // registrationProperties.put(EventConstants.EVENT_TOPIC, topic);
+    // registration = context.registerService(EventSubscriber.class, this, registrationProperties);
+    // log.warn("registration: " + registration);
+    // }
 
     /**
      * This method is used to unregister this handler.
@@ -146,7 +150,7 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
     @Override
     public void dispose() {
         super.dispose();
-        if(registration != null) {
+        if (registration != null) {
             registration.unregister();
             registration = null;
         }
@@ -175,25 +179,25 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
     @Override
     public void receive(Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
-        if(!skyThingUid.equals(event.getSource())) {
-//            log.warn("Got rapid wind event, but not for us...");
+        if (!skyThingUid.equals(event.getSource())) {
+            // log.warn("Got rapid wind event, but not for us...");
             return;
         }
 
-        if(!topic.equals(event.getTopic())) {
+        if (!topic.equals(event.getTopic())) {
             log.warn("Got event without correct topic.");
             return;
         }
 
         log.debug("EventType: " + event.getType() + ", expected " + RapidWindEvent.TYPE);
-        if(event.getType() != RapidWindEvent.TYPE) {
+        if (event.getType() != RapidWindEvent.TYPE) {
             log.warn("Got event without correct type. this should not happen.");
             return;
         }
 
-        RapidWindData data = ((RapidWindEvent)event).getRapidWindData();
+        RapidWindData data = ((RapidWindEvent) event).getRapidWindData();
 
-        if(this.callback != null) {
+        if (this.callback != null) {
             log.debug("Triggering rule!");
             final RapidWindData outputValue = (RapidWindData) data;
             final Map<String, Object> outputProps = new HashMap<String, Object>();

@@ -1,5 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.automation;
 
+import java.util.*;
+
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.core.events.EventFilter;
 import org.eclipse.smarthome.core.events.EventSubscriber;
@@ -15,8 +17,6 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-
 public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements EventSubscriber, EventFilter {
 
     private static final Logger log = LoggerFactory.getLogger(LightningStrikeTrigger.class);
@@ -28,7 +28,8 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
     public static final String EVENT_TOPIC = "smarthome/things/{uid}/lightningstrike";
 
     /**
-     * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s {@link Configuration}.
+     * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s
+     * {@link Configuration}.
      */
     private static final String AIR_UID = "airThingUid";
 
@@ -39,7 +40,8 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
     private static final String OUTPUT_NAME = "eventData";
 
     /**
-     * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for {@link Event}s.
+     * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for
+     * {@link Event}s.
      */
     private final String airThingUid;
 
@@ -55,6 +57,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
     @SuppressWarnings("rawtypes")
     private ServiceRegistration registration;
     private String topic;
+
     /**
      * Constructs a {@link LightningStrikeTrigger} instance.
      *
@@ -87,7 +90,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
         properties.put("event.topics", topic);
 
         this.registration = context.registerService(EventSubscriber.class, this, properties);
-        log.info("Trigger Registered EventSubscriber: Topic: {}", new Object[]{this.topic});
+        log.info("Trigger Registered EventSubscriber: Topic: {}", new Object[] { this.topic });
     }
 
     /**
@@ -97,32 +100,32 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
      *
      * @param event - {@link Event} that is passed from {@link EventAdmin} service.
      */
-//    @Override
-//    public void handleEvent(Event event) {
-//        if(true) return;
-//        log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
-//        if(!airThingUid.equals(event.getProperty("source"))) {
-//            log.warn("Got lightning strike event, but not for us...");
-//            return;
-//        }
-//
-//        if(event.getProperty("payload") == null) {
-//            log.warn("Got event without payload.");
-//            return;
-//        }
-//
-//        Object data = event.getProperty("payload");
-//
-//        if(data instanceof LightningStrikeData) {
-//            log.warn("Triggering rule!");
-//            final LightningStrikeData outputValue = (LightningStrikeData)data;
-//            final Map<String, Object> outputProps = new HashMap<String, Object>();
-//            outputProps.put(OUTPUT_NAME, outputValue);
-//            ruleEngineCallback.triggered(module, outputProps);
-//        } else {
-//            log.warn("Got event but data not of type LightningStrikeData");
-//        }
-//    }
+    // @Override
+    // public void handleEvent(Event event) {
+    // if(true) return;
+    // log.warn("Handle event: topic=" + event.getTopic() + ", source=" + event.getProperty("source") + ".");
+    // if(!airThingUid.equals(event.getProperty("source"))) {
+    // log.warn("Got lightning strike event, but not for us...");
+    // return;
+    // }
+    //
+    // if(event.getProperty("payload") == null) {
+    // log.warn("Got event without payload.");
+    // return;
+    // }
+    //
+    // Object data = event.getProperty("payload");
+    //
+    // if(data instanceof LightningStrikeData) {
+    // log.warn("Triggering rule!");
+    // final LightningStrikeData outputValue = (LightningStrikeData)data;
+    // final Map<String, Object> outputProps = new HashMap<String, Object>();
+    // outputProps.put(OUTPUT_NAME, outputValue);
+    // ruleEngineCallback.triggered(module, outputProps);
+    // } else {
+    // log.warn("Got event but data not of type LightningStrikeData");
+    // }
+    // }
 
     /**
      * This method is used to set a callback object to the RuleEngine
@@ -130,18 +133,18 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
      * @param callback a callback object to the RuleEngine.
      */
 
-//    @Override
-//    public void setRuleEngineCallback(final TriggerHandlerCallback callback) {
-//        ruleEngineCallback = callback;
-//        log.warn("setCallback(" + callback + ")");
-//        final Dictionary<String, Object> registrationProperties = new Hashtable<String, Object>();
-//        String topic = EVENT_TOPIC.replace("{uid}", airThingUid);
-//      //  String [] topics = {topic};
-//        log.warn("topic: " + topic);
-//        registrationProperties.put(EventConstants.EVENT_TOPIC, topic);
-//        registration = context.registerService(EventSubscriber.class, this, registrationProperties);
-//        log.warn("registration: " + registration);
-//    }
+    // @Override
+    // public void setRuleEngineCallback(final TriggerHandlerCallback callback) {
+    // ruleEngineCallback = callback;
+    // log.warn("setCallback(" + callback + ")");
+    // final Dictionary<String, Object> registrationProperties = new Hashtable<String, Object>();
+    // String topic = EVENT_TOPIC.replace("{uid}", airThingUid);
+    // // String [] topics = {topic};
+    // log.warn("topic: " + topic);
+    // registrationProperties.put(EventConstants.EVENT_TOPIC, topic);
+    // registration = context.registerService(EventSubscriber.class, this, registrationProperties);
+    // log.warn("registration: " + registration);
+    // }
 
     /**
      * This method is used to unregister this handler.
@@ -149,7 +152,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
     @Override
     public void dispose() {
         super.dispose();
-        if(registration != null) {
+        if (registration != null) {
             registration.unregister();
             registration = null;
         }
@@ -170,23 +173,22 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
     @Override
     public void receive(org.eclipse.smarthome.core.events.Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
-        if(!airThingUid.equals(event.getSource())) {
-//            log.warn("Got rapid wind event, but not for us...");
+        if (!airThingUid.equals(event.getSource())) {
+            // log.warn("Got rapid wind event, but not for us...");
             return;
         }
 
-        if(!topic.equals(event.getTopic())) {
-  //          log.warn("Got event without correct topic.");
+        if (!topic.equals(event.getTopic())) {
+            // log.warn("Got event without correct topic.");
             return;
         }
 
-        if(event.getType() != LightningStrikeEvent.TYPE) {
+        if (event.getType() != LightningStrikeEvent.TYPE) {
             log.warn("Got event without correct type. this should not happen.");
             return;
         }
 
-
-        if(this.callback != null) {
+        if (this.callback != null) {
             LightningStrikeData data = ((LightningStrikeEvent) event).getLightningStrikeData();
 
             log.debug("Triggering rule!");
@@ -200,7 +202,6 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
             log.warn("No callback!");
         }
     }
-
 
     public boolean apply(org.eclipse.smarthome.core.events.Event event) {
         log.debug("->FILTER: {}:{}", event.getTopic(), topic);

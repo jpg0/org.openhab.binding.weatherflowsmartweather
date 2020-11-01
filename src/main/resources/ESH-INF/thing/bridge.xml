@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <thing:thing-descriptions bindingId="weatherflowsmartweather"
-						  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-						  xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
-						  xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
 	<!-- Hub Thing Type -->
 	<bridge-type id="hub">
 		<label>SmartWeather Hub</label>
 		<description>WeatherFlow SmartWeather Hub</description>
-        <channels>
-            <channel id="rssi" typeId="rssi"/>
-            <channel id="firmware_version" typeId="version"/>
-            <channel id="uptime" typeId="uptime"/>
-            <channel id="lastReport" typeId="lastReport" />
-        </channels>
-        
-        <properties>
-            <property name="vendor">WeatherFlow</property>
-            <property name="serial_number"></property>
-        </properties>
-      
-        </bridge-type>
-        
-        
-        
-     <channel-type id="rssi">
-        <item-type>Number</item-type>
-        <label>RSSI</label>
-        <description>Wireless RSSI (Signal Strength)</description>
-        <category>Network</category>
-        <state readOnly="true"/>
-      </channel-type>
-        
-     <channel-type id="version">
-        <item-type>String</item-type>
-        <label>Firmware Version</label>
-        <description>Version of Firmware</description>
-        <category>Network</category>
-        <state readOnly="true"/>
-      </channel-type>
+		<channels>
+			<channel id="rssi" typeId="rssi"/>
+			<channel id="firmware_version" typeId="version"/>
+			<channel id="uptime" typeId="uptime"/>
+			<channel id="lastReport" typeId="lastReport"/>
+		</channels>
 
-     <channel-type id="uptime">
-        <item-type>Number</item-type>
-        <label>Uptime</label>
-        <description>Seconds since restart</description>
-        <category>Network</category>
-        <state readOnly="true"/>
-      </channel-type>
+		<properties>
+			<property name="vendor">WeatherFlow</property>
+			<property name="serial_number"></property>
+		</properties>
 
-     <channel-type id="lastReport">
-        <item-type>DateTime</item-type>
-        <label>Last Report</label>
-        <description>UTC Time of last report</description>
-        <category>Network</category>
-        <state readOnly="true"/>
-     </channel-type>
+	</bridge-type>
+
+
+
+	<channel-type id="rssi">
+		<item-type>Number</item-type>
+		<label>RSSI</label>
+		<description>Wireless RSSI (Signal Strength)</description>
+		<category>Network</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="version">
+		<item-type>String</item-type>
+		<label>Firmware Version</label>
+		<description>Version of Firmware</description>
+		<category>Network</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="uptime">
+		<item-type>Number</item-type>
+		<label>Uptime</label>
+		<description>Seconds since restart</description>
+		<category>Network</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="lastReport">
+		<item-type>DateTime</item-type>
+		<label>Last Report</label>
+		<description>UTC Time of last report</description>
+		<category>Network</category>
+		<state readOnly="true"/>
+	</channel-type>
 </thing:thing-descriptions>

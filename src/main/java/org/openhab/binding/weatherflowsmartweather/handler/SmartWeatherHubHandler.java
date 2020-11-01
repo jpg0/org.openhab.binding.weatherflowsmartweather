@@ -110,8 +110,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
                 handler.eventReceived(source, message);
-            }
-            else if (data instanceof ObservationAirMessage) {
+            } else if (data instanceof ObservationAirMessage) {
                 ObservationAirMessage message = (ObservationAirMessage) data;
                 String serialNumber = message.getSerial_number();
                 ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR,
@@ -171,11 +170,12 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
     }
 
     private ThingTypeUID thingTypeUidFromSerial(String serialNumber) {
-        if(serialNumber.startsWith("SK"))
+        if (serialNumber.startsWith("SK"))
             return WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY;
-        else if(serialNumber.startsWith("AR"))
+        else if (serialNumber.startsWith("AR"))
             return WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR;
-        else return null;
+        else
+            return null;
     }
 
     // wonder if perhaps the refresh rate on this data may be too high by default... do we really need to

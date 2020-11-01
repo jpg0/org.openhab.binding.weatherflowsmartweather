@@ -2,7 +2,7 @@ package org.openhab.binding.weatherflowsmartweather.model;
 
 import java.util.List;
 
-public class ObservationAirMessage extends SmartWeatherMessage {
+public class ObservationTempestMessage extends SmartWeatherMessage {
     private String hub_sn;
 
     private List<List> obs;
@@ -24,14 +24,6 @@ public class ObservationAirMessage extends SmartWeatherMessage {
     public void setHub_sn(String hub_sn) {
         this.hub_sn = hub_sn;
     }
-    //
-    // public int getDevice_id() {
-    // return device_id;
-    // }
-    //
-    // public void setDevice_id(int device_id) {
-    // this.device_id = device_id;
-    // }
 
     public List<List> getObs() {
         return obs;
@@ -43,7 +35,7 @@ public class ObservationAirMessage extends SmartWeatherMessage {
 
     @Override
     public String toString() {
-        return "ObservationAirMessage{" + "hub_sn='" + hub_sn + '\'' + ", obs=" + obs + ", firmware_revision="
+        return "ObservationTempestMessage{" + "hub_sn='" + hub_sn + '\'' + ", obs=" + obs + ", firmware_revision="
                 + firmware_revision + ", serial_number='" + serial_number + '\'' + '}';
     }
 }

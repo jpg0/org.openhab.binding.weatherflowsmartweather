@@ -66,7 +66,8 @@ public class SmartWeatherUDPListenerServiceImpl implements SmartWeatherUDPListen
             logger.error("Unable to parse message. ", e);
         }
 
-        if(message == null) return;
+        if (message == null)
+            return;
 
         logger.debug("Sending message " + message + " for  " + listeners.size() + " listeners.");
         for (SmartWeatherEventListener listener : listeners) {
@@ -83,5 +84,4 @@ public class SmartWeatherUDPListenerServiceImpl implements SmartWeatherUDPListen
     public void unregisterListener(SmartWeatherEventListener listener) {
         listeners.remove(listener);
     }
-
 }
