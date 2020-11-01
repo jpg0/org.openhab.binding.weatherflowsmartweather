@@ -116,7 +116,7 @@
 		<label>Rain Accumulated</label>
 		<description>Rain Accumulated</description>
 		<category>Rain</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
+		<state pattern="%.2f %unit%" readOnly="true"></state>
 	</channel-type>
 
 	<channel-type id="wind_lull">
