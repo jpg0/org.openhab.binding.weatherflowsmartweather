@@ -27,6 +27,8 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
+import org.openhab.binding.weatherflowsmartweather.event.LightningStrikeEventFactory;
+import org.openhab.binding.weatherflowsmartweather.event.PrecipitationStartedEventFactory;
 import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactory;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherAirHandler;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherHubHandler;
@@ -55,6 +57,8 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
 
     SmartWeatherUDPListenerService udpListener;
     private RapidWindEventFactory rapidWindEventFactory;
+    private PrecipitationStartedEventFactory precipitationStartedEventFactory;
+    private LightningStrikeEventFactory lightningStrikeEventFactory;
     private EventPublisher eventPublisher;
 
     public WeatherFlowSmartWeatherHandlerFactory() {
@@ -78,6 +82,24 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
     protected void unsetRapidWindEventFactory(RapidWindEventFactory factory) {
         rapidWindEventFactory = null;
     }
+
+    @Reference
+    protected void setLightningStrikeEventFactory(LightningStrikeEventFactory factory) {
+        lightningStrikeEventFactory = factory;
+    };
+
+    protected void unsetLightningStrikeEventFactory(LightningStrikeEventFactory factory) {
+        lightningStrikeEventFactory = null;
+    };
+
+    @Reference
+    protected void setPrecipitationStartedEventFactory(PrecipitationStartedEventFactory factory) {
+        precipitationStartedEventFactory = factory;
+    };
+
+    protected void unsetLightningStrikeEventFactory(PrecipitationStartedEventFactory factory) {
+        precipitationStartedEventFactory = null;
+    };
 
     @Reference()
     protected void setEventPublisher(EventPublisher eventPublisher) {
@@ -103,11 +125,13 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
             registerDeviceDiscoveryService(hubHandler);
             return hubHandler;
         } else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR)) {
-            return new SmartWeatherAirHandler(thing);
+            return new SmartWeatherAirHandler(thing, lightningStrikeEventFactory, eventPublisher);
         } else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY)) {
-            return new SmartWeatherSkyHandler(thing, rapidWindEventFactory, eventPublisher);
+            return new SmartWeatherSkyHandler(thing, rapidWindEventFactory, precipitationStartedEventFactory,
+                    eventPublisher);
         } else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_TEMPEST)) {
-            return new SmartWeatherTempestHandler(thing, rapidWindEventFactory, eventPublisher);
+            return new SmartWeatherTempestHandler(thing, rapidWindEventFactory, precipitationStartedEventFactory,
+                    lightningStrikeEventFactory, eventPublisher);
         } else {
             throw new RuntimeException("whaaaaaa?");
         }

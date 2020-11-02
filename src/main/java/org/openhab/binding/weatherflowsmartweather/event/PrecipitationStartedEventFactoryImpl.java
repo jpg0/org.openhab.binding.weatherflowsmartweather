@@ -22,7 +22,7 @@ import jersey.repackaged.com.google.common.collect.Sets;
 public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory
         implements PrecipitationStartedEventFactory {
 
-    static final String PRECIPITATION_STARTED_EVENT_TOPIC = "smarthome/things/{thingUID}/precipitation_started";
+    static final String PRECIPITATION_STARTED_EVENT_TOPIC = "openhab/things/{thingUID}/precipitation_started";
 
     private static final Logger log = LoggerFactory.getLogger(PrecipitationStartedEventFactoryImpl.class);
 
@@ -30,37 +30,36 @@ public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory
         super(Sets.newHashSet(PrecipitationStartedEvent.TYPE));
     }
 
-    public static PrecipitationStartedEvent createPrecipitionEvent(PrecipitationStartedData precipitation_started) {
-        String topic = PrecipitationStartedEventFactoryImpl.buildTopic(
-                PrecipitationStartedEventFactoryImpl.PRECIPITATION_STARTED_EVENT_TOPIC,
-                precipitation_started.getThingUID());
-        log.debug("Topic: " + topic);
-        String payload = null;
-
-        try {
-            payload = mySerializePayload(precipitation_started);
-        } catch (Throwable e) {
-            log.error("Error serializing payload.", e);
-        }
-        log.debug("Payload: " + payload);
-        return new PrecipitationStartedEvent(topic, payload, precipitation_started);
-    }
-
     @Override
     protected Event createEventByType(String eventType, String topic, String payload, String source) throws Exception {
         if (PrecipitationStartedEvent.TYPE.equals(eventType)) {
             log.debug(
                     "creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
-            return createPrecipitionEvent(topic, payload);
+            return createPrecipitionStartedEvent(topic, payload);
         }
         throw new IllegalArgumentException("Unsupported event type " + eventType);
+    }
+
+    public static PrecipitationStartedEvent createPrecipitionStartedEvent(
+            PrecipitationStartedData precipitation_started) {
+        String topic = PrecipitationStartedEventFactoryImpl.buildTopic(
+                PrecipitationStartedEventFactoryImpl.PRECIPITATION_STARTED_EVENT_TOPIC,
+                precipitation_started.getThingUID());
+        String payload = null;
+
+        try {
+            payload = PrecipitationStartedEventFactoryImpl.mySerializePayload(precipitation_started);
+        } catch (Throwable e) {
+            PrecipitationStartedEventFactoryImpl.log.error("Error serializing payload.", e);
+        }
+        return new PrecipitationStartedEvent(topic, payload, precipitation_started);
     }
 
     protected static String buildTopic(String topic, String thingUID) {
         return topic.replace("{thingUID}", thingUID);
     }
 
-    private Event createPrecipitionEvent(String topic, String payload) {
+    private Event createPrecipitionStartedEvent(String topic, String payload) {
         PrecipitationStartedData precipitationStartedData = myDeserializePayload(payload,
                 PrecipitationStartedData.class);
         return new PrecipitationStartedEvent(topic, payload, precipitationStartedData);

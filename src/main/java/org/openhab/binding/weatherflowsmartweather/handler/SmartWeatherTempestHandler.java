@@ -39,8 +39,7 @@ import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.State;
 import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
-import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactory;
-import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactoryImpl;
+import org.openhab.binding.weatherflowsmartweather.event.*;
 import org.openhab.binding.weatherflowsmartweather.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,13 +59,19 @@ public class SmartWeatherTempestHandler extends BaseThingHandler implements Smar
 
     private ScheduledFuture<?> messageTimeout;
     private Gson gson = new Gson();
-    private RapidWindEventFactoryImpl rapidWindEventFactory;
+    private RapidWindEventFactory rapidWindEventFactory;
+    private LightningStrikeEventFactory lightningStrikeEventFactory;
+    private PrecipitationStartedEventFactory precipitationStartedEventFactory;
+
     private EventPublisher eventPublisher;
 
     public SmartWeatherTempestHandler(Thing thing, RapidWindEventFactory rapidWindEventFactory,
-            EventPublisher eventPublisher) {
+            PrecipitationStartedEventFactory precipitationStartedEventFactory,
+            LightningStrikeEventFactory lightningStrikeEventFactory, EventPublisher eventPublisher) {
         super(thing);
-        this.rapidWindEventFactory = new RapidWindEventFactoryImpl();
+        this.rapidWindEventFactory = rapidWindEventFactory;
+        this.lightningStrikeEventFactory = lightningStrikeEventFactory;
+        this.precipitationStartedEventFactory = precipitationStartedEventFactory;
         this.eventPublisher = eventPublisher;
     }
 
@@ -123,7 +128,7 @@ public class SmartWeatherTempestHandler extends BaseThingHandler implements Smar
             handleEventRapidWindMessage((EventRapidWindMessage) data);
         } else if (data instanceof EventPrecipitationMessage) {
             logger.debug("Received Precipitation Message.");
-            handleEventPrecipitationMessage((EventPrecipitationMessage) data);
+            handleEventPrecipitationStartedMessage((EventPrecipitationMessage) data);
         } else if (data instanceof EventStrikeMessage) {
             logger.debug("Received Strike Message.");
             handleEventStrikeMessage((EventStrikeMessage) data);
@@ -136,27 +141,27 @@ public class SmartWeatherTempestHandler extends BaseThingHandler implements Smar
         ThingUID uid = getThing().getUID();
         RapidWindData rapidWindData = new RapidWindData(getThing(), data);
         logger.debug("handling rapid wind record: " + rapidWindData);
-        Event event = rapidWindEventFactory.createRapidWindEvent(rapidWindData);
+        Event event = RapidWindEventFactoryImpl.createRapidWindEvent(rapidWindData);
         logger.debug("publisher: " + eventPublisher + ", event: " + event);
         eventPublisher.post(event);
-    }
-
-    private void handleEventPrecipitationMessage(EventPrecipitationMessage data) {
-        ThingUID uid = getThing().getUID();
-        PrecipitationStartedData precipitationStartedData = new PrecipitationStartedData(getThing(), data);
-        logger.debug("handling precipitation record: " + precipitationStartedData);
-        // Event event = precipitationEventFactory.createPrecipitationEvent(precipitationStartedData);
-        // logger.debug("publisher: " + eventPublisher + ", event: " + event);
-        // eventPublisher.post(event);
     }
 
     private void handleEventStrikeMessage(EventStrikeMessage data) {
         ThingUID uid = getThing().getUID();
         LightningStrikeData lightningStrikeData = new LightningStrikeData(getThing(), data);
         logger.debug("handling lightning strike record: " + lightningStrikeData);
-        // Event event = precipitationEventFactory.createPrecipitationEvent(precipitationStartedData);
-        // logger.debug("publisher: " + eventPublisher + ", event: " + event);
-        // eventPublisher.post(event);
+        Event event = LightningStrikeEventFactoryImpl.createLightningStrikeEvent(lightningStrikeData);
+        logger.debug("publisher: " + eventPublisher + ", event: " + event);
+        eventPublisher.post(event);
+    }
+
+    private void handleEventPrecipitationStartedMessage(EventPrecipitationMessage data) {
+        ThingUID uid = getThing().getUID();
+        PrecipitationStartedData precipitationStartedData = new PrecipitationStartedData(getThing(), data);
+        logger.debug("handling precipitation record: " + precipitationStartedData);
+        Event event = PrecipitationStartedEventFactoryImpl.createPrecipitionStartedEvent(precipitationStartedData);
+        logger.debug("publisher: " + eventPublisher + ", event: " + event);
+        eventPublisher.post(event);
     }
 
     public void handleObservationMessage(ObservationTempestMessage data) {

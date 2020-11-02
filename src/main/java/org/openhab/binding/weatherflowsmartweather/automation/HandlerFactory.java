@@ -24,6 +24,7 @@ import org.openhab.core.automation.handler.ModuleHandler;
 import org.openhab.core.automation.handler.ModuleHandlerFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author William Welliver - Initial contribution
  */
+
+@Component(service = ModuleHandlerFactory.class, configurationPid = "binding.weatherflowsmartweather")
 public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHandlerFactory {
 
     /**
@@ -58,6 +61,7 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
         final List<String> temp = new ArrayList<String>();
         temp.add(RapidWindTrigger.UID);
         temp.add(LightningStrikeTrigger.UID);
+        temp.add(PrecipitationStartedTrigger.UID);
         TYPES = Collections.unmodifiableCollection(temp);
 
         LOGGER = LoggerFactory.getLogger(HandlerFactory.class);

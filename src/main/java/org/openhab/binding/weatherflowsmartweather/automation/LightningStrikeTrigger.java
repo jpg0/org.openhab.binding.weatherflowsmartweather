@@ -25,13 +25,13 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
      * JSON definition of the module type.
      */
     public static final String UID = "LightningStrikeTrigger";
-    public static final String EVENT_TOPIC = "smarthome/things/{uid}/lightningstrike";
+    public static final String EVENT_TOPIC = "openhab/things/{uid}/lightningstrike";
 
     /**
      * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s
      * {@link Configuration}.
      */
-    private static final String AIR_UID = "airThingUid";
+    private static final String AIR_UID = "sensorThingUid";
 
     /**
      * This constant defines the output name of this {@link Trigger} handler.
@@ -43,7 +43,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
      * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for
      * {@link Event}s.
      */
-    private final String airThingUid;
+    private final String sensorThingUid;
 
     /**
      * A bundle's execution context within the Framework.
@@ -75,14 +75,14 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
         if (configuration == null) {
             throw new IllegalArgumentException("Configuration can't be null.");
         }
-        airThingUid = (String) configuration.get(AIR_UID);
-        if (airThingUid == null) {
+        sensorThingUid = (String) configuration.get(AIR_UID);
+        if (sensorThingUid == null) {
             throw new IllegalArgumentException("'airThingUid' can not be null.");
         }
 
-        topic = EVENT_TOPIC.replace("{uid}", airThingUid);
+        topic = EVENT_TOPIC.replace("{uid}", sensorThingUid);
 
-        log.debug("Created for " + airThingUid + ".");
+        log.debug("Created for " + sensorThingUid + ".");
 
         this.context = context;
 
@@ -173,7 +173,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
     @Override
     public void receive(org.eclipse.smarthome.core.events.Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
-        if (!airThingUid.equals(event.getSource())) {
+        if (!sensorThingUid.equals(event.getSource())) {
             // log.warn("Got rapid wind event, but not for us...");
             return;
         }
@@ -193,8 +193,9 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
 
             log.debug("Triggering rule!");
             final LightningStrikeData outputValue = (LightningStrikeData) data;
+            final org.eclipse.smarthome.core.events.Event event1 = event;
             final Map<String, Object> outputProps = new HashMap<String, Object>();
-            outputProps.put(EVENT_NAME, event);
+            outputProps.put(EVENT_NAME, event1);
             outputProps.put(OUTPUT_NAME, outputValue);
             ((TriggerHandlerCallback) this.callback).triggered((Trigger) this.module, outputProps);
 

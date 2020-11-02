@@ -24,13 +24,13 @@ public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implem
      * JSON definition of the module type.
      */
     public static final String UID = "PrecipitationStartedTrigger";
-    public static final String EVENT_TOPIC = "smarthome/things/{uid}/precipitationstarted";
+    public static final String EVENT_TOPIC = "openhab/things/{uid}/precipitationstarted";
 
     /**
      * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s
      * {@link Configuration}.
      */
-    private static final String AIR_UID = "skyThingUid";
+    private static final String AIR_UID = "sensorThingUid";
 
     /**
      * This constant defines the output name of this {@link Trigger} handler.
@@ -42,7 +42,7 @@ public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implem
      * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for
      * {@link Event}s.
      */
-    private final String skyThingUid;
+    private final String sensorThingUid;
 
     /**
      * A bundle's execution context within the Framework.
@@ -74,14 +74,14 @@ public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implem
         if (configuration == null) {
             throw new IllegalArgumentException("Configuration can't be null.");
         }
-        skyThingUid = (String) configuration.get(AIR_UID);
-        if (skyThingUid == null) {
-            throw new IllegalArgumentException("'skyThingUid' can not be null.");
+        sensorThingUid = (String) configuration.get(AIR_UID);
+        if (sensorThingUid == null) {
+            throw new IllegalArgumentException("'sensorThingUid' can not be null.");
         }
 
-        topic = EVENT_TOPIC.replace("{uid}", skyThingUid);
+        topic = EVENT_TOPIC.replace("{uid}", sensorThingUid);
 
-        log.warn("Created for " + skyThingUid + ".");
+        log.warn("Created for " + sensorThingUid + ".");
 
         this.context = context;
 
@@ -178,7 +178,7 @@ public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implem
     @Override
     public void receive(Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
-        if (!skyThingUid.equals(event.getSource())) {
+        if (!sensorThingUid.equals(event.getSource())) {
             // log.warn("Got precipitation started event, but not for us...");
             return;
         }
@@ -197,9 +197,10 @@ public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implem
 
         if (this.callback != null) {
             log.debug("Triggering rule!");
+            final Event event1 = event;
             final PrecipitationStartedData outputValue = (PrecipitationStartedData) data;
             final Map<String, Object> outputProps = new HashMap<String, Object>();
-            outputProps.put(EVENT_NAME, event);
+            outputProps.put(EVENT_NAME, event1);
             outputProps.put(OUTPUT_NAME, outputValue);
             ((TriggerHandlerCallback) this.callback).triggered((Trigger) this.module, outputProps);
         } else {

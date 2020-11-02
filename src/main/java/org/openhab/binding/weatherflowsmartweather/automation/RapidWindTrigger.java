@@ -24,13 +24,13 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
      * JSON definition of the module type.
      */
     public static final String UID = "RapidWindTrigger";
-    public static final String EVENT_TOPIC = "smarthome/things/{uid}/rapidwind";
+    public static final String EVENT_TOPIC = "openhab/things/{uid}/rapidwind";
 
     /**
      * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s
      * {@link Configuration}.
      */
-    private static final String SKY_UID = "skyThingUid";
+    private static final String SKY_UID = "sensorThingUid";
 
     /**
      * This constant defines the output name of this {@link Trigger} handler.
@@ -42,7 +42,7 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
      * This field will contain the sky thing's uid with which this {@link Trigger} handler is subscribed for
      * {@link Event}s.
      */
-    private final String skyThingUid;
+    private final String sensorThingUid;
 
     /**
      * A bundle's execution context within the Framework.
@@ -74,14 +74,14 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
         if (configuration == null) {
             throw new IllegalArgumentException("Configuration can't be null.");
         }
-        skyThingUid = (String) configuration.get(SKY_UID);
-        if (skyThingUid == null) {
+        sensorThingUid = (String) configuration.get(SKY_UID);
+        if (sensorThingUid == null) {
             throw new IllegalArgumentException("'skyThingUid' can not be null.");
         }
 
-        topic = EVENT_TOPIC.replace("{uid}", skyThingUid);
+        topic = EVENT_TOPIC.replace("{uid}", sensorThingUid);
 
-        log.debug("Created for " + skyThingUid + ".");
+        log.debug("Created for " + sensorThingUid + ".");
 
         this.context = context;
 
@@ -179,7 +179,7 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
     @Override
     public void receive(Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
-        if (!skyThingUid.equals(event.getSource())) {
+        if (!sensorThingUid.equals(event.getSource())) {
             // log.warn("Got rapid wind event, but not for us...");
             return;
         }
@@ -199,10 +199,12 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
 
         if (this.callback != null) {
             log.debug("Triggering rule!");
+            final Event event1 = event;
             final RapidWindData outputValue = (RapidWindData) data;
             final Map<String, Object> outputProps = new HashMap<String, Object>();
-            outputProps.put(EVENT_NAME, event);
+            outputProps.put(EVENT_NAME, event1);
             outputProps.put(OUTPUT_NAME, outputValue);
+
             ((TriggerHandlerCallback) this.callback).triggered((Trigger) this.module, outputProps);
         } else {
             log.warn("No callback!");

@@ -2,24 +2,30 @@
    "triggers":[  
       {  
          "uid":"LightningStrikeTrigger",
-         "label":"when a rapid wind event happens",
+         "label":"when a lightning strike event happens",
          "description":"Triggers the Rule on Lightning Strike Event",
          "configDescriptions":[
             {  
-               "name":"airThingUid",
+               "name":"sensorThingUid",
                "type":"TEXT",
                "context":"thing",
-               "label":"Air Thing",
-               "description":"The WeatherFlow Air device to use as the source for this trigger.",
+               "label":"Sensor Thing",
+               "description":"The WeatherFlow Air or Tempest device to use as the source for this trigger.",
                "required":true
             }
          ],
-         "outputs":[  
-            {  
+         "outputs":[
+            {
                "name":"outputValue",
                "type":"org.openhab.binding.weatherflowsmartweather.model.LightningStrikeData",
                "label":"Output value",
-               "description":"Output value"
+               "description":"Lightning Strike Data"
+            },
+            {
+               "name":"event",
+               "type":"org.eclipse.smarthome.core.events.Event",
+               "label":"Triggering event",
+               "description":"OH Event"
             }
          ]
       }

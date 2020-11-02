@@ -38,6 +38,8 @@ import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.State;
 import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
+import org.openhab.binding.weatherflowsmartweather.event.PrecipitationStartedEventFactory;
+import org.openhab.binding.weatherflowsmartweather.event.PrecipitationStartedEventFactoryImpl;
 import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactory;
 import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactoryImpl;
 import org.openhab.binding.weatherflowsmartweather.model.*;
@@ -55,17 +57,19 @@ import com.google.gson.Gson;
 
 public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWeatherEventListener {
 
-    private final Logger logger = LoggerFactory.getLogger(SmartWeatherSkyHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SmartWeatherSkyHandler.class);
 
     private ScheduledFuture<?> messageTimeout;
     private Gson gson = new Gson();
-    private RapidWindEventFactoryImpl rapidWindEventFactory;
+    private RapidWindEventFactory rapidWindEventFactory;
+    private PrecipitationStartedEventFactory precipitationStartedEventFactory;
     private EventPublisher eventPublisher;
 
     public SmartWeatherSkyHandler(Thing thing, RapidWindEventFactory rapidWindEventFactory,
-            EventPublisher eventPublisher) {
+            PrecipitationStartedEventFactory precipitationStartedEventFactory, EventPublisher eventPublisher) {
         super(thing);
-        this.rapidWindEventFactory = new RapidWindEventFactoryImpl();
+        this.rapidWindEventFactory = rapidWindEventFactory;
+        this.precipitationStartedEventFactory = precipitationStartedEventFactory;
         this.eventPublisher = eventPublisher;
     }
 
@@ -122,7 +126,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
             handleEventRapidWindMessage((EventRapidWindMessage) data);
         } else if (data instanceof EventPrecipitationMessage) {
             logger.debug("Received Precipitation Message.");
-            handleEventPrecipitationMessage((EventPrecipitationMessage) data);
+            handleEventPrecipitationStartedMessage((EventPrecipitationMessage) data);
         } else {
             logger.warn("not handling message: " + data);
         }
@@ -132,18 +136,18 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
         ThingUID uid = getThing().getUID();
         RapidWindData rapidWindData = new RapidWindData(getThing(), data);
         logger.debug("handling rapid wind record: " + rapidWindData);
-        Event event = rapidWindEventFactory.createRapidWindEvent(rapidWindData);
+        Event event = RapidWindEventFactoryImpl.createRapidWindEvent(rapidWindData);
         logger.debug("publisher: " + eventPublisher + ", event: " + event);
         eventPublisher.post(event);
     }
 
-    private void handleEventPrecipitationMessage(EventPrecipitationMessage data) {
+    private void handleEventPrecipitationStartedMessage(EventPrecipitationMessage data) {
         ThingUID uid = getThing().getUID();
         PrecipitationStartedData precipitationStartedData = new PrecipitationStartedData(getThing(), data);
         logger.debug("handling precipitation record: " + precipitationStartedData);
-        // Event event = precipitationEventFactory.createPrecipitationEvent(precipitationStartedData);
-        // logger.debug("publisher: " + eventPublisher + ", event: " + event);
-        // eventPublisher.post(event);
+        Event event = PrecipitationStartedEventFactoryImpl.createPrecipitionStartedEvent(precipitationStartedData);
+        logger.debug("publisher: " + eventPublisher + ", event: " + event);
+        eventPublisher.post(event);
     }
 
     public void handleObservationMessage(ObservationSkyMessage data) {

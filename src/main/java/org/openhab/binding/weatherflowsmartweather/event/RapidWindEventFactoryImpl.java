@@ -21,7 +21,7 @@ import jersey.repackaged.com.google.common.collect.Sets;
         RapidWindEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
 public class RapidWindEventFactoryImpl extends AbstractEventFactory implements RapidWindEventFactory {
 
-    static final String RAPID_WIND_EVENT_TOPIC = "smarthome/things/{thingUID}/rapidwind";
+    static final String RAPID_WIND_EVENT_TOPIC = "openhab/things/{thingUID}/rapidwind";
 
     private static final Logger log = LoggerFactory.getLogger(RapidWindEventFactoryImpl.class);
 

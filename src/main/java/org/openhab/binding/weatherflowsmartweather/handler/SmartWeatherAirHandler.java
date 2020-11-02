@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.measure.quantity.*;
 
+import org.eclipse.smarthome.core.events.Event;
+import org.eclipse.smarthome.core.events.EventPublisher;
 import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.QuantityType;
@@ -36,6 +38,8 @@ import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.State;
 import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
+import org.openhab.binding.weatherflowsmartweather.event.LightningStrikeEventFactory;
+import org.openhab.binding.weatherflowsmartweather.event.LightningStrikeEventFactoryImpl;
 import org.openhab.binding.weatherflowsmartweather.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,8 +60,14 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
     private Gson gson = new Gson();
     private ScheduledFuture<?> messageTimeout;
 
-    public SmartWeatherAirHandler(Thing thing) {
+    private LightningStrikeEventFactory lightningStrikeEventFactory;
+    private EventPublisher eventPublisher;
+
+    public SmartWeatherAirHandler(Thing thing, LightningStrikeEventFactory lightningStrikeEventFactory,
+            EventPublisher eventPublisher) {
         super(thing);
+        this.lightningStrikeEventFactory = lightningStrikeEventFactory;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -129,9 +139,9 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
         ThingUID uid = getThing().getUID();
         LightningStrikeData lightningStrikeData = new LightningStrikeData(getThing(), data);
         logger.debug("handling lightning strike record: " + lightningStrikeData);
-        // Event event = precipitationEventFactory.createPrecipitationEvent(precipitationStartedData);
-        // logger.debug("publisher: " + eventPublisher + ", event: " + event);
-        // eventPublisher.post(event);
+        Event event = LightningStrikeEventFactoryImpl.createLightningStrikeEvent(lightningStrikeData);
+        logger.debug("publisher: " + eventPublisher + ", event: " + event);
+        eventPublisher.post(event);
     }
 
     public void handleObservationMessage(ObservationAirMessage data) {

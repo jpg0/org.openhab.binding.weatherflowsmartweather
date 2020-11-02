@@ -6,20 +6,26 @@
          "description":"Triggers the Rule on Rapid Wind Event",
          "configDescriptions":[
             {  
-               "name":"skyThingUid",
+               "name":"sensorThingUid",
                "type":"TEXT",
                "context":"thing",
-               "label":"Sky Thing",
-               "description":"The WeatherFlow Sky device to use as the source for this trigger.",
+               "label":"Sensor Thing",
+               "description":"The WeatherFlow Sky or Tempest device to use as the source for this trigger.",
                "required":true
             }
          ],
          "outputs":[  
-            {  
+            {
+               "name":"event",
+               "type":"org.eclipse.smarthome.core.events.Event",
+               "label":"Triggering event",
+               "description":"OH Event"
+            },
+            {
                "name":"outputValue",
                "type":"org.openhab.binding.weatherflowsmartweather.model.RapidWindData",
                "label":"Output value",
-               "description":"Output value"
+               "description":"RapidWindData"
             }
          ]
       }

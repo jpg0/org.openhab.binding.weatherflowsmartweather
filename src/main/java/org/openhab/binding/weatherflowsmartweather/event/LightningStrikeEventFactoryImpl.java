@@ -21,7 +21,7 @@ import jersey.repackaged.com.google.common.collect.Sets;
         LightningStrikeEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
 public class LightningStrikeEventFactoryImpl extends AbstractEventFactory implements LightningStrikeEventFactory {
 
-    static final String LIGHTNING_STRIKE_EVENT_TOPIC = "smarthome/things/{thingUID}/lightningstrike";
+    static final String LIGHTNING_STRIKE_EVENT_TOPIC = "openhab/things/{thingUID}/lightningstrike";
 
     private static final Logger log = LoggerFactory.getLogger(LightningStrikeEventFactoryImpl.class);
 
