@@ -100,8 +100,9 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
             if (data instanceof EventRapidWindMessage) {
                 EventRapidWindMessage message = (EventRapidWindMessage) data;
                 String serialNumber = message.getSerial_number();
-                ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY,
-                        getThing().getUID(), serialNumber);
+
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
@@ -113,8 +114,9 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
             } else if (data instanceof ObservationAirMessage) {
                 ObservationAirMessage message = (ObservationAirMessage) data;
                 String serialNumber = message.getSerial_number();
-                ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR,
-                        getThing().getUID(), serialNumber);
+
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
@@ -126,12 +128,55 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
             } else if (data instanceof ObservationSkyMessage) {
                 ObservationSkyMessage message = (ObservationSkyMessage) data;
                 String serialNumber = message.getSerial_number();
-                ThingUID thingUid = new ThingUID(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY,
-                        getThing().getUID(), serialNumber);
+
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
                     logger.warn("sky observation but not for us.");
+                    return;
+                } // not our hub and sensor combo.
+                SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
+                handler.eventReceived(source, message);
+            } else if (data instanceof ObservationTempestMessage) {
+                ObservationTempestMessage message = (ObservationTempestMessage) data;
+                String serialNumber = message.getSerial_number();
+
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
+
+                Thing t = this.getThingByUID(thingUid);
+                if (t == null) {
+                    logger.warn("tempest observation but not for us.");
+                    return;
+                } // not our hub and sensor combo.
+                SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
+                handler.eventReceived(source, message);
+            } else if (data instanceof EventStrikeMessage) {
+                EventStrikeMessage message = (EventStrikeMessage) data;
+                String serialNumber = message.getSerial_number();
+
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
+
+                Thing t = this.getThingByUID(thingUid);
+                if (t == null) {
+                    logger.warn("event strike message but not for us.");
+                    return;
+                } // not our hub and sensor combo.
+                SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
+                handler.eventReceived(source, message);
+            } else if (data instanceof EventPrecipitationMessage) {
+                EventPrecipitationMessage message = (EventPrecipitationMessage) data;
+                String serialNumber = message.getSerial_number();
+
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
+
+                Thing t = this.getThingByUID(thingUid);
+                if (t == null) {
+                    logger.warn("event precipitation message but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -141,7 +186,6 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
                 String serialNumber = message.getSerial_number();
 
                 ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
-
                 ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
 
                 Thing t = this.getThingByUID(thingUid);
@@ -154,8 +198,8 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
             } else if (data instanceof StationStatusMessage) {
                 StationStatusMessage message = (StationStatusMessage) data;
                 String serialNumber = message.getSerial_number();
-                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
 
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
                 ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
 
                 Thing t = this.getThingByUID(thingUid);
@@ -171,11 +215,12 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
     private ThingTypeUID thingTypeUidFromSerial(String serialNumber) {
         if (serialNumber.startsWith("SK"))
-            return WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY;
+            return THING_TYPE_SMART_WEATHER_SKY;
         else if (serialNumber.startsWith("AR"))
-            return WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR;
-        else
-            return null;
+            return THING_TYPE_SMART_WEATHER_AIR;
+        else if (serialNumber.startsWith("ST"))
+            return THING_TYPE_SMART_WEATHER_TEMPEST;
+        return null;
     }
 
     // wonder if perhaps the refresh rate on this data may be too high by default... do we really need to
