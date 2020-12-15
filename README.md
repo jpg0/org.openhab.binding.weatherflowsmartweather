@@ -20,7 +20,21 @@ No configuration required!
 
 _To be completed_
 
+## Contributing
+
+Snapshot binaries are available form the download section at:
+
+https://bitbucket.org/hww3/org.openhab.binding.weatherflowsmartweather/downloads/
+
+See the master git repository at: 
+
+https://git.sr.ht/~hww3/org.openhab.binding.weatherflowsmartweather
+
+You can use git send-email to submit patches to the mailing list: 
+
+https://lists.sr.ht/~hww3/weatherflowsmartweather
+
 ## TODO
 
-- Support Strike (and Fast Wind/Rain Start) events
+- Support Strike (and Fast Wind/Rain Start) events Done
 - Add derived datapoints (feels like, dewpoint, etc) Done, see weathercalulations binding
