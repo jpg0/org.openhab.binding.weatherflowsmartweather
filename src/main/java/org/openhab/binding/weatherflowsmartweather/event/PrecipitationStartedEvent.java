@@ -24,6 +24,6 @@ public class PrecipitationStartedEvent extends AbstractEvent {
 
     @Override
     public String toString() {
-        return "Rapid Wind at '" + precipitationStartedData.toString() + "'.";
+        return "Precipitation Started at '" + precipitationStartedData.toString() + "'.";
     }
 }
