@@ -1,19 +1,21 @@
 package org.openhab.binding.weatherflowsmartweather.internal;
 
+import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.PROPERTY_SERIAL_NUMBER;
+import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_HUB;
+
 import java.net.InetAddress;
 import java.util.Set;
 
-import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
-import org.eclipse.smarthome.config.discovery.DiscoveryResult;
-import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
-import org.eclipse.smarthome.config.discovery.DiscoveryService;
-import org.eclipse.smarthome.config.discovery.DiscoveryServiceCallback;
-import org.eclipse.smarthome.core.thing.ThingTypeUID;
-import org.eclipse.smarthome.core.thing.ThingUID;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
 import org.openhab.binding.weatherflowsmartweather.model.HubStatusMessage;
 import org.openhab.binding.weatherflowsmartweather.model.SmartWeatherMessage;
+import org.openhab.core.config.discovery.AbstractDiscoveryService;
+import org.openhab.core.config.discovery.DiscoveryResult;
+import org.openhab.core.config.discovery.DiscoveryResultBuilder;
+import org.openhab.core.config.discovery.DiscoveryService;
+import org.openhab.core.thing.ThingTypeUID;
+import org.openhab.core.thing.ThingUID;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -27,8 +29,6 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService imple
     protected final static Set<ThingTypeUID> supportedDevices = WeatherFlowSmartWeatherBindingConstants.SUPPORTED_THING_TYPES;
 
     protected SmartWeatherUDPListenerService udpListener;
-
-    protected DiscoveryServiceCallback discoveryServiceCallback = null;
 
     @Reference()
     protected void bindUdpListener(SmartWeatherUDPListenerService service) {
@@ -89,7 +89,7 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService imple
             // }
 
             DiscoveryResult result = DiscoveryResultBuilder.create(thingUid).withLabel("SmartWeather Hub")
-                    .withRepresentationProperty(serial).withProperty("serial_number", serial).build();
+                    .withProperty(PROPERTY_SERIAL_NUMBER, serial).withThingType(THING_TYPE_SMART_WEATHER_HUB).build();
             // logger.debug("New SmartWeather Hub discovered with ID=<" + serial + ">.");
             this.thingDiscovered(result);
 

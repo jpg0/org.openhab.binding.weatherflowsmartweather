@@ -1,7 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
-import org.eclipse.smarthome.core.events.AbstractEvent;
 import org.openhab.binding.weatherflowsmartweather.model.RapidWindData;
+import org.openhab.core.events.AbstractEvent;
 
 public class RapidWindEvent extends AbstractEvent {
     public static final String TYPE = RapidWindEvent.class.getSimpleName();

@@ -1,20 +1,22 @@
 package org.openhab.binding.weatherflowsmartweather.internal;
 
+import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.PROPERTY_SERIAL_NUMBER;
+
 import java.net.InetAddress;
 import java.util.Set;
 
-import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
-import org.eclipse.smarthome.config.discovery.DiscoveryResult;
-import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.eclipse.smarthome.core.thing.ThingTypeUID;
-import org.eclipse.smarthome.core.thing.ThingUID;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherHubHandler;
 import org.openhab.binding.weatherflowsmartweather.model.DeviceStatusMessage;
 import org.openhab.binding.weatherflowsmartweather.model.SmartWeatherMessage;
 import org.openhab.binding.weatherflowsmartweather.model.StationStatusMessage;
+import org.openhab.core.config.discovery.AbstractDiscoveryService;
+import org.openhab.core.config.discovery.DiscoveryResult;
+import org.openhab.core.config.discovery.DiscoveryResultBuilder;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingTypeUID;
+import org.openhab.core.thing.ThingUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +85,11 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
             hubSerial = message.getHub_sn();
         }
 
+        if (serial == null) {
+            logger.trace("Got message without serial number, ignoring: {}", data);
+            return;
+        }
+
         if (serial != null && serial.startsWith("AR")) {
             // we have an AIR sensor.
             label = "SmartWeather Air";
@@ -103,8 +110,7 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
         }
 
         // is this sensor attached to this hub?
-        if (!hubHandler.getThing().getProperties().get(WeatherFlowSmartWeatherBindingConstants.PROPERTY_SERIAL_NUMBER)
-                .equals(hubSerial)) {
+        if (!hubHandler.getThing().getProperties().get(PROPERTY_SERIAL_NUMBER).equals(hubSerial)) {
             return;
         }
 
@@ -114,15 +120,15 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
 
         Thing thing = hubHandler.getThingByUID(thingUid);
         if (thing != null) {
-            logger.info("Already have thing with ID=<" + thingUid + ">");
+            logger.debug("Already have thing with ID=<" + thingUid + ">");
             return;
         } else {
             logger.debug("Nope. This should trigger a new inbox entry.");
         }
 
         DiscoveryResult result = DiscoveryResultBuilder.create(thingUid).withLabel(label)
-                .withBridge(hubHandler.getThing().getUID()).withRepresentationProperty(serial)
-                .withProperty("serial_number", serial).build();
+                .withBridge(hubHandler.getThing().getUID()).withRepresentationProperty(PROPERTY_SERIAL_NUMBER)
+                .withProperty(PROPERTY_SERIAL_NUMBER, serial).build();
         logger.info("New " + label + " discovered with ID=<" + serial + ">.");
         this.thingDiscovered(result);
     }

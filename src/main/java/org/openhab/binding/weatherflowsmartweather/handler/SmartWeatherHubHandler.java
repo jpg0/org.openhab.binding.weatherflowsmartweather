@@ -12,23 +12,27 @@
  */
 package org.openhab.binding.weatherflowsmartweather.handler;
 
+import static java.time.ZoneOffset.UTC;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.*;
 
 import java.net.InetAddress;
+import java.time.Instant;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.smarthome.core.library.types.DateTimeType;
-import org.eclipse.smarthome.core.library.types.DecimalType;
-import org.eclipse.smarthome.core.library.types.StringType;
-import org.eclipse.smarthome.core.thing.*;
-import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
-import org.eclipse.smarthome.core.types.Command;
-import org.joda.time.DateTime;
+import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
 import org.openhab.binding.weatherflowsmartweather.internal.SmartWeatherUDPListenerService;
 import org.openhab.binding.weatherflowsmartweather.model.*;
+import org.openhab.core.library.types.DateTimeType;
+import org.openhab.core.library.types.DecimalType;
+import org.openhab.core.library.types.StringType;
+import org.openhab.core.thing.*;
+import org.openhab.core.thing.binding.BaseBridgeHandler;
+import org.openhab.core.types.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +70,22 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
         } else {
             updateStatus(ThingStatus.OFFLINE);
         }
+    }
+
+    @Nullable
+    public Thing getThingByUID(ThingUID uid) {
+        Bridge bridge = this.getThing();
+        List<Thing> things = bridge.getThings();
+        Iterator thingIterator = things.iterator();
+
+        while (thingIterator.hasNext()) {
+            Thing thing = (Thing) thingIterator.next();
+            if (thing.getUID().equals(uid)) {
+                return thing;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -230,7 +250,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
         updateState(new ChannelUID(getThing().getUID(), CHANNEL_FIRMWARE_VERSION),
                 new StringType(data.getFirmware_version()));
         updateState(new ChannelUID(getThing().getUID(), CHANNEL_LAST_REPORT),
-                new DateTimeType(new DateTime(data.getTimestamp() * 1000).toCalendar(null)));
+                new DateTimeType(Instant.ofEpochMilli(data.getTimestamp() * 1000L).atZone(UTC)));
         updateState(new ChannelUID(getThing().getUID(), CHANNEL_UPTIME), new DecimalType(data.getUptime()));
 
         // TODO Does it make sense to include the new fields from the v30 status message? Mostly debug info, it seems.

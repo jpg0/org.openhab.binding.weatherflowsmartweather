@@ -12,35 +12,36 @@
  */
 package org.openhab.binding.weatherflowsmartweather.handler;
 
-import static org.eclipse.smarthome.core.library.unit.MetricPrefix.HECTO;
-import static org.eclipse.smarthome.core.library.unit.MetricPrefix.MILLI;
+import static java.time.ZoneOffset.UTC;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.*;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.CHANNEL_EPOCH;
+import static org.openhab.core.library.unit.MetricPrefix.HECTO;
+import static org.openhab.core.library.unit.MetricPrefix.MILLI;
 
 import java.net.InetAddress;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.measure.quantity.*;
 
-import org.eclipse.smarthome.core.events.Event;
-import org.eclipse.smarthome.core.events.EventPublisher;
-import org.eclipse.smarthome.core.library.dimension.Intensity;
-import org.eclipse.smarthome.core.library.types.*;
-import org.eclipse.smarthome.core.library.unit.SIUnits;
-import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
-import org.eclipse.smarthome.core.thing.ChannelUID;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.eclipse.smarthome.core.thing.ThingStatus;
-import org.eclipse.smarthome.core.thing.ThingUID;
-import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
-import org.eclipse.smarthome.core.types.Command;
-import org.eclipse.smarthome.core.types.State;
-import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
 import org.openhab.binding.weatherflowsmartweather.event.*;
 import org.openhab.binding.weatherflowsmartweather.model.*;
+import org.openhab.core.events.Event;
+import org.openhab.core.events.EventPublisher;
+import org.openhab.core.library.dimension.Intensity;
+import org.openhab.core.library.types.*;
+import org.openhab.core.library.unit.SIUnits;
+import org.openhab.core.library.unit.Units;
+import org.openhab.core.thing.ChannelUID;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingStatus;
+import org.openhab.core.thing.ThingUID;
+import org.openhab.core.thing.binding.BaseThingHandler;
+import org.openhab.core.types.Command;
+import org.openhab.core.types.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,6 +181,7 @@ public class SmartWeatherTempestHandler extends BaseThingHandler implements Smar
             int i = 0;
             for (String f : fields) {
                 Double val = (Double) obs.get(i++);
+
                 State type = null;
 
                 if (val == null)
@@ -187,37 +189,37 @@ public class SmartWeatherTempestHandler extends BaseThingHandler implements Smar
                 else {
                     switch (f) {
                         case CHANNEL_EPOCH:
-                            type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
+                            type = new DateTimeType(Instant.ofEpochMilli(val.longValue() * 1000L).atZone(UTC));
                             break;
                         case CHANNEL_ILLUMINANCE:
-                            type = new QuantityType<Illuminance>(val, SmartHomeUnits.LUX);
+                            type = new QuantityType<Illuminance>(val, Units.LUX);
                             break;
                         case CHANNEL_UV:
-                            type = new QuantityType<Dimensionless>(val, SmartHomeUnits.ONE);
+                            type = new QuantityType<Dimensionless>(val, Units.ONE);
                             break;
                         case CHANNEL_RAIN_ACCUMULATED:
                             type = new QuantityType<Length>(val, MILLI(SIUnits.METRE));
                             break;
                         case CHANNEL_WIND_LULL:
-                            type = new QuantityType<Speed>(val, SmartHomeUnits.METRE_PER_SECOND);
+                            type = new QuantityType<Speed>(val, Units.METRE_PER_SECOND);
                             break;
                         case CHANNEL_WIND_AVG:
-                            type = new QuantityType<Speed>(val, SmartHomeUnits.METRE_PER_SECOND);
+                            type = new QuantityType<Speed>(val, Units.METRE_PER_SECOND);
                             break;
                         case CHANNEL_WIND_GUST:
-                            type = new QuantityType<Speed>(val, SmartHomeUnits.METRE_PER_SECOND);
+                            type = new QuantityType<Speed>(val, Units.METRE_PER_SECOND);
                             break;
                         case CHANNEL_WIND_DIRECTION:
-                            type = new QuantityType<Angle>(val, SmartHomeUnits.DEGREE_ANGLE);
+                            type = new QuantityType<Angle>(val, Units.DEGREE_ANGLE);
                             break;
                         case CHANNEL_BATTERY_LEVEL:
-                            type = new QuantityType<ElectricPotential>(val, SmartHomeUnits.VOLT);
+                            type = new QuantityType<ElectricPotential>(val, Units.VOLT);
                             break;
                         case CHANNEL_REPORT_INTERVAL:
-                            type = new QuantityType<Time>(val, SmartHomeUnits.SECOND);
+                            type = new QuantityType<Time>(val, Units.SECOND);
                             break;
                         case CHANNEL_SOLAR_RADIATION:
-                            type = new QuantityType<Intensity>(val, SmartHomeUnits.IRRADIANCE);
+                            type = new QuantityType<Intensity>(val, Units.IRRADIANCE);
                             break;
                         case CHANNEL_LOCAL_DAY_RAIN_ACCUMULATION:
                             type = new QuantityType<Length>(val, MILLI(SIUnits.METRE));
@@ -226,7 +228,7 @@ public class SmartWeatherTempestHandler extends BaseThingHandler implements Smar
                             type = new StringType("" + val.intValue());
                             break;
                         case CHANNEL_WIND_SAMPLE_INTERVAL:
-                            type = new QuantityType<Time>(val, SmartHomeUnits.SECOND);
+                            type = new QuantityType<Time>(val, Units.SECOND);
                             break;
                         case CHANNEL_PRESSURE:
                             type = new QuantityType<Pressure>(val, HECTO(SIUnits.PASCAL));
@@ -235,7 +237,7 @@ public class SmartWeatherTempestHandler extends BaseThingHandler implements Smar
                             type = new QuantityType<Temperature>(val, SIUnits.CELSIUS);
                             break;
                         case CHANNEL_HUMIDITY:
-                            type = new QuantityType<Dimensionless>(val, SmartHomeUnits.PERCENT);
+                            type = new QuantityType<Dimensionless>(val, Units.PERCENT);
                             break;
                         case CHANNEL_STRIKE_COUNT:
                             type = new DecimalType(val);
@@ -247,9 +249,13 @@ public class SmartWeatherTempestHandler extends BaseThingHandler implements Smar
                             logger.info("Received unknown field " + f + " with value " + val);
                     }
                 }
-                logger.debug("posting type = " + type);
 
-                updateState(new ChannelUID(uid, f), type);
+                if (type != null) {
+                    logger.debug("posting type = " + type);
+                    updateState(new ChannelUID(uid, f), type);
+                } else {
+                    logger.warn("passed through without a type to update.");
+                }
             }
         }
     }

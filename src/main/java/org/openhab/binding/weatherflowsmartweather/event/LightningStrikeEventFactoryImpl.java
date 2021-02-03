@@ -1,21 +1,18 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
-import java.lang.reflect.Type;
+import static org.openhab.binding.weatherflowsmartweather.util.GsonUtils.gsonDateTime;
 
-import org.eclipse.smarthome.core.events.AbstractEventFactory;
-import org.eclipse.smarthome.core.events.Event;
-import org.eclipse.smarthome.core.events.EventFactory;
-import org.eclipse.smarthome.core.library.types.QuantityType;
-import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
+import java.util.Set;
+
 import org.openhab.binding.weatherflowsmartweather.model.LightningStrikeData;
+import org.openhab.core.events.AbstractEventFactory;
+import org.openhab.core.events.Event;
+import org.openhab.core.events.EventFactory;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.*;
-
-import jersey.repackaged.com.google.common.collect.Sets;
 
 @Component(service = { EventFactory.class,
         LightningStrikeEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
@@ -26,7 +23,7 @@ public class LightningStrikeEventFactoryImpl extends AbstractEventFactory implem
     private static final Logger log = LoggerFactory.getLogger(LightningStrikeEventFactoryImpl.class);
 
     public LightningStrikeEventFactoryImpl() {
-        super(Sets.newHashSet(LightningStrikeEvent.TYPE));
+        super(Set.of(LightningStrikeEvent.TYPE));
     }
 
     public static LightningStrikeEvent createLightningStrikeEvent(LightningStrikeData lightning_strike) {
@@ -69,46 +66,5 @@ public class LightningStrikeEventFactoryImpl extends AbstractEventFactory implem
 
     protected static String mySerializePayload(LightningStrikeData payloadObject) {
         return gsonDateTime().toJson(payloadObject);
-    }
-
-    public static Gson gsonDateTime() {
-        Gson gson = // new Gson();
-                new GsonBuilder().registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {
-                    @Override
-                    public JsonElement serialize(DateTime json, Type typeOfSrc, JsonSerializationContext context) {
-                        log.debug("Serializing " + json);
-                        JsonPrimitive p = new JsonPrimitive(ISODateTimeFormat.dateTime().print(json));
-                        log.debug("Serialized to " + p);
-                        return p;
-                    }
-                }).registerTypeAdapter(DateTime.class, new JsonDeserializer<DateTime>() {
-                    @Override
-                    public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                            throws JsonParseException {
-                        DateTime dt = ISODateTimeFormat.dateTime().parseDateTime(json.getAsString());
-                        return dt;
-                    }
-                }).registerTypeAdapter(QuantityType.class, new JsonSerializer<QuantityType>() {
-                    @Override
-                    public JsonElement serialize(QuantityType quantityType, Type typeOfSrc,
-                            JsonSerializationContext context) {
-                        log.debug("Serializing " + quantityType);
-                        JsonPrimitive p = new JsonPrimitive(quantityType.toFullString());
-                        log.debug("Serialized to " + p);
-                        return p;
-                    }
-                }).registerTypeAdapter(QuantityType.class, new JsonDeserializer<QuantityType>() {
-                    @Override
-                    public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                            throws JsonParseException {
-                        log.debug("Deserializing " + json.getAsString());
-                        QuantityType qt = new QuantityType(json.getAsString());
-                        log.debug("Deserialized to " + qt);
-
-                        return qt;
-                    }
-                }).create();
-
-        return gson;
     }
 }

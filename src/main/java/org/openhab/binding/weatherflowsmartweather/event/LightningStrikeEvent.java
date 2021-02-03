@@ -1,7 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
-import org.eclipse.smarthome.core.events.AbstractEvent;
 import org.openhab.binding.weatherflowsmartweather.model.LightningStrikeData;
+import org.openhab.core.events.AbstractEvent;
 
 public class LightningStrikeEvent extends AbstractEvent {
     public static final String TYPE = LightningStrikeEvent.class.getSimpleName();

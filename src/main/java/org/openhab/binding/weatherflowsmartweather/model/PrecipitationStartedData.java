@@ -1,7 +1,11 @@
 package org.openhab.binding.weatherflowsmartweather.model;
 
-import org.eclipse.smarthome.core.thing.Thing;
-import org.joda.time.DateTime;
+import static java.time.ZoneOffset.UTC;
+
+import java.time.Instant;
+import java.time.ZonedDateTime;
+
+import org.openhab.core.thing.Thing;
 
 public class PrecipitationStartedData {
     private String bridgeUID;
@@ -10,7 +14,7 @@ public class PrecipitationStartedData {
     private String hubSerialNumber;
     private String serialNumber;
 
-    private DateTime epoch;
+    private ZonedDateTime epoch;
 
     // private Logger log = LoggerFactory.getLogger(RapidWindData.class);
 
@@ -22,7 +26,7 @@ public class PrecipitationStartedData {
         hubSerialNumber = message.getHub_sn();
         Object[] ob = message.getEvt();
 
-        epoch = new DateTime((((Double) ob[0]).intValue() * 1000L));
+        epoch = Instant.ofEpochMilli(((Double) ob[0]).intValue() * 1000L).atZone(UTC);
     }
 
     public String getBridgeUID() {
@@ -41,7 +45,7 @@ public class PrecipitationStartedData {
         return serialNumber;
     }
 
-    public DateTime getEpoch() {
+    public ZonedDateTime getEpoch() {
         return epoch;
     }
 

@@ -65,7 +65,7 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
         TYPES = Collections.unmodifiableCollection(temp);
 
         LOGGER = LoggerFactory.getLogger(HandlerFactory.class);
-        LOGGER.warn("Initialize!");
+        LOGGER.info("Initialize!");
     }
 
     private BundleContext bundleContext;
@@ -73,7 +73,7 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
     @Override
     public ModuleHandler getHandler(Module module, String ruleUID) {
         String id = ruleUID + module.getId();
-        LOGGER.warn("getHandler");
+        LOGGER.info("getHandler");
         return super.getHandler(module, ruleUID);
     }
 
@@ -83,7 +83,7 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
      */
     @Override
     protected ModuleHandler internalCreate(Module module, String ruleUID) {
-        LOGGER.warn("internalCreate " + module.getTypeUID() + " " + ruleUID);
+        LOGGER.info("internalCreate " + module.getTypeUID() + " " + ruleUID);
         if (RapidWindTrigger.UID.equals(module.getTypeUID())) {
             return new RapidWindTrigger((Trigger) module, bundleContext);
         } else if (LightningStrikeTrigger.UID.equals(module.getTypeUID())) {
@@ -113,7 +113,7 @@ public class HandlerFactory extends BaseModuleHandlerFactory implements ModuleHa
      */
     public void activate(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
-        LOGGER.warn("activate()");
+        LOGGER.debug("activate()");
     }
 
     /**

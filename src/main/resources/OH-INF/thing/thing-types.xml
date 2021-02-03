@@ -94,7 +94,6 @@
 		</properties>
 	</thing-type>
 
-
 	<channel-type id="illuminance">
 		<item-type>Number:Illuminance</item-type>
 		<label>Illuminance</label>
@@ -158,7 +157,6 @@
 		<category>Number</category>
 		<state pattern="%.1f %unit%" readOnly="true"></state>
 	</channel-type>
-
 
 	<channel-type id="solar_radiation">
 		<item-type>Number:Intensity</item-type>

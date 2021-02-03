@@ -1,7 +1,7 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
-import org.eclipse.smarthome.core.events.AbstractEvent;
 import org.openhab.binding.weatherflowsmartweather.model.PrecipitationStartedData;
+import org.openhab.core.events.AbstractEvent;
 
 public class PrecipitationStartedEvent extends AbstractEvent {
     public static final String TYPE = PrecipitationStartedEvent.class.getSimpleName();

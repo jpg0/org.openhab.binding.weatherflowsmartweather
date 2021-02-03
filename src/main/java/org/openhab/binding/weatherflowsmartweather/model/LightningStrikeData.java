@@ -1,14 +1,17 @@
 package org.openhab.binding.weatherflowsmartweather.model;
 
-import static org.eclipse.smarthome.core.library.unit.MetricPrefix.KILO;
+import static java.time.ZoneOffset.UTC;
+import static org.openhab.core.library.unit.MetricPrefix.KILO;
+
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
 import javax.measure.quantity.Length;
 
-import org.eclipse.smarthome.core.library.types.DecimalType;
-import org.eclipse.smarthome.core.library.types.QuantityType;
-import org.eclipse.smarthome.core.library.unit.SIUnits;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.joda.time.DateTime;
+import org.openhab.core.library.types.DecimalType;
+import org.openhab.core.library.types.QuantityType;
+import org.openhab.core.library.unit.SIUnits;
+import org.openhab.core.thing.Thing;
 
 public class LightningStrikeData {
     private String bridgeUID;
@@ -17,7 +20,7 @@ public class LightningStrikeData {
     private String hubSerialNumber;
     private String serialNumber;
 
-    private DateTime epoch;
+    private ZonedDateTime epoch;
     private final DecimalType energy;
     private final QuantityType<Length> distance;
 
@@ -31,7 +34,7 @@ public class LightningStrikeData {
         hubSerialNumber = message.getHub_sn();
         Object[] ob = message.getEvt();
 
-        epoch = new DateTime((((Double) ob[0]).intValue() * 1000L));
+        epoch = Instant.ofEpochMilli(((Double) ob[0]).intValue() * 1000L).atZone(UTC);
 
         distance = new QuantityType<Length>((Double) ob[1], KILO(SIUnits.METRE));
         energy = new DecimalType((Double) ob[2]);
@@ -61,7 +64,7 @@ public class LightningStrikeData {
         return serialNumber;
     }
 
-    public DateTime getEpoch() {
+    public ZonedDateTime getEpoch() {
         return epoch;
     }
 

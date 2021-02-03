@@ -1,10 +1,10 @@
 package org.openhab.binding.weatherflowsmartweather.event;
 
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.smarthome.core.events.AbstractTypedEventSubscriber;
-import org.eclipse.smarthome.core.events.Event;
-import org.eclipse.smarthome.core.events.EventFilter;
-import org.eclipse.smarthome.core.events.EventSubscriber;
+import org.openhab.core.events.AbstractTypedEventSubscriber;
+import org.openhab.core.events.Event;
+import org.openhab.core.events.EventFilter;
+import org.openhab.core.events.EventSubscriber;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class WeatherFlowEventSubscriberImpl extends AbstractTypedEventSubscriber
 
     public WeatherFlowEventSubscriberImpl() {
         super(AbstractTypedEventSubscriber.ALL_EVENT_TYPES);
-        logger.warn("Starting!");
+        logger.info("Starting!");
     }
 
     @Override

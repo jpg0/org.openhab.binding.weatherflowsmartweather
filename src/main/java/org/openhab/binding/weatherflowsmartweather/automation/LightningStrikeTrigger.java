@@ -2,14 +2,14 @@ package org.openhab.binding.weatherflowsmartweather.automation;
 
 import java.util.*;
 
-import org.eclipse.smarthome.config.core.Configuration;
-import org.eclipse.smarthome.core.events.EventFilter;
-import org.eclipse.smarthome.core.events.EventSubscriber;
 import org.openhab.binding.weatherflowsmartweather.event.LightningStrikeEvent;
 import org.openhab.binding.weatherflowsmartweather.model.LightningStrikeData;
 import org.openhab.core.automation.Trigger;
 import org.openhab.core.automation.handler.BaseTriggerModuleHandler;
 import org.openhab.core.automation.handler.TriggerHandlerCallback;
+import org.openhab.core.config.core.Configuration;
+import org.openhab.core.events.EventFilter;
+import org.openhab.core.events.EventSubscriber;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.event.Event;
@@ -171,7 +171,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
     }
 
     @Override
-    public void receive(org.eclipse.smarthome.core.events.Event event) {
+    public void receive(org.openhab.core.events.Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
         if (!sensorThingUid.equals(event.getSource())) {
             // log.warn("Got rapid wind event, but not for us...");
@@ -193,7 +193,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
 
             log.debug("Triggering rule!");
             final LightningStrikeData outputValue = (LightningStrikeData) data;
-            final org.eclipse.smarthome.core.events.Event event1 = event;
+            final org.openhab.core.events.Event event1 = event;
             final Map<String, Object> outputProps = new HashMap<String, Object>();
             outputProps.put(EVENT_NAME, event1);
             outputProps.put(OUTPUT_NAME, outputValue);
@@ -204,7 +204,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
         }
     }
 
-    public boolean apply(org.eclipse.smarthome.core.events.Event event) {
+    public boolean apply(org.openhab.core.events.Event event) {
         log.debug("->FILTER: {}:{}", event.getTopic(), topic);
         return event.getTopic().equals(topic);
     }

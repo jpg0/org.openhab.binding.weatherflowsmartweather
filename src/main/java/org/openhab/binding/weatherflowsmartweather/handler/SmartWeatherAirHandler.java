@@ -12,35 +12,36 @@
  */
 package org.openhab.binding.weatherflowsmartweather.handler;
 
-import static org.eclipse.smarthome.core.library.unit.MetricPrefix.HECTO;
+import static java.time.ZoneOffset.UTC;
 import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.*;
+import static org.openhab.core.library.unit.MetricPrefix.HECTO;
 
 import java.net.InetAddress;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.measure.quantity.*;
 
-import org.eclipse.smarthome.core.events.Event;
-import org.eclipse.smarthome.core.events.EventPublisher;
-import org.eclipse.smarthome.core.library.types.DateTimeType;
-import org.eclipse.smarthome.core.library.types.DecimalType;
-import org.eclipse.smarthome.core.library.types.QuantityType;
-import org.eclipse.smarthome.core.library.unit.SIUnits;
-import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
-import org.eclipse.smarthome.core.thing.ChannelUID;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.eclipse.smarthome.core.thing.ThingStatus;
-import org.eclipse.smarthome.core.thing.ThingUID;
-import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
-import org.eclipse.smarthome.core.types.Command;
-import org.eclipse.smarthome.core.types.State;
-import org.joda.time.DateTime;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
 import org.openhab.binding.weatherflowsmartweather.event.LightningStrikeEventFactory;
 import org.openhab.binding.weatherflowsmartweather.event.LightningStrikeEventFactoryImpl;
 import org.openhab.binding.weatherflowsmartweather.model.*;
+import org.openhab.core.events.Event;
+import org.openhab.core.events.EventPublisher;
+import org.openhab.core.library.types.DateTimeType;
+import org.openhab.core.library.types.DecimalType;
+import org.openhab.core.library.types.QuantityType;
+import org.openhab.core.library.unit.SIUnits;
+import org.openhab.core.library.unit.Units;
+import org.openhab.core.thing.ChannelUID;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingStatus;
+import org.openhab.core.thing.ThingUID;
+import org.openhab.core.thing.binding.BaseThingHandler;
+import org.openhab.core.types.Command;
+import org.openhab.core.types.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,7 +161,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
                 State type = null;
                 switch (f) {
                     case CHANNEL_EPOCH:
-                        type = new DateTimeType(new DateTime(val.longValue() * 1000).toCalendar(null));
+                        type = new DateTimeType(Instant.ofEpochMilli(val.longValue() * 1000).atZone(UTC));
                         break;
                     case CHANNEL_PRESSURE:
                         type = new QuantityType<Pressure>(val, HECTO(SIUnits.PASCAL));
@@ -169,7 +170,7 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
                         type = new QuantityType<Temperature>(val, SIUnits.CELSIUS);
                         break;
                     case CHANNEL_HUMIDITY:
-                        type = new QuantityType<Dimensionless>(val, SmartHomeUnits.PERCENT);
+                        type = new QuantityType<Dimensionless>(val, Units.PERCENT);
                         break;
                     case CHANNEL_STRIKE_COUNT:
                         type = new DecimalType(val);
@@ -178,15 +179,18 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
                         type = new QuantityType<Length>(val, SIUnits.METRE.multiply(1000.0));
                         break;
                     case CHANNEL_BATTERY_LEVEL:
-                        type = new QuantityType<ElectricPotential>(val, SmartHomeUnits.VOLT);
+                        type = new QuantityType<ElectricPotential>(val, Units.VOLT);
                         break;
                     default:
                         logger.info("Received unknown field " + f + " with value " + val);
                 }
 
-                // logger.warn("posting field = " + f + ", type = " + type.getClass() + ", value = " + type);
-                // logger.warn("thing handler callback: " + this.getCallback());
-                this.updateState(new ChannelUID(this.getThing().getUID(), f), type);
+                if (type != null) {
+                    logger.debug("posting type = " + type);
+                    updateState(new ChannelUID(uid, f), type);
+                } else {
+                    logger.warn("passed through without a type to update.");
+                }
             }
         }
     }

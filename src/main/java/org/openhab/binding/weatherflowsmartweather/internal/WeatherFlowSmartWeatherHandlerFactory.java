@@ -12,20 +12,12 @@
  */
 package org.openhab.binding.weatherflowsmartweather.internal;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
+import static org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants.*;
 
-import org.eclipse.smarthome.config.discovery.DiscoveryService;
-import org.eclipse.smarthome.core.events.EventPublisher;
-import org.eclipse.smarthome.core.thing.Bridge;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.eclipse.smarthome.core.thing.ThingTypeUID;
-import org.eclipse.smarthome.core.thing.ThingUID;
-import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
-import org.eclipse.smarthome.core.thing.binding.ThingHandler;
-import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
+import java.util.*;
+
+import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
 import org.openhab.binding.weatherflowsmartweather.event.LightningStrikeEventFactory;
 import org.openhab.binding.weatherflowsmartweather.event.PrecipitationStartedEventFactory;
@@ -34,6 +26,16 @@ import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherAirHandle
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherHubHandler;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherSkyHandler;
 import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherTempestHandler;
+import org.openhab.core.config.core.Configuration;
+import org.openhab.core.config.discovery.DiscoveryService;
+import org.openhab.core.events.EventPublisher;
+import org.openhab.core.thing.Bridge;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingTypeUID;
+import org.openhab.core.thing.ThingUID;
+import org.openhab.core.thing.binding.BaseThingHandlerFactory;
+import org.openhab.core.thing.binding.ThingHandler;
+import org.openhab.core.thing.binding.ThingHandlerFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -47,6 +49,7 @@ import org.slf4j.LoggerFactory;
  * @author William Welliver - Initial contribution
  */
 
+@NonNullByDefault
 @Component(service = ThingHandlerFactory.class, configurationPid = "binding.weatherflowsmartweather")
 public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFactory {
 
@@ -55,14 +58,19 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
     static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = WeatherFlowSmartWeatherBindingConstants.SUPPORTED_THING_TYPES;
     private Map<ThingUID, ServiceRegistration<?>> discoveryServiceRegs = new HashMap<>();
 
+    @Nullable
     SmartWeatherUDPListenerService udpListener;
+    @Nullable
     private RapidWindEventFactory rapidWindEventFactory;
+    @Nullable
     private PrecipitationStartedEventFactory precipitationStartedEventFactory;
-    private LightningStrikeEventFactory lightningStrikeEventFactory;
-    private EventPublisher eventPublisher;
+    @Nullable
+    LightningStrikeEventFactory lightningStrikeEventFactory;
+    @Nullable
+    EventPublisher eventPublisher;
 
     public WeatherFlowSmartWeatherHandlerFactory() {
-        logger.info("Creating WeatherFlowSmartWeatherFactory.");
+        logger.info("Creating WeatherFlowSmartWeatherHandlerFactory.");
     }
 
     @Reference
@@ -112,29 +120,43 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
+        // logger.warn("SupportsThingType: " + thingTypeUID + "? " + SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID));
         return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
     }
 
     @Override
-    protected ThingHandler createHandler(Thing thing) {
+    protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
-        logger.info("Creating handler for thing=" + thing);
-        if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_HUB)) {
+        logger.debug("Creating handler for thing=" + thingTypeUID);
+
+        if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_HUB)) {
             SmartWeatherHubHandler hubHandler = new SmartWeatherHubHandler((Bridge) thing, udpListener);
             registerDeviceDiscoveryService(hubHandler);
             return hubHandler;
-        } else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR)) {
+        } else if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_AIR)) {
             return new SmartWeatherAirHandler(thing, lightningStrikeEventFactory, eventPublisher);
-        } else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_SKY)) {
+        } else if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_SKY)) {
             return new SmartWeatherSkyHandler(thing, rapidWindEventFactory, precipitationStartedEventFactory,
                     eventPublisher);
-        } else if (thingTypeUID.equals(WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_TEMPEST)) {
+        } else if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_TEMPEST)) {
             return new SmartWeatherTempestHandler(thing, rapidWindEventFactory, precipitationStartedEventFactory,
                     lightningStrikeEventFactory, eventPublisher);
         } else {
-            throw new RuntimeException("whaaaaaa?");
+            logger.warn("No handler for thingTypeUID=" + thingTypeUID);
+            return null;
         }
+    }
+
+    @Override
+    protected @Nullable Thing createThing(ThingTypeUID thingTypeUID, Configuration configuration, ThingUID thingUID) {
+        return super.createThing(thingTypeUID, configuration, thingUID);
+    }
+
+    @Override
+    public @Nullable Thing createThing(ThingTypeUID thingTypeUID, Configuration configuration,
+            @Nullable ThingUID thingUID, @Nullable ThingUID bridgeUID) {
+        return super.createThing(thingTypeUID, configuration, thingUID, bridgeUID);
     }
 
     private synchronized void registerDeviceDiscoveryService(SmartWeatherHubHandler hubHandler) {

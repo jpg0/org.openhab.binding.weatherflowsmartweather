@@ -1,14 +1,17 @@
 package org.openhab.binding.weatherflowsmartweather.model;
 
+import static java.time.ZoneOffset.UTC;
+
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.measure.quantity.Angle;
 import javax.measure.quantity.Speed;
 
-import org.eclipse.smarthome.core.library.types.QuantityType;
-import org.eclipse.smarthome.core.library.unit.SmartHomeUnits;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.joda.time.DateTime;
+import org.openhab.core.library.types.QuantityType;
+import org.openhab.core.library.unit.Units;
+import org.openhab.core.thing.Thing;
 
 public class RapidWindData {
     private String bridgeUID;
@@ -17,7 +20,7 @@ public class RapidWindData {
     private String hubSerialNumber;
     private String serialNumber;
 
-    private DateTime epoch;
+    private ZonedDateTime epoch;
     private final QuantityType<Angle> windDirection;
     private final QuantityType<Speed> windSpeed;
 
@@ -31,10 +34,10 @@ public class RapidWindData {
         hubSerialNumber = message.getHub_sn();
         List ob = message.getOb();
 
-        epoch = new DateTime((((Double) ob.get(0)).intValue() * 1000L));
+        epoch = Instant.ofEpochMilli(((Double) ob.get(0)).intValue() * 1000L).atZone(UTC);
 
-        windSpeed = new QuantityType<Speed>((Double) ob.get(1), SmartHomeUnits.METRE_PER_SECOND);
-        windDirection = new QuantityType<Angle>((Double) ob.get(2), SmartHomeUnits.DEGREE_ANGLE);
+        windSpeed = new QuantityType<Speed>((Double) ob.get(1), Units.METRE_PER_SECOND);
+        windDirection = new QuantityType<Angle>((Double) ob.get(2), Units.DEGREE_ANGLE);
     }
 
     public String getBridgeUID() {
@@ -53,7 +56,7 @@ public class RapidWindData {
         return serialNumber;
     }
 
-    public DateTime getEpoch() {
+    public ZonedDateTime getEpoch() {
         return epoch;
     }
 
