@@ -19,7 +19,7 @@ import com.google.gson.*;
 public class PrecipitationStartedEventFactoryImpl extends AbstractEventFactory
         implements PrecipitationStartedEventFactory {
 
-    static final String PRECIPITATION_STARTED_EVENT_TOPIC = "openhab/things/{thingUID}/precipitation_started";
+    static final String PRECIPITATION_STARTED_EVENT_TOPIC = "openhab/things/{thingUID}/precipitationstarted";
 
     private static final Logger log = LoggerFactory.getLogger(PrecipitationStartedEventFactoryImpl.class);
 
