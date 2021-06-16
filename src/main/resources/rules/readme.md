@@ -61,3 +61,26 @@ log.warn( "RapidWind Rule:  windSpeed=" + (windSpeed2) );
 if(windSpeed2.floatValue() > threshold) 
   NotificationAction.sendBroadcastNotification(, "whoa, it's pretty windy here: " + windSpeed2);
 ```
+
+Another example that updates an item with the new wind speed value of the rapid wind event
+
+```
+var log	= Java.type("org.slf4j.LoggerFactory").getLogger("org.openhab.model.script.Rules");
+
+log.warn( "RapidWind Rule:  event=" + (event.type) );
+
+// let's get the 
+var windSpeed = eventData.windSpeed;
+log.warn( "RapidWind Rule: windSpeed=" + (windSpeed) );
+
+// this example uses english customary units; you could instead use SI units.
+var MPH = Java.type("org.openhab.core.library.unit.ImperialUnits").MILES_PER_HOUR;
+
+// let's convert the native windspeed to miles per hour
+var windSpeed2 = windSpeed.toUnit(MPH);
+
+log.warn( "RapidWind Rule2:  windSpeed=" + (windSpeed2) );
+
+// We assume that the item we should update is called "MyRapidWindSpeedItem"
+events.postUpdate("MyRapidWindSpeedItem", windSpeed2);
+```
