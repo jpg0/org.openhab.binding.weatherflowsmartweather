@@ -9,7 +9,7 @@ public class PrecipitationStartedEvent extends AbstractEvent {
     private final PrecipitationStartedData precipitationStartedData;
 
     PrecipitationStartedEvent(String topic, String payload, PrecipitationStartedData precipitationStartedData) {
-        super(topic, payload, null);
+        super(topic, payload, precipitationStartedData.getThingUID());
         this.precipitationStartedData = precipitationStartedData;
     }
 

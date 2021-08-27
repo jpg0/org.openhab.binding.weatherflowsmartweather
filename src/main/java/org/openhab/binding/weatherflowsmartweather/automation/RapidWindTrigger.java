@@ -24,7 +24,7 @@ public class RapidWindTrigger extends BaseTriggerModuleHandler implements EventF
      * JSON definition of the module type.
      */
     public static final String UID = "RapidWindTrigger";
-    public static final String EVENT_TOPIC = "openhab/things/{uid}/rapidwind";
+    public static final String EVENT_TOPIC = "openhab/things/{uid}/rapid_wind";
 
     /**
      * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s

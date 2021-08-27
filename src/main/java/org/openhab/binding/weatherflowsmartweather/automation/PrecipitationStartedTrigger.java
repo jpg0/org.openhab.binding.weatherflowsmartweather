@@ -24,7 +24,7 @@ public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implem
      * JSON definition of the module type.
      */
     public static final String UID = "PrecipitationStartedTrigger";
-    public static final String EVENT_TOPIC = "openhab/things/{uid}/precipitationstarted";
+    public static final String EVENT_TOPIC = "openhab/things/{uid}/precipitation_started";
 
     /**
      * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s
@@ -179,7 +179,7 @@ public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implem
     public void receive(Event event) {
         log.debug("Receive oh2 event: topic=" + event.getTopic() + ", source=" + event.getSource() + ".");
         if (!sensorThingUid.equals(event.getSource())) {
-            // log.warn("Got precipitation started event, but not for us...");
+            log.warn("Got precipitation started event, but not for us...");
             return;
         }
 
@@ -209,7 +209,7 @@ public class PrecipitationStartedTrigger extends BaseTriggerModuleHandler implem
     }
 
     public boolean apply(Event event) {
-        log.debug("->FILTER: {}:{}", event.getTopic(), topic);
+        log.debug("->FILTER: {} {} {}", event.getTopic(), topic, event.getTopic().equals(topic));
         return event.getTopic().equals(topic);
     }
 }

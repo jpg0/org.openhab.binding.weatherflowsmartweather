@@ -120,6 +120,14 @@ public class SmartWeatherAirHandler extends BaseThingHandler implements SmartWea
 
             // TODO update station status fields
         } else if (data instanceof ObservationAirMessage) {
+            // EventStrikeMessage m = new EventStrikeMessage();
+            // m.setSerial_number(((ObservationAirMessage) data).getSerial_number());
+            // m.setFirmware_revision(((ObservationAirMessage) data).getFirmware_revision());
+            // m.setHub_sn(((ObservationAirMessage) data).getHub_sn());
+            // m.setSerial_number(data.getSerial_number());
+            // m.setEvt(new Object[] { 0.0d, 1.0d, 1.2d });
+            // logger.debug("Handling Strike Event");
+            // handleEventStrikeMessage(m);
             handleObservationMessage((ObservationAirMessage) data);
         } else if (data instanceof EventStrikeMessage) {
             logger.debug("Received Strike Message.");

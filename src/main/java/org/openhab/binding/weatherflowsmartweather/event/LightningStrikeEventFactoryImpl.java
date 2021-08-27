@@ -18,7 +18,7 @@ import com.google.gson.*;
         LightningStrikeEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
 public class LightningStrikeEventFactoryImpl extends AbstractEventFactory implements LightningStrikeEventFactory {
 
-    static final String LIGHTNING_STRIKE_EVENT_TOPIC = "openhab/things/{thingUID}/lightningstrike";
+    static final String LIGHTNING_STRIKE_EVENT_TOPIC = "openhab/things/{thingUID}/lightning_strike";
 
     private static final Logger log = LoggerFactory.getLogger(LightningStrikeEventFactoryImpl.class);
 

@@ -18,7 +18,7 @@ import com.google.gson.*;
         RapidWindEventFactory.class }, configurationPid = "binding.weatherflowsmartweather")
 public class RapidWindEventFactoryImpl extends AbstractEventFactory implements RapidWindEventFactory {
 
-    static final String RAPID_WIND_EVENT_TOPIC = "openhab/things/{thingUID}/rapidwind";
+    static final String RAPID_WIND_EVENT_TOPIC = "openhab/things/{thingUID}/rapid_wind";
 
     private static final Logger log = LoggerFactory.getLogger(RapidWindEventFactoryImpl.class);
 

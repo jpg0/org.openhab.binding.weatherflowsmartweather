@@ -11,8 +11,9 @@ import java.net.SocketException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ThreadFactory;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -110,7 +111,7 @@ import java.util.logging.Logger;
  */
 public class UdpServer {
 
-    private final static Logger LOGGER = Logger.getLogger(UdpServer.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(UdpServer.class);
 
     /**
      * The port property <tt>port</tt> used with
@@ -317,7 +318,7 @@ public class UdpServer {
             } catch (IOException exc) {
                 int pl = this.packet.getData().length;
                 int bl = this.mSocket.getReceiveBufferSize();
-                LOGGER.warning(String.format("Could not set receive buffer to %d. It is now at %d. Error: %s", pl, bl,
+                LOGGER.warn(String.format("Could not set receive buffer to %d. It is now at %d. Error: %s", pl, bl,
                         exc.getMessage()));
             } // end catch
 
@@ -329,7 +330,7 @@ public class UdpServer {
                         this.mSocket.joinGroup(InetAddress.getByName(p));
                         LOGGER.info("UDP Server joined multicast group " + p);
                     } catch (IOException exc) {
-                        LOGGER.warning("Could not join " + p + " as a multicast group: " + exc.getMessage());
+                        LOGGER.warn("Could not join " + p + " as a multicast group: " + exc.getMessage());
                     } // end catch
                 } // end for: each proposed
             } // end if: groups not null
@@ -351,8 +352,8 @@ public class UdpServer {
                     this.mSocket.receive(packet);
                     //////// B L O C K I N G
 
-                    if (LOGGER.isLoggable(Level.FINE)) {
-                        LOGGER.fine("UDP Server received datagram: " + packet);
+                    if (LOGGER.isTraceEnabled()) {
+                        LOGGER.trace("UDP Server received datagram: " + packet);
                     }
                     fireUdpServerPacketReceived();
 
@@ -365,7 +366,7 @@ public class UdpServer {
                     this.mSocket.close();
                     LOGGER.info("Udp Server closed normally.");
                 } else {
-                    LOGGER.log(Level.WARNING, "Server closed unexpectedly: " + exc.getMessage(), exc);
+                    LOGGER.warn("Server closed unexpectedly: " + exc.getMessage(), exc);
                 } // end else
             } // end sync
             fireExceptionNotification(exc);
@@ -543,7 +544,7 @@ public class UdpServer {
             try {
                 l.packetReceived(event);
             } catch (Exception exc) {
-                LOGGER.warning("UdpServer.Listener " + l + " threw an exception: " + exc.getMessage());
+                LOGGER.warn("UdpServer.Listener " + l + " threw an exception: " + exc.getMessage(), exc);
                 fireExceptionNotification(exc);
             } // end catch
         } // end for: each listener
@@ -572,7 +573,7 @@ public class UdpServer {
         try {
             propSupport.firePropertyChange(prop, oldVal, newVal);
         } catch (Exception exc) {
-            LOGGER.log(Level.WARNING, "A property change listener threw an exception: " + exc.getMessage(), exc);
+            LOGGER.warn("A property change listener threw an exception: " + exc.getMessage(), exc);
             fireExceptionNotification(exc);
         } // end catch
     } // end fire
@@ -636,29 +637,6 @@ public class UdpServer {
         Throwable oldVal = this.lastException;
         this.lastException = t;
         firePropertyChange(LAST_EXCEPTION_PROP, oldVal, t);
-    }
-
-    /* ******** L O G G I N G ******** */
-
-    /**
-     * Static method to set the logging level using Java's
-     * <tt>java.util.logging</tt> package. Example:
-     * <code>UdpServer.setLoggingLevel(Level.OFF);</code>.
-     *
-     * @param level the new logging level
-     */
-    public static void setLoggingLevel(Level level) {
-        LOGGER.setLevel(level);
-    }
-
-    /**
-     * Static method returning the logging level using Java's
-     * <tt>java.util.logging</tt> package.
-     * 
-     * @return the logging level
-     */
-    public static Level getLoggingLevel() {
-        return LOGGER.getLevel();
     }
 
     /* ******** ******** */

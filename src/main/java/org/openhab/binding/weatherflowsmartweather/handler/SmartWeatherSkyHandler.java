@@ -123,7 +123,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
         } else if (data instanceof ObservationSkyMessage) {
             handleObservationMessage((ObservationSkyMessage) data);
         } else if (data instanceof EventRapidWindMessage) {
-            logger.debug("Received Rapid Wind Message.");
+            logger.debug("> Received Rapid Wind Message.");
             handleEventRapidWindMessage((EventRapidWindMessage) data);
         } else if (data instanceof EventPrecipitationMessage) {
             logger.debug("Received Precipitation Message.");
@@ -144,6 +144,7 @@ public class SmartWeatherSkyHandler extends BaseThingHandler implements SmartWea
 
     private void handleEventPrecipitationStartedMessage(EventPrecipitationMessage data) {
         ThingUID uid = getThing().getUID();
+        logger.debug("creating from message: " + data);
         PrecipitationStartedData precipitationStartedData = new PrecipitationStartedData(getThing(), data);
         logger.debug("handling precipitation record: " + precipitationStartedData);
         Event event = PrecipitationStartedEventFactoryImpl.createPrecipitionStartedEvent(precipitationStartedData);

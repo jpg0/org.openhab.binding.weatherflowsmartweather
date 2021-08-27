@@ -25,7 +25,7 @@ public class LightningStrikeTrigger extends BaseTriggerModuleHandler implements 
      * JSON definition of the module type.
      */
     public static final String UID = "LightningStrikeTrigger";
-    public static final String EVENT_TOPIC = "openhab/things/{uid}/lightningstrike";
+    public static final String EVENT_TOPIC = "openhab/things/{uid}/lightning_strike";
 
     /**
      * This constant is used to get the value of the 'skyThingUid' property from {@link Trigger}'s
