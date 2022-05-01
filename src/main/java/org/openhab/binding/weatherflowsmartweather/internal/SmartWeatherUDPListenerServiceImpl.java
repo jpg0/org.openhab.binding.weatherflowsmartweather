@@ -35,7 +35,7 @@ public class SmartWeatherUDPListenerServiceImpl implements SmartWeatherUDPListen
         us.addUdpServerListener(new UdpServer.Listener() {
             @Override
             public void packetReceived(UdpServer.Event evt) { // Packet received
-                // logger.warn("received message: " + evt.getPacketAsString());
+                logger.debug("received message: " + evt.getPacketAsString());
                 processMessage(evt.getPacket().getAddress(), evt.getPacketAsString());
             }
         }); // end Listener

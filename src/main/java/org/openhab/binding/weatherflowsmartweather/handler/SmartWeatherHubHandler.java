@@ -126,7 +126,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("rapid wind observation but not for us.");
+                    logger.debug("rapid wind observation but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -140,7 +140,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("air observation but not for us.");
+                    logger.debug("air observation but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -154,7 +154,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("sky observation but not for us.");
+                    logger.debug("sky observation but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -168,7 +168,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("tempest observation but not for us.");
+                    logger.debug("tempest observation but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -182,7 +182,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("event strike message but not for us.");
+                    logger.debug("event strike message but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -196,7 +196,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("event precipitation message but not for us.");
+                    logger.debug("event precipitation message but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -210,7 +210,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("device status but not for us: " + thingUid);
+                    logger.debug("device status but not for us: " + thingUid);
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
@@ -224,7 +224,7 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
 
                 Thing t = this.getThingByUID(thingUid);
                 if (t == null) {
-                    logger.warn("station status but not for us.");
+                    logger.debug("station status but not for us.");
                     return;
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
