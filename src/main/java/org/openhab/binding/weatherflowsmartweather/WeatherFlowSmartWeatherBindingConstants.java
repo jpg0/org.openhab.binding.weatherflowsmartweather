@@ -33,6 +33,8 @@ public class WeatherFlowSmartWeatherBindingConstants {
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_AIR = new ThingTypeUID(BINDING_ID, "air");
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_SKY = new ThingTypeUID(BINDING_ID, "sky");
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_TEMPEST = new ThingTypeUID(BINDING_ID, "tempest");
+    public static final ThingTypeUID THING_TYPE_SMART_WEATHER_BETTER_FORECAST = new ThingTypeUID(BINDING_ID,
+            "better-forecast");
 
     // List of all Hub Channel ids
     public static final String CHANNEL_RSSI = "rssi";
@@ -63,10 +65,27 @@ public class WeatherFlowSmartWeatherBindingConstants {
     public static final String CHANNEL_PRECIPITATION_TYPE = "precipitation_type";
     public static final String CHANNEL_WIND_SAMPLE_INTERVAL = "wind_sample_interval";
 
+    // List of all Forecast Channel ids
+    public static final String CHANNEL_STATION_NAME = "station_name";
+    public static final String CHANNEL_FORECAST_RAW = "forecast_raw";
+    public static final String CHANNEL_FORECAST_ENRICHED = "forecast_enriched";
+
     // Event Channel ids
     public static final String CHANNEL_STRIKE_EVENTS = "strike_events";
     public static final String CHANNEL_RAPID_WIND_EVENTS = "rapid_wind_events";
     public static final String CHANNEL_PRECIPITATION_START_EVENTS = "precipitation_start_events";
+
+    public static final String FORECAST_URL = "https://swd.weatherflow.com/swd/rest/better_forecast";
+
+    public static final String CONFIG_TOKEN = "token";
+    public static final String CONFIG_STATION_ID = "station_id";
+    public static final String CONFIG_SYSTEM_OF_MEASUREMENT = "system_of_measurement";
+    public static final String CONFIG_KEEP_HOURLY = "keep_hourly";
+    public static final String CONFIG_KEEP_DAILY = "keep_daily";
+
+    public static final String SYSTEM_OF_MEASUREMENT_METRIC = "Metric";
+
+    public static final String EMPTY_INVALID = "empty or invalid";
 
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES;
     static {
@@ -75,6 +94,7 @@ public class WeatherFlowSmartWeatherBindingConstants {
         thingTypes.add(THING_TYPE_SMART_WEATHER_AIR);
         thingTypes.add(THING_TYPE_SMART_WEATHER_SKY);
         thingTypes.add(THING_TYPE_SMART_WEATHER_TEMPEST);
+        thingTypes.add(THING_TYPE_SMART_WEATHER_BETTER_FORECAST);
         SUPPORTED_THING_TYPES = Set.copyOf(thingTypes);
     }
     public static final String PROPERTY_SERIAL_NUMBER = "serial_number";

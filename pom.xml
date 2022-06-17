@@ -8,7 +8,6 @@
     <groupId>org.openhab.addons.bundles</groupId>
     <artifactId>org.openhab.addons.reactor.bundles</artifactId>
     <relativePath>../openhab-addons/bundles</relativePath>
-    <!-- <version>3.0.3-SNAPSHOT</version> -->
     <version>3.3.0-SNAPSHOT</version>
   </parent>
 

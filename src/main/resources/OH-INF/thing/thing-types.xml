@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <thing:thing-descriptions bindingId="weatherflowsmartweather"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
-	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://www.openhab.org/schemas/thing-description-1.0.0.xsd">
 
 	<thing-type id="air">
 		<supported-bridge-type-refs>
@@ -94,137 +94,74 @@
 		</properties>
 	</thing-type>
 
-	<channel-type id="illuminance">
-		<item-type>Number:Illuminance</item-type>
-		<label>Illuminance</label>
-		<description>Illuminance</description>
-		<category>Sun</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
 
-	<channel-type id="uv">
-		<item-type>Number:Dimensionless</item-type>
-		<label>UV Index</label>
-		<description>UV Index</description>
-		<category>Sun</category>
-		<state pattern="%.1f" readOnly="true"></state>
-	</channel-type>
+	<thing-type id="better-forecast">
 
-	<channel-type id="rain_accumulated">
-		<item-type>Number:Length</item-type>
-		<label>Rain Accumulated</label>
-		<description>Rain Accumulated</description>
-		<category>Rain</category>
-		<state pattern="%.2f %unit%" readOnly="true"></state>
-	</channel-type>
+		<label>SmartWeather Better Forecast</label>
+		<description>Localized forecast for a given station</description>
 
-	<channel-type id="wind_lull">
-		<item-type>Number:Speed</item-type>
-		<label>Wind Lull</label>
-		<description>Wind Lull (minimum 3 second sample)</description>
-		<category>Wind</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
+		<channels>
+			<channel id="epoch" typeId="epoch"/>
+			<channel id="station_name" typeId="stationName"/>
+			<channel id="forecast_raw" typeId="forecastRaw"/>
+			<channel id="forecast_enriched" typeId="forecastEnriched"/>
+		</channels>
 
-	<channel-type id="wind_avg">
-		<item-type>Number:Speed</item-type>
-		<label>Wind Avg</label>
-		<description>Wind Avg (average over report interval)</description>
-		<category>Wind</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
+		<config-description>
+			<parameter name="station_id" type="integer">
+				<label>Station ID</label>
+				<description>Station ID</description>
+				<required>true</required>
+			</parameter>
+			<parameter name="token" type="text">
+				<label>Authorization Token</label>
+				<description>Authorization Token</description>
+				<required>true</required>
+			</parameter>
+			<parameter name="system_of_measurement" type="text">
+				<label>System of Measurement</label>
+				<description>System of Measurement</description>
+				<required>true</required>
+				<options>
+					<option value="Metric">Metric</option>
+					<option value="US_Customary">US Customary</option>
+				</options>
+			</parameter>
+			<parameter name="keep_hourly" type="integer">
+				<label>Maximum Hourly Forecasts</label>
+				<description>Maximum Hourly Forecasts to retain. Value of zero (0) keeps all.</description>
+				<required>false</required>
+			</parameter>
+			<parameter name="keep_daily" type="integer">
+				<label>Maximum Daily Forecasts</label>
+				<description>Maximum Daily Forecasts to retain. Value of zero (0) keeps all.</description>
+				<required>false</required>
+			</parameter>
+		</config-description>
+	</thing-type>
 
-	<channel-type id="wind_gust">
-		<item-type>Number:Speed</item-type>
-		<label>Wind Gust</label>
-		<description>Wind Gust (maximum 3 second sample)</description>
-		<category>Wind</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
-
-	<channel-type id="wind_direction">
-		<item-type>Number:Angle</item-type>
-		<label>Wind Direction</label>
-		<description>Wind Direction</description>
-		<category>Wind</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
-
-	<channel-type id="report_interval" advanced="true">
-		<item-type>Number:Time</item-type>
-		<label>Report Interval</label>
-		<description>Report Interval</description>
-		<category>Number</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
-
-	<channel-type id="solar_radiation">
-		<item-type>Number:Intensity</item-type>
-		<label>Solar Radiation</label>
-		<description>Solar Radiation</description>
-		<category>Sun</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
-
-	<channel-type id="precipitation_type">
+	<channel-type id="forecastRaw">
 		<item-type>String</item-type>
-		<label>Precipitation Type</label>
-		<description>Precipitation Type</description>
-		<state readOnly="true">
-			<options>
-				<option value="0">None</option>
-				<option value="1">Rain</option>
-				<option value="2">Hail</option>
-			</options>
-		</state>
+		<label>Forecast Data (Raw)</label>
+		<description>Weather forecast data, as provided by WeatherFlow.</description>
+		<category>String</category>
+		<state readOnly="true"/>
 	</channel-type>
 
-	<channel-type id="wind_sample_interval" advanced="true">
-		<item-type>Number:Time</item-type>
-		<label>Wind Sample Interval</label>
-		<description>Wind Sample Interval</description>
-		<category>Number</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
+	<channel-type id="forecastEnriched">
+		<item-type>String</item-type>
+		<label>Forecast Data (Enriched)</label>
+		<description>Weather forecast data, enriched for easier consumption in UIs.</description>
+		<category>String</category>
+		<state readOnly="true"/>
 	</channel-type>
 
-	<channel-type id="airTemperature">
-		<item-type>Number:Temperature</item-type>
-		<label>Temperature</label>
-		<description>Temperature</description>
-		<category>Temperature</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
-
-	<channel-type id="humidity">
-		<item-type>Number:Dimensionless</item-type>
-		<label>Relative Humidity</label>
-		<description>Relative Humidity</description>
-		<category>Humidity</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
-
-	<channel-type id="pressure">
-		<item-type>Number:Pressure</item-type>
-		<label>Pressure</label>
-		<description>Barometric Pressure</description>
-		<category>Pressure</category>
-		<state pattern="%.1f %unit%" readOnly="true"></state>
-	</channel-type>
-
-	<channel-type id="count">
-		<item-type>Number</item-type>
-		<label>Lightning Strike Count</label>
-		<description>Lightning Strike Count</description>
-		<category>Energy</category>
-		<state readOnly="true"></state>
-	</channel-type>
-
-	<channel-type id="distance">
-		<item-type>Number:Length</item-type>
-		<label>Lightning Strike Distance</label>
-		<description>Average Lightning Strike Distance</description>
-		<category>Energy</category>
-		<state pattern="%.1f %unit%" readOnly="true"/>
+	<channel-type id="stationName">
+		<item-type>String</item-type>
+		<label>Station Name</label>
+		<description>Name of the weather station.</description>
+		<category>String</category>
+		<state readOnly="true"/>
 	</channel-type>
 
 	<channel-type id="epoch">
@@ -233,13 +170,5 @@
 		<description>UTC Time of observation, in seconds since the epoch.</description>
 		<category>Time</category>
 		<state readOnly="true"/>
-	</channel-type>
-
-	<channel-type id="battery_level" advanced="true">
-		<item-type>Number:ElectricPotential</item-type>
-		<label>Battery Level</label>
-		<description>Sensor Battery Level</description>
-		<category>Battery</category>
-		<state pattern="%.1f %unit%" readOnly="true"/>
 	</channel-type>
 </thing:thing-descriptions>

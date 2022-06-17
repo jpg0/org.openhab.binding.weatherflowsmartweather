@@ -22,10 +22,7 @@ import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindin
 import org.openhab.binding.weatherflowsmartweather.event.LightningStrikeEventFactory;
 import org.openhab.binding.weatherflowsmartweather.event.PrecipitationStartedEventFactory;
 import org.openhab.binding.weatherflowsmartweather.event.RapidWindEventFactory;
-import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherAirHandler;
-import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherHubHandler;
-import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherSkyHandler;
-import org.openhab.binding.weatherflowsmartweather.handler.SmartWeatherTempestHandler;
+import org.openhab.binding.weatherflowsmartweather.handler.*;
 import org.openhab.core.config.core.Configuration;
 import org.openhab.core.config.discovery.DiscoveryService;
 import org.openhab.core.events.EventPublisher;
@@ -142,6 +139,8 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
         } else if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_TEMPEST)) {
             return new SmartWeatherTempestHandler(thing, rapidWindEventFactory, precipitationStartedEventFactory,
                     lightningStrikeEventFactory, eventPublisher);
+        } else if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_BETTER_FORECAST)) {
+            return new SmartWeatherBetterForecastHandler(thing);
         } else {
             logger.warn("No handler for thingTypeUID=" + thingTypeUID);
             return null;
