@@ -13,43 +13,50 @@ import com.google.gson.*;
 public class GsonUtils {
     private static Logger log = LoggerFactory.getLogger(GsonUtils.class);
 
-    public static Gson gsonDateTime() {
-        Gson gson = // new Gson();
-                new GsonBuilder().registerTypeAdapter(ZonedDateTime.class, new JsonSerializer<ZonedDateTime>() {
-                    @Override
-                    public JsonElement serialize(ZonedDateTime json, Type typeOfSrc, JsonSerializationContext context) {
-                        log.debug("Serializing " + json);
-                        JsonPrimitive p = new JsonPrimitive(json.format(DateTimeFormatter.ISO_DATE_TIME));
-                        log.debug("Serialized to " + p);
-                        return p;
-                    }
-                }).registerTypeAdapter(ZonedDateTime.class, new JsonDeserializer<ZonedDateTime>() {
-                    @Override
-                    public ZonedDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                            throws JsonParseException {
-                        ZonedDateTime dt = ZonedDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_DATE_TIME);
-                        return dt;
-                    }
-                }).registerTypeAdapter(QuantityType.class, new JsonSerializer<QuantityType>() {
-                    @Override
-                    public JsonElement serialize(QuantityType quantityType, Type typeOfSrc,
-                            JsonSerializationContext context) {
-                        log.debug("Serializing " + quantityType);
-                        JsonPrimitive p = new JsonPrimitive(quantityType.toFullString());
-                        log.debug("Serialized to " + p);
-                        return p;
-                    }
-                }).registerTypeAdapter(QuantityType.class, new JsonDeserializer<QuantityType>() {
-                    @Override
-                    public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                            throws JsonParseException {
-                        log.debug("Deserializing " + json.getAsString());
-                        QuantityType qt = new QuantityType(json.getAsString());
-                        log.debug("Deserialized to " + qt);
+    private static Gson gson = null;
 
-                        return qt;
-                    }
-                }).create();
+    static class ZonedDateTimeAdapter implements JsonSerializer<ZonedDateTime>, JsonDeserializer<ZonedDateTime> {
+        @Override
+        public JsonElement serialize(ZonedDateTime json, Type typeOfSrc, JsonSerializationContext context) {
+            log.debug("Serializing " + json);
+            JsonPrimitive p = new JsonPrimitive(json.format(DateTimeFormatter.ISO_DATE_TIME));
+            log.debug("Serialized to " + p);
+            return p;
+        }
+
+        @Override
+        public ZonedDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            ZonedDateTime dt = ZonedDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_DATE_TIME);
+            return dt;
+        }
+    }
+
+    static class QuantityTypeAdapter implements JsonSerializer<QuantityType>, JsonDeserializer<QuantityType> {
+        @Override
+        public JsonElement serialize(QuantityType quantityType, Type typeOfSrc, JsonSerializationContext context) {
+            log.debug("Serializing " + quantityType);
+            JsonPrimitive p = new JsonPrimitive(quantityType.toFullString());
+            log.debug("Serialized to " + p);
+            return p;
+        }
+
+        @Override
+        public QuantityType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            log.debug("Deserializing " + json.getAsString());
+            QuantityType qt = new QuantityType(json.getAsString());
+            log.debug("Deserialized to " + qt);
+
+            return qt;
+        }
+    }
+
+    public static Gson gsonDateTime() {
+        if (gson == null)
+            gson = // new Gson();
+                    new GsonBuilder().registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeAdapter())
+                            .registerTypeAdapter(QuantityType.class, new QuantityTypeAdapter()).create();
 
         return gson;
     }

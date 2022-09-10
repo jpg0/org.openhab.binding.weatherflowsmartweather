@@ -12,6 +12,8 @@ import javax.measure.quantity.Speed;
 import org.openhab.core.library.types.QuantityType;
 import org.openhab.core.library.unit.Units;
 import org.openhab.core.thing.Thing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RapidWindData {
     private String bridgeUID;
@@ -24,9 +26,11 @@ public class RapidWindData {
     private final QuantityType<Angle> windDirection;
     private final QuantityType<Speed> windSpeed;
 
-    // private Logger log = LoggerFactory.getLogger(RapidWindData.class);
+    private Logger log = LoggerFactory.getLogger(RapidWindData.class);
 
     public RapidWindData(Thing sky, EventRapidWindMessage message) {
+        log.debug("RapidWindData.create(sky = {}, message = {})", sky, message);
+
         bridgeUID = sky.getBridgeUID().getAsString();
         thingUID = sky.getUID().getAsString();
 

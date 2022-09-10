@@ -2,6 +2,7 @@ package org.openhab.binding.weatherflowsmartweather.event;
 
 import static org.openhab.binding.weatherflowsmartweather.util.GsonUtils.gsonDateTime;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 import org.openhab.binding.weatherflowsmartweather.model.RapidWindData;
@@ -43,10 +44,11 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
 
     @Override
     protected Event createEventByType(String eventType, String topic, String payload, String source) throws Exception {
-        log.debug("Creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
+        // log.debug("Creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
         if (RapidWindEvent.TYPE.equals(eventType)) {
-            log.debug(
-                    "Creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source=" + source);
+            if (log.isDebugEnabled())
+                log.debug("Creating event " + eventType + " topic=" + topic + ", payload=" + payload + ", source="
+                        + source);
             return createRapidWindEvent(topic, payload);
         }
         throw new IllegalArgumentException("Unsupported event type " + eventType);
@@ -62,10 +64,89 @@ public class RapidWindEventFactoryImpl extends AbstractEventFactory implements R
     }
 
     protected static <T> T myDeserializePayload(String payload, Class<T> classOfPayload) {
+        if (log.isTraceEnabled())
+            log.trace("deserializing {} into {}", payload, classOfPayload);
         return gsonDateTime().fromJson(payload, classOfPayload);
     }
 
     protected static String mySerializePayload(RapidWindData payloadObject) {
-        return gsonDateTime().toJson(payloadObject);
+
+        StringBuilder b = new StringBuilder();
+        b.append("{");
+
+        b.append("\"");
+        b.append("bridgeUID");
+        b.append("\": ");
+
+        b.append("\"");
+        b.append(payloadObject.getBridgeUID());
+        b.append("\", ");
+
+        b.append("\"");
+        b.append("thingUID");
+        b.append("\": ");
+
+        b.append("\"");
+        b.append(payloadObject.getThingUID());
+        b.append("\", ");
+
+        b.append("\"");
+        b.append("hubSerialNumber");
+        b.append("\": ");
+
+        b.append("\"");
+        b.append(payloadObject.getHubSerialNumber());
+        b.append("\", ");
+
+        b.append("\"");
+        b.append("serialNumber");
+        b.append("\": ");
+
+        b.append("\"");
+        b.append(payloadObject.getSerialNumber());
+        b.append("\", ");
+
+        b.append("\"");
+        b.append("epoch");
+        b.append("\": ");
+
+        b.append("\"");
+        b.append(payloadObject.getEpoch().format(DateTimeFormatter.ISO_DATE_TIME));
+        b.append("\", ");
+
+        b.append("\"");
+        b.append("windDirection");
+        b.append("\": ");
+
+        b.append("\"");
+        b.append(payloadObject.getWindDirection().toFullString());
+        b.append("\", ");
+
+        b.append("\"");
+        b.append("windSpeed");
+        b.append("\": ");
+
+        b.append("\"");
+        b.append(payloadObject.getWindSpeed().toFullString());
+        b.append("\"");
+
+        b.append("}");
+
+        /*
+         * private String bridgeUID;
+         * private String thingUID;
+         * 
+         * private String hubSerialNumber;
+         * private String serialNumber;
+         * 
+         * private ZonedDateTime epoch;
+         * private final QuantityType<Angle> windDirection;
+         * private final QuantityType<Speed> windSpeed;
+         */
+
+        if (log.isTraceEnabled())
+            log.trace("Serialized RapidWindData to {}", b.toString());
+        return b.toString();
+        // return gsonDateTime().toJson(payloadObject);
     }
 }
