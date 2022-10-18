@@ -12,7 +12,7 @@ To install:
 - Create a new item for the forecast and link the Enriched forecast data channel for the Better Forecast thing to the new item. It should be filled with forecast data in JSON format.
 - create an empty file called dummy.js in your $OPENHAB/conf/html directory.
 - In the OpenHAB web ui, go to Developer Tools -> Widgets.
-- Click on the "+" button and paste the contents of the WeatherCard.yaml file into the text box. 
+- Click on the "+" button and paste the contents of the weathercard.yaml file into the text box. 
 - Make sure that you have not added any spaces or empty lines and that the content has not been reformatted.
 - Click Save.
 - Add the widget to a page and configure the widget by clicking on "Configure Cell" from the settings icon for
