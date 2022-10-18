@@ -1,5 +1,24 @@
 These files provide a set of widgets for use in HABPanel.
 
+__WeatherCard__
+
+The Weather Card widget displays a set of weather conditions and forecast data provided by the WeatherFlow "Better Forecast" service. It's based on the Weather Card widget by Rainer Groll [1].
+
+[1] https://community.openhab.org/t/ui-widget-weather/106842
+
+To install:
+
+- Create and configure a "Better Forecast" thing.
+- Create a new item for the forecast and link the Enriched forecast data channel for the Better Forecast thing to the new item. It should be filled with forecast data in JSON format.
+- create an empty file called dummy.js in your $OPENHAB/conf/html directory.
+- In the OpenHAB web ui, go to Developer Tools -> Widgets.
+- Click on the "+" button and paste the contents of the WeatherCard.yaml file into the text box. 
+- Make sure that you have not added any spaces or empty lines and that the content has not been reformatted.
+- Click Save.
+- Add the widget to a page and configure the widget by clicking on "Configure Cell" from the settings icon for
+  the cell containing the widget. 
+- Specify the "Better forecast" item you wish to use as the source.
+
 __Rapid Wind__
 
 The Rapid Wind widget provides a simple display of wind speed and direction, as provided by Sky or Tempest sensors. This data is different from the regular 1-minute observations.
