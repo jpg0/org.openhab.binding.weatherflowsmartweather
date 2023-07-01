@@ -90,7 +90,11 @@ public class SmartWeatherStationDiscoveryService extends AbstractDiscoveryServic
             return;
         }
 
-        if (serial != null && serial.startsWith("AR")) {
+        if (serial != null && serial.startsWith("AQ")) {
+            // we have an Air Quality sensor.
+            label = "SmartWeather Air Quality";
+            thingType = WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIRQUALITY;
+        } else if (serial != null && serial.startsWith("AR")) {
             // we have an AIR sensor.
             label = "SmartWeather Air";
             thingType = WeatherFlowSmartWeatherBindingConstants.THING_TYPE_SMART_WEATHER_AIR;

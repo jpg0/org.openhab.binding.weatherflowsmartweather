@@ -131,6 +131,20 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
                 } // not our hub and sensor combo.
                 SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
                 handler.eventReceived(source, message);
+            } else if (data instanceof ObservationAirQualityMessage) {
+                ObservationAirQualityMessage message = (ObservationAirQualityMessage) data;
+                String serialNumber = message.getSerial_number();
+
+                ThingTypeUID deviceType = thingTypeUidFromSerial(serialNumber);
+                ThingUID thingUid = new ThingUID(deviceType, getThing().getUID(), serialNumber);
+
+                Thing t = this.getThingByUID(thingUid);
+                if (t == null) {
+                    logger.debug("airquality observation but not for us.");
+                    return;
+                } // not our hub and sensor combo.
+                SmartWeatherEventListener handler = (SmartWeatherEventListener) t.getHandler();
+                handler.eventReceived(source, message);
             } else if (data instanceof ObservationAirMessage) {
                 ObservationAirMessage message = (ObservationAirMessage) data;
                 String serialNumber = message.getSerial_number();
@@ -238,6 +252,8 @@ public class SmartWeatherHubHandler extends BaseBridgeHandler implements SmartWe
             return THING_TYPE_SMART_WEATHER_SKY;
         else if (serialNumber.startsWith("AR"))
             return THING_TYPE_SMART_WEATHER_AIR;
+        else if (serialNumber.startsWith("AQ"))
+            return THING_TYPE_SMART_WEATHER_AIRQUALITY;
         else if (serialNumber.startsWith("ST"))
             return THING_TYPE_SMART_WEATHER_TEMPEST;
         return null;

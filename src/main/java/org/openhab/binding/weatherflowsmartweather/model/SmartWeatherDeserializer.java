@@ -24,6 +24,8 @@ public class SmartWeatherDeserializer implements JsonDeserializer<SmartWeatherMe
         Gson gson = new Gson();
         SmartWeatherMessage message = null;
         switch (messageType) {
+            case "obs_pm":
+                return gson.fromJson(je, ObservationAirQualityMessage.class);
             case "obs_air":
                 return gson.fromJson(je, ObservationAirMessage.class);
             case "obs_sky":

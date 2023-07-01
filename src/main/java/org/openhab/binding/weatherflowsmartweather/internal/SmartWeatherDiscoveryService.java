@@ -9,6 +9,7 @@ import java.util.Set;
 import org.openhab.binding.weatherflowsmartweather.SmartWeatherEventListener;
 import org.openhab.binding.weatherflowsmartweather.WeatherFlowSmartWeatherBindingConstants;
 import org.openhab.binding.weatherflowsmartweather.model.HubStatusMessage;
+import org.openhab.binding.weatherflowsmartweather.model.HubStatusV30Message;
 import org.openhab.binding.weatherflowsmartweather.model.SmartWeatherMessage;
 import org.openhab.core.config.discovery.AbstractDiscoveryService;
 import org.openhab.core.config.discovery.DiscoveryResult;
@@ -66,7 +67,7 @@ public class SmartWeatherDiscoveryService extends AbstractDiscoveryService imple
 
     @Override
     public void eventReceived(InetAddress source, SmartWeatherMessage data) {
-        if (data instanceof HubStatusMessage) {
+        if (data instanceof HubStatusMessage || data instanceof HubStatusV30Message) {
             HubStatusMessage message = (HubStatusMessage) data;
             String serial = message.getSerial_number();
 

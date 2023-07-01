@@ -117,7 +117,7 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
-        // logger.warn("SupportsThingType: " + thingTypeUID + "? " + SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID));
+        logger.warn("? SupportsThingType: " + thingTypeUID + "? " + SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID));
         return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
     }
 
@@ -125,12 +125,14 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
     protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
-        logger.debug("Creating handler for thing=" + thingTypeUID);
+        logger.warn("Creating handler for thing=" + thingTypeUID);
 
         if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_HUB)) {
             SmartWeatherHubHandler hubHandler = new SmartWeatherHubHandler((Bridge) thing, udpListener);
             registerDeviceDiscoveryService(hubHandler);
             return hubHandler;
+        } else if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_AIRQUALITY)) {
+            return new SmartWeatherAirQualityHandler(thing, eventPublisher);
         } else if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_AIR)) {
             return new SmartWeatherAirHandler(thing, lightningStrikeEventFactory, eventPublisher);
         } else if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_SKY)) {
@@ -149,12 +151,16 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
 
     @Override
     protected @Nullable Thing createThing(ThingTypeUID thingTypeUID, Configuration configuration, ThingUID thingUID) {
+        logger.warn("Creating thing for thing=" + thingTypeUID);
+        logger.warn("ThingType: " + getThingTypeByUID(thingTypeUID));
         return super.createThing(thingTypeUID, configuration, thingUID);
     }
 
     @Override
     public @Nullable Thing createThing(ThingTypeUID thingTypeUID, Configuration configuration,
             @Nullable ThingUID thingUID, @Nullable ThingUID bridgeUID) {
+        logger.warn("Creating thing for thing=" + thingTypeUID);
+        logger.warn("ThingType: " + getThingTypeByUID(thingTypeUID));
         return super.createThing(thingTypeUID, configuration, thingUID, bridgeUID);
     }
 

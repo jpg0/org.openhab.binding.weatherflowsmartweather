@@ -33,6 +33,7 @@ public class WeatherFlowSmartWeatherBindingConstants {
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_AIR = new ThingTypeUID(BINDING_ID, "air");
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_SKY = new ThingTypeUID(BINDING_ID, "sky");
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_TEMPEST = new ThingTypeUID(BINDING_ID, "tempest");
+    public static final ThingTypeUID THING_TYPE_SMART_WEATHER_AIRQUALITY = new ThingTypeUID(BINDING_ID, "quality");
     public static final ThingTypeUID THING_TYPE_SMART_WEATHER_BETTER_FORECAST = new ThingTypeUID(BINDING_ID,
             "better-forecast");
 
@@ -70,6 +71,19 @@ public class WeatherFlowSmartWeatherBindingConstants {
     public static final String CHANNEL_FORECAST_RAW = "forecast_raw";
     public static final String CHANNEL_FORECAST_ENRICHED = "forecast_enriched";
 
+    // Air quality channel ids
+    public static final String CHANNEL_PM10 = "pm10";
+    public static final String CHANNEL_PM25 = "pm25";
+    public static final String CHANNEL_PM100 = "pm100";
+    public static final String CHANNEL_PARTICLE_3UM = "particles_03um";
+    public static final String CHANNEL_PARTICLE_5UM = "particles_05um";
+    public static final String CHANNEL_PARTICLE_10UM = "particles_10um";
+    public static final String CHANNEL_PARTICLE_25UM = "particles_25um";
+    public static final String CHANNEL_PARTICLE_50UM = "particles_50um";
+    public static final String CHANNEL_PARTICLE_100UM = "particles_100um";
+
+    public static final String SKIP = "SKIP";
+
     // Event Channel ids
     public static final String CHANNEL_STRIKE_EVENTS = "strike_events";
     public static final String CHANNEL_RAPID_WIND_EVENTS = "rapid_wind_events";
@@ -95,6 +109,7 @@ public class WeatherFlowSmartWeatherBindingConstants {
         thingTypes.add(THING_TYPE_SMART_WEATHER_SKY);
         thingTypes.add(THING_TYPE_SMART_WEATHER_TEMPEST);
         thingTypes.add(THING_TYPE_SMART_WEATHER_BETTER_FORECAST);
+        thingTypes.add(THING_TYPE_SMART_WEATHER_AIRQUALITY);
         SUPPORTED_THING_TYPES = Set.copyOf(thingTypes);
     }
     public static final String PROPERTY_SERIAL_NUMBER = "serial_number";

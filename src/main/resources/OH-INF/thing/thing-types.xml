@@ -27,6 +27,33 @@
 		</properties>
 	</thing-type>
 
+	<thing-type id="quality">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="hub"/>
+		</supported-bridge-type-refs>
+
+		<label>SmartWeather Air Quality</label>
+		<description>Air quality sensors</description>
+
+		<channels>
+			<channel id="epoch" typeId="epoch"/>
+			<channel id="pm10" typeId="pm10"/>
+			<channel id="pm25" typeId="pm25"/>
+			<channel id="pm100" typeId="pm100"/>
+			<channel id="particles_03um" typeId="particles_03um"/>
+			<channel id="particles_05um" typeId="particles_05um"/>
+			<channel id="particles_10um" typeId="particles_10um"/>
+			<channel id="particles_25um" typeId="particles_25um"/>
+			<channel id="particles_50um" typeId="particles_50um"/>
+			<channel id="particles_100um" typeId="particles_100um"/>
+			<channel id="battery_level" typeId="battery_level"/>
+		</channels>
+
+		<properties>
+			<property name="serial_number"></property>
+		</properties>
+	</thing-type>
+
 	<thing-type id="sky">
 		<supported-bridge-type-refs>
 			<bridge-type-ref id="hub"/>
@@ -312,4 +339,76 @@
 		<category>Battery</category>
 		<state pattern="%.1f %unit%" readOnly="true"/>
 	</channel-type>
+
+	<channel-type id="pm100">
+		<item-type>Number</item-type>
+		<label>PM10.0</label>
+		<description>Particle Mass 10um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="pm25">
+		<item-type>Number</item-type>
+		<label>PM2.5</label>
+		<description>Particle Mass 2.5um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="pm10">
+		<item-type>Number</item-type>
+		<label>PM1.0</label>
+		<description>Particle Mass 1.0um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="particles_03um">
+		<item-type>Number</item-type>
+		<label>Particles 0.3um</label>
+		<description>Particle count 0.3um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="particles_05um">
+		<item-type>Number</item-type>
+		<label>Particles 0.5um</label>
+		<description>Particle count 0.5um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="particles_10um">
+		<item-type>Number</item-type>
+		<label>Particles 1.0um</label>
+		<description>Particle count 1.0um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="particles_25um">
+		<item-type>Number</item-type>
+		<label>Particles 2.5um</label>
+		<description>Particle count 2.5um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="particles_50um">
+		<item-type>Number</item-type>
+		<label>Particles 5um</label>
+		<description>Particle count 5um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+	<channel-type id="particles_100um">
+		<item-type>Number</item-type>
+		<label>Particles 10um</label>
+		<description>Particle count 10um</description>
+		<category>Number</category>
+		<state readOnly="true"/>
+	</channel-type>
+
 </thing:thing-descriptions>
