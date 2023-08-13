@@ -16,7 +16,7 @@
 			<channel id="epoch" typeId="epoch"/>
 			<channel id="temperature" typeId="airTemperature"/>
 			<channel id="pressure" typeId="pressure"/>
-			<channel id="humidity" typeId="humidity"/>
+			<channel id="humidity" typeId="system.atmospheric-humidity"/>
 			<channel id="strike_count" typeId="count"/>
 			<channel id="strike_distance" typeId="distance"/>
 			<channel id="battery_level" typeId="battery_level"/>
