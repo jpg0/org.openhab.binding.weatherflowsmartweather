@@ -117,7 +117,6 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
-        logger.warn("? SupportsThingType: " + thingTypeUID + "? " + SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID));
         return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
     }
 
@@ -125,7 +124,7 @@ public class WeatherFlowSmartWeatherHandlerFactory extends BaseThingHandlerFacto
     protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
-        logger.warn("Creating handler for thing=" + thingTypeUID);
+        logger.info("Creating handler for thing=" + thingTypeUID);
 
         if (thingTypeUID.equals(THING_TYPE_SMART_WEATHER_HUB)) {
             SmartWeatherHubHandler hubHandler = new SmartWeatherHubHandler((Bridge) thing, udpListener);
